@@ -13,10 +13,9 @@ namespace questionnaire.BackAdmin
     public partial class mainPageA_Add : System.Web.UI.Page
     {
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
+        private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
         private QuesTypeManager _mgrQuesType = new QuesTypeManager();
         private CQManager _mgrCQ = new CQManager();
-        private static int num = 1;
-
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -60,26 +59,64 @@ namespace questionnaire.BackAdmin
             }
         }
 
+        // 新增問題
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            string keyword = string.Empty;
-            var quesList = this._mgrQuesContents.GetQuesContentsList(keyword);
+            Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
+            Session["questionList"] += this.txtQuesAns.Text.Trim() + "&";
+            Session["questionList"] += Convert.ToInt32(this.ddlAnsType.SelectedValue) + "&";
+            Session["questionList"] += (this.ddlAnsType.SelectedItem.ToString()).Trim() + "&";
+            Session["questionList"] += this.ckbMustAns.Checked + "$";
+
+            var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
             this.rptQuestion.DataSource = quesList;
             this.rptQuestion.DataBind();
 
-            foreach (RepeaterItem item in this.rptQuestion.Items)
+            if (quesList != null || quesList.Count > 0)
             {
-                Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                ltlNum.Text = (num.ToString() + "<br />");
-                num = num + 1;
-
-                bool mustAns = this.ckbMustAns.Checked;
-                if (mustAns)
-                    this.ckbMustAns.Checked = true;
+                // 生成問題編號
+                int i = 1;
+                foreach (RepeaterItem item in this.rptQuestion.Items)
+                {
+                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                    ltlNum.Text = i.ToString();
+                    i++;
+                }
             }
-            
-            
         }
+
+        protected void btnQuesCancel_Click(object sender, EventArgs e)
+        {
+            Session.Remove("questionList");
+            Response.Redirect("listPageA.aspx");
+        }
+
+        protected void btnQuesSend_Click(object sender, EventArgs e)
+        {
+            //var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+
+            //string qTitle = this.txtQuesTitle.Text.Trim();
+            //string qAnser = this.txtQuesAns.Text.Trim();
+            //int typeID = Convert.ToInt32(this.ddlAnsType.SelectedValue.Trim());
+            //bool mustAns = this.ckbMustAns.Checked;
+
+            //if (quesList != null || quesList.Count > 0)
+            //{
+            //    QuesDetailModel model = new QuesDetailModel()
+            //    {
+            //        QuesTitle = qTitle,
+            //        QuesChoices = qAnser,
+            //        QuesTypeID = typeID,
+            //        IsEnable = mustAns
+            //    };
+
+            //    this._mgrQuesDetail.CreateQuesDetail(model);
+            //}
+        }
+
+
+
+
 
         protected void btnPaperSend_Click(object sender, EventArgs e)
         {
@@ -130,7 +167,5 @@ namespace questionnaire.BackAdmin
             else
                 return true;
         }
-
-        
     }
 }

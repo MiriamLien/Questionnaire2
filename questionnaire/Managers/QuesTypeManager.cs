@@ -55,7 +55,7 @@ namespace questionnaire.Managers
                         from item in contextModel.CommonQues
                         join item2 in contextModel.QuesTypes
                         on item.QuesTypeID equals item2.QuesTypeID
-                        where item.QuesTypeID == id
+                        where item.CQID == id
                         select new CQAndTypeModel
                         {
                             CQID = item.CQID,

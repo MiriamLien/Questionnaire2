@@ -73,22 +73,20 @@
                 <asp:Repeater ID="rptQuestion" runat="server">
                     <ItemTemplate>
                         <tr>
-                            <td width="30">
-                                <asp:CheckBox ID="ckbForDel" runat="server" />
+                            <td width="50">
+                                &emsp;<asp:CheckBox ID="ckbForDel" runat="server" />
                             </td>
                             <td width="60">
-                                <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
+                                &nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal>
                             </td>
-                            <td width="200">
-                                <%# Eval(this.txtQuesTitle.Text) %>
-                                <%--<asp:Literal runat="server" ID="ltlQTitle"></asp:Literal>--%>
+                            <td width="280">
+                                <%# Eval("QuesTitle") %>
                             </td>
-                            <td width="120">
-                                <%# Eval(this.ddlAnsType.SelectedValue) %>
-                                <%--<asp:Literal runat="server" ID="ltlQAnsType"></asp:Literal>--%>
+                            <td width="100">
+                                <%# Eval("QuesType1") %>
                             </td>
                             <td width="50">
-                                <asp:CheckBox ID="ckbMustAns2" runat="server" />
+                                <asp:CheckBox ID="ckbMustAns2" runat="server" Checked='<%# Eval("IsEnable") %>' Enabled="false" />
                             </td>
                             <td width="50"><a>編輯</a></td>
                         </tr>
@@ -96,9 +94,9 @@
                 </asp:Repeater>
             </table>
             <p></p>
-            <asp:Button ID="btnQuesCancel" runat="server" Text="取消" />
+            <asp:Button ID="btnQuesCancel" runat="server" Text="取消" OnClick="btnQuesCancel_Click" />
             &emsp;&emsp;&emsp;&emsp;&emsp;
-            <asp:Button ID="btnQuesSend" runat="server" Text="送出" />
+            <asp:Button ID="btnQuesSend" runat="server" Text="送出" OnClick="btnQuesSend_Click" />
         </div>
     </div>
 </asp:Content>

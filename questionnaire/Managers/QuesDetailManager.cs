@@ -10,6 +10,34 @@ namespace questionnaire.Managers
 {
     public class QuesDetailManager
     {
+        /// <summary>
+        /// 做字串切割，並取得問題列表
+        /// </summary>
+        /// <param name="ques"></param>
+        /// <returns></returns>
+        public List<QuesAndTypeModel> GetQuestionList(string ques)
+        {
+            ques = ques.TrimEnd('$');
+            string[] question = ques.Split('$');
+
+            List<QuesAndTypeModel> quesList = new List<QuesAndTypeModel>();
+            foreach (string item in question)
+            {
+                string[] questDetail = item.Split('&');
+
+                QuesAndTypeModel Ques = new QuesAndTypeModel();
+                Ques.QuesTitle = questDetail[0];
+                Ques.QuesChoices = questDetail[1];
+                Ques.QuesTypeID = Convert.ToInt32(questDetail[2]);
+                Ques.QuesType1 = questDetail[3];
+                Ques.IsEnable = Convert.ToBoolean(questDetail[4]);
+
+                quesList.Add(Ques);
+            }
+            return quesList;
+        }
+
+
         #region "增刪修"
         /// <summary>
         /// 新增問題
