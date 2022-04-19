@@ -15,6 +15,8 @@ namespace questionnaire.BackAdmin
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
         private QuesTypeManager _mgrQuesType = new QuesTypeManager();
         private CQManager _mgrCQ = new CQManager();
+        private static int num = 1;
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -38,33 +40,11 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        private bool CheckInput(out List<string> errorMsgList)
-        {
-            errorMsgList = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(this.txtTitle.Text))
-                errorMsgList.Add("問卷名稱為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtContent.Text))
-                errorMsgList.Add("描述內容為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtStartDate.Text))
-                errorMsgList.Add("開始時間為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtEndDate.Text))
-                errorMsgList.Add("結束時間為必填。");
-
-            if (errorMsgList.Count > 0)
-                return false;
-            else
-                return true;
-        }
-
-
+        // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
         {
-            int cqid = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
-            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqid);
+            int cqID = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
+            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqID);
 
             if (CQs != null)
             {
@@ -78,6 +58,27 @@ namespace questionnaire.BackAdmin
                     this.ckbMustAns.Checked = true;
                 }
             }
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            string keyword = string.Empty;
+            var quesList = this._mgrQuesContents.GetQuesContentsList(keyword);
+            this.rptQuestion.DataSource = quesList;
+            this.rptQuestion.DataBind();
+
+            foreach (RepeaterItem item in this.rptQuestion.Items)
+            {
+                Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                ltlNum.Text = (num.ToString() + "<br />");
+                num = num + 1;
+
+                bool mustAns = this.ckbMustAns.Checked;
+                if (mustAns)
+                    this.ckbMustAns.Checked = true;
+            }
+            
+            
         }
 
         protected void btnPaperSend_Click(object sender, EventArgs e)
@@ -107,5 +108,29 @@ namespace questionnaire.BackAdmin
         {
             Response.Redirect("listPageA.aspx");
         }
+
+        private bool CheckInput(out List<string> errorMsgList)
+        {
+            errorMsgList = new List<string>();
+
+            if (string.IsNullOrWhiteSpace(this.txtTitle.Text))
+                errorMsgList.Add("問卷名稱為必填。");
+
+            if (string.IsNullOrWhiteSpace(this.txtContent.Text))
+                errorMsgList.Add("描述內容為必填。");
+
+            if (string.IsNullOrWhiteSpace(this.txtStartDate.Text))
+                errorMsgList.Add("開始時間為必填。");
+
+            if (string.IsNullOrWhiteSpace(this.txtEndDate.Text))
+                errorMsgList.Add("結束時間為必填。");
+
+            if (errorMsgList.Count > 0)
+                return false;
+            else
+                return true;
+        }
+
+        
     }
 }

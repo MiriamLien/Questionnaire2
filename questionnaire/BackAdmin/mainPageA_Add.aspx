@@ -57,7 +57,7 @@
                 <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
                 <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
                 <span>﹝多個答案以；分隔﹞</span>&emsp;
-                <asp:Button ID="btnAdd" runat="server" Text="加入" /><br />
+                <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             </p>
             <br />
             <asp:ImageButton ID="ImgBtnDel" runat="server" ImageUrl="../images/deleteICON.png" Width="50" />
@@ -70,18 +70,30 @@
                     <th>必填</th>
                     <th></th>
                 </tr>
-                <tr>
-                    <td width="30">
-                        <asp:CheckBox ID="ckbForDel" runat="server" />
-                    </td>
-                    <td width="60"></td>
-                    <td width="200"></td>
-                    <td width="120"></td>
-                    <td width="50">
-                        <asp:CheckBox ID="ckbMustAns2" runat="server" />
-                    </td>
-                    <td width="50"><a>編輯</a></td>
-                </tr>
+                <asp:Repeater ID="rptQuestion" runat="server">
+                    <ItemTemplate>
+                        <tr>
+                            <td width="30">
+                                <asp:CheckBox ID="ckbForDel" runat="server" />
+                            </td>
+                            <td width="60">
+                                <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
+                            </td>
+                            <td width="200">
+                                <%# Eval(this.txtQuesTitle.Text) %>
+                                <%--<asp:Literal runat="server" ID="ltlQTitle"></asp:Literal>--%>
+                            </td>
+                            <td width="120">
+                                <%# Eval(this.ddlAnsType.SelectedValue) %>
+                                <%--<asp:Literal runat="server" ID="ltlQAnsType"></asp:Literal>--%>
+                            </td>
+                            <td width="50">
+                                <asp:CheckBox ID="ckbMustAns2" runat="server" />
+                            </td>
+                            <td width="50"><a>編輯</a></td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
             </table>
             <p></p>
             <asp:Button ID="btnQuesCancel" runat="server" Text="取消" />

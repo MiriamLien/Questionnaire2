@@ -222,22 +222,13 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.ImageButton ImgBtnDel;
 
         /// <summary>
-        /// ckbForDel 控制項。
+        /// rptQuestion 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ckbForDel;
-
-        /// <summary>
-        /// ckbMustAns2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ckbMustAns2;
+        protected global::System.Web.UI.WebControls.Repeater rptQuestion;
 
         /// <summary>
         /// btnQuesCancel 控制項。

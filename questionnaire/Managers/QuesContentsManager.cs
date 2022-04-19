@@ -28,6 +28,7 @@ namespace questionnaire.Managers
                         query =
                             from item in contextModel.Contents
                             where item.Title.Contains(keyword)
+                            //orderby item.TitleID descending
                             select item;
                     }
                     else
@@ -51,26 +52,25 @@ namespace questionnaire.Managers
         }
 
         /// <summary>
-        /// 取得所有或附加查詢條件(起始/結束日)的問卷，及其所有資料
+        /// 取得所有或起始日的問卷清單
         /// </summary>
         /// <param name="startDT"></param>
-        /// <param name="endDT"></param>
         /// <returns></returns>
-        public List<Content> GetQuesContentsList(string startDT, string endDT)
+        public List<Content> GetStartDateQuesContentsList(DateTime startDT)
         {
+            var startDTString = startDT.ToString();
+
             try
             {
                 using (ContextModel contextModel = new ContextModel())
                 {
                     //取得加查詢條件的問卷
                     IQueryable<Content> query;
-                    if (!string.IsNullOrWhiteSpace(startDT) &&
-                        !string.IsNullOrWhiteSpace(endDT))
+                    if (!string.IsNullOrWhiteSpace(startDTString))
                     {
                         query =
                         from item in contextModel.Contents
-                        where item.Title.Contains(startDT)
-                        where item.Title.Contains(endDT)
+                        where item.StartDate == startDT
                         select item;
                     }
                     else
@@ -87,7 +87,91 @@ namespace questionnaire.Managers
             }
             catch (Exception ex)
             {
-                Logger.WriteLog("QuesContentsManager.GetQuesContentsList", ex);
+                Logger.WriteLog("QuesContentsManager.GetStartDateQuesContentsList", ex);
+                throw;
+            }
+        }
+        /// <summary>
+        /// 取得所有或搜尋結束日的問卷清單
+        /// </summary>
+        /// <param name="endDT"></param>
+        /// <returns></returns>
+        public List<Content> GetEndDateQuesContentsList(DateTime endDT)
+        {
+            var endDTString = endDT.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    //取得加查詢條件的問卷
+                    IQueryable<Content> query;
+                    if (!string.IsNullOrWhiteSpace(endDTString))
+                    {
+                        query =
+                        from item in contextModel.Contents
+                        where item.EndDate == endDT
+                        select item;
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.Contents
+                            select item;
+                    }
+
+                    //組合，並取回結果
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuesContentsManager.GetEndDateQuesContentsList", ex);
+                throw;
+            }
+        }
+        /// <summary>
+        /// 取得所有或搜尋結束日的問卷清單
+        /// </summary>
+        /// <param name="startDT"></param>
+        /// <param name="endDT"></param>
+        /// <returns></returns>
+        public List<Content> GetDateQuesContentsList(DateTime startDT, DateTime endDT)
+        {
+            var startDTString = startDT.ToString();
+            var endDTString = endDT.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    //取得加查詢條件的問卷
+                    IQueryable<Content> query;
+                    if (!string.IsNullOrWhiteSpace(startDTString) &&
+                        !string.IsNullOrWhiteSpace(endDTString))
+                    {
+                        query =
+                        from item in contextModel.Contents
+                        where item.StartDate == startDT
+                        where item.EndDate == endDT
+                        select item;
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.Contents
+                            select item;
+                    }
+
+                    //組合，並取回結果
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuesContentsManager.GetDateQuesContentsList", ex);
                 throw;
             }
         }

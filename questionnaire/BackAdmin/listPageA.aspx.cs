@@ -36,7 +36,7 @@ namespace questionnaire.BackAdmin
 
         protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
         {
-            //導至新建頁面
+            //導至新增模式頁面
             Response.Redirect("mainPageA_Add.aspx");
         }
     }

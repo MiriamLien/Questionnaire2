@@ -5,17 +5,17 @@ using System.Web;
 
 namespace questionnaire.Models
 {
-    public class QuesDetailModel
+    public class QuesAndTypeModel
     {
         public int QuesID { get; set; }
 
-        public Guid ID { get; set; }
-
         public string QuesTitle { get; set; }
 
-        public string QuesChoices { get; set; }   // (答案)選項
+        public string QuesChoices { get; set; }
 
-        public int QuesTypeID { get; set; }
+        public int QuesTypeID { get; set; } //問題種類ID
+
+        public string QuesType1 { get; set; } //問題種類名稱
 
         public bool IsEnable { get; set; }
     }

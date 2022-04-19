@@ -200,6 +200,7 @@
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CQAndTypeModel.cs" />
     <Compile Include="Models\CQModel.cs" />
+    <Compile Include="Models\QuesAndTypeModel.cs" />
     <Compile Include="Models\QuesContentsModel.cs" />
     <Compile Include="Models\QuesDetailModel.cs" />
     <Compile Include="Models\QuesTypeModel.cs" />
