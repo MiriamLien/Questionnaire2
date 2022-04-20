@@ -15,7 +15,7 @@ namespace questionnaire.Models
 
         public int QuesTypeID { get; set; } //問題種類ID
 
-        public string QuesType1 { get; set; } //問題種類名稱
+        public string QuesType1 { get; set; } //問題種類名稱(文字、單選/複選方塊)
 
         public bool CQIsEnable { get; set; }
     }

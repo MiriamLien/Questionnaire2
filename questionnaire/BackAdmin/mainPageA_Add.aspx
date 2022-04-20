@@ -44,6 +44,7 @@
 
         <div id="question" class="tab-pane fade">
             <p>
+                <asp:HiddenField ID="hfID" runat="server" />
                 <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
                 <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
                 <asp:Button ID="btnUse" runat="server" Text="填入" OnClick="btnUse_Click" />

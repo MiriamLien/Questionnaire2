@@ -48,7 +48,8 @@
                             <asp:CheckBox ID="ckbForDel" runat="server" />
                         </td>
                         <td width="50px"><%# Eval("TitleID") %></td>
-                        <td width="250px"><a href="mainPageA.aspx"><%# Eval("Title") %></a></td>
+                        
+                        <td width="250px"><asp:LinkButton ID="linkBtnTitle" runat="server" OnClick="linkBtnTitle_Click"><%# Eval("Title") %></asp:LinkButton></td>
                         <td width="80px"><%# Eval("IsEnable") %></td>
                         <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
                         <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>

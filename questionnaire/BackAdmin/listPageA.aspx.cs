@@ -39,5 +39,11 @@ namespace questionnaire.BackAdmin
             //導至新增模式頁面
             Response.Redirect("mainPageA_Add.aspx");
         }
+
+        protected void linkBtnTitle_Click(object sender, EventArgs e)
+        {
+            string idtext = Request.QueryString["ID"];
+            Response.Redirect("mainPageA.aspx?ID=" + idtext);
+        }
     }
 }

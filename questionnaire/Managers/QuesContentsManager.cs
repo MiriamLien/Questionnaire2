@@ -28,13 +28,14 @@ namespace questionnaire.Managers
                         query =
                             from item in contextModel.Contents
                             where item.Title.Contains(keyword)
-                            //orderby item.TitleID descending
+                            orderby item.TitleID descending
                             select item;
                     }
                     else
                     {
                         query =
                             from item in contextModel.Contents
+                            orderby item.TitleID descending
                             select item;
                     }
 
@@ -71,12 +72,14 @@ namespace questionnaire.Managers
                         query =
                         from item in contextModel.Contents
                         where item.StartDate == startDT
+                        orderby item.TitleID descending
                         select item;
                     }
                     else
                     {
                         query =
                             from item in contextModel.Contents
+                            orderby item.TitleID descending
                             select item;
                     }
 
@@ -111,12 +114,14 @@ namespace questionnaire.Managers
                         query =
                         from item in contextModel.Contents
                         where item.EndDate == endDT
+                        orderby item.TitleID descending
                         select item;
                     }
                     else
                     {
                         query =
                             from item in contextModel.Contents
+                            orderby item.TitleID descending
                             select item;
                     }
 
@@ -155,12 +160,14 @@ namespace questionnaire.Managers
                         from item in contextModel.Contents
                         where item.StartDate == startDT
                         where item.EndDate == endDT
+                        orderby item.TitleID descending
                         select item;
                     }
                     else
                     {
                         query =
                             from item in contextModel.Contents
+                            orderby item.TitleID descending
                             select item;
                     }
 
@@ -176,6 +183,11 @@ namespace questionnaire.Managers
             }
         }
 
+        /// <summary>
+        /// 使用TitleID取得問卷
+        /// </summary>
+        /// <param name="titleID"></param>
+        /// <returns></returns>
         public Content GetQuesContent(int titleID)
         {
             try
@@ -187,7 +199,7 @@ namespace questionnaire.Managers
                         where item.TitleID == titleID
                         select item;
 
-                    //取得Account所有資料
+                    //取得問卷所有資料
                     var Ques = query.FirstOrDefault();
 
                     //檢查是否存在
@@ -237,40 +249,12 @@ namespace questionnaire.Managers
             }
         }
 
-        public Content GetQuesID(string title)
-        {
-            try
-            {
-                using (ContextModel contextModel = new ContextModel())
-                {
-                    var query =
-                        from item in contextModel.Contents
-                        where item.Title == title
-                        select item;
-
-                    //取得問卷所有資料
-                    var QuesContent = query.FirstOrDefault();
-
-                    //檢查是否存在
-                    if (QuesContent != null)
-                        return QuesContent;
-
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog("QuesContentsManager.GetQuesID", ex);
-                throw;
-            }
-        }
-
         #region "增刪修"
         /// <summary>
         /// 新增問卷
         /// </summary>
         /// <param name="ques"></param>
-        public void CreateQues(QuesContentsModel ques, Guid id)
+        public void CreateQues(QuesContentsModel ques)
         {
             try
             {
@@ -281,7 +265,7 @@ namespace questionnaire.Managers
                     //建立新問卷
                     var newQues = new Content
                     {
-                        ID = id,
+                        ID = ques.ID,
                         Title = ques.Title,
                         Body = ques.Body,
                         StartDate = ques.StartDate,

@@ -46,7 +46,6 @@ namespace questionnaire.BackAdmin
             else
                 this._isEditMode = false;
 
-
             if (this._isEditMode)
                 this.InitEditMode();
             else
@@ -56,7 +55,9 @@ namespace questionnaire.BackAdmin
         /// <summary> 新增模式初始化 </summary>
         private void InitCreateMode()
         {
+            this.txtStartDate.Text = DateTime.Now.ToString();
         }
+
         /// <summary> 編輯模式初始化 </summary>
         private void InitEditMode()
         {
@@ -71,9 +72,15 @@ namespace questionnaire.BackAdmin
                 this.txtEndDate.Text = item.EndDate.ToString();
             }
             
-            string url = this.Request.Url.LocalPath + "?ID=" + idText;
-            this.Response.Redirect(url);
+            //string url = this.Request.Url.LocalPath + "?ID=" + idText;
+            //this.Response.Redirect(url);
         }
+
+        protected void btnPaperCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("listPageA.aspx");
+        }
+
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
@@ -99,9 +106,6 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        protected void btnPaperCancel_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("listPageA.aspx");
-        }
+        
     }
 }

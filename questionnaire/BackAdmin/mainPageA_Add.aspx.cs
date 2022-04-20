@@ -16,6 +16,7 @@ namespace questionnaire.BackAdmin
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
         private QuesTypeManager _mgrQuesType = new QuesTypeManager();
         private CQManager _mgrCQ = new CQManager();
+        Guid id = Guid.NewGuid();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -38,6 +39,39 @@ namespace questionnaire.BackAdmin
                 this.ddlQuesType.Items.Insert(0, new ListItem("自訂問題", "0"));
             }
         }
+
+        // 問卷資訊填寫後送出(新增模式)
+        protected void btnPaperSend_Click(object sender, EventArgs e)
+        {
+            List<string> errorMsgList = new List<string>();
+            if (!this.CheckInput(out errorMsgList))
+            {
+                this.lblMsg.Text = string.Join("<br/>", errorMsgList);
+                return;
+            }
+
+            QuesContentsModel model = new QuesContentsModel()
+            {
+                ID = id,
+                Title = this.txtTitle.Text.Trim(),
+                Body = this.txtContent.Text.Trim(),
+                StartDate = Convert.ToDateTime(this.txtStartDate.Text.Trim()),
+                EndDate = Convert.ToDateTime(this.txtEndDate.Text.Trim()),
+                IsEnable = this.ckbPaperEnable.Checked,
+            };
+
+            //Account account = new AccountManager().GetCurrentUser();
+
+            this._mgrQuesContents.CreateQues(model);
+
+            this.hfID.Value = model.ID.ToString();
+        }
+
+        protected void btnPaperCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("listPageA.aspx");
+        }
+
 
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
@@ -85,66 +119,41 @@ namespace questionnaire.BackAdmin
             }
         }
 
+        // 把問題傳送至DB(新增模式)
+        protected void btnQuesSend_Click(object sender, EventArgs e)
+        {
+            var idText = new Guid(this.hfID.Value);
+            var quesContent = this._mgrQuesContents.GetQuesContent(idText);
+
+            var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+
+            string qTitle = this.txtQuesTitle.Text.Trim();
+            string qAnser = this.txtQuesAns.Text.Trim();
+            int typeID = Convert.ToInt32(this.ddlAnsType.SelectedValue.Trim());
+            bool mustAns = this.ckbMustAns.Checked;
+
+            if (quesList != null || quesList.Count > 0)
+            {
+                QuesDetailModel model = new QuesDetailModel()
+                {
+                    ID = quesContent.ID,
+                    QuesTitle = qTitle,
+                    QuesChoices = qAnser,
+                    QuesTypeID = typeID,
+                    IsEnable = mustAns
+                };
+
+                this._mgrQuesDetail.CreateQuesDetail(model);
+                this.Response.Redirect("listPageA.aspx");
+            }
+        }
+
         protected void btnQuesCancel_Click(object sender, EventArgs e)
         {
             Session.Remove("questionList");
             Response.Redirect("listPageA.aspx");
         }
 
-        protected void btnQuesSend_Click(object sender, EventArgs e)
-        {
-            //var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
-
-            //string qTitle = this.txtQuesTitle.Text.Trim();
-            //string qAnser = this.txtQuesAns.Text.Trim();
-            //int typeID = Convert.ToInt32(this.ddlAnsType.SelectedValue.Trim());
-            //bool mustAns = this.ckbMustAns.Checked;
-
-            //if (quesList != null || quesList.Count > 0)
-            //{
-            //    QuesDetailModel model = new QuesDetailModel()
-            //    {
-            //        QuesTitle = qTitle,
-            //        QuesChoices = qAnser,
-            //        QuesTypeID = typeID,
-            //        IsEnable = mustAns
-            //    };
-
-            //    this._mgrQuesDetail.CreateQuesDetail(model);
-            //}
-        }
-
-
-
-
-
-        protected void btnPaperSend_Click(object sender, EventArgs e)
-        {
-            List<string> errorMsgList = new List<string>();
-            if (!this.CheckInput(out errorMsgList))
-            {
-                this.lblMsg.Text = string.Join("<br/>", errorMsgList);
-                return;
-            }
-
-            QuesContentsModel model = new QuesContentsModel()
-            {
-                Title = this.txtTitle.Text.Trim(),
-                Content = this.txtContent.Text.Trim(),
-                StartDate = Convert.ToDateTime(this.txtStartDate.Text.Trim()),
-                EndDate = Convert.ToDateTime(this.txtEndDate.Text.Trim()),
-                IsEnable = this.ckbPaperEnable.Checked,
-            };
-
-            Account account = new AccountManager().GetCurrentUser();
-
-            this._mgrQuesContents.CreateQues(model, account.AccountID);
-        }
-
-        protected void btnPaperCancel_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("listPageA.aspx");
-        }
 
         private bool CheckInput(out List<string> errorMsgList)
         {
