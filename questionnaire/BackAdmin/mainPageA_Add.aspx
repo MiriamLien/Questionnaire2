@@ -12,6 +12,16 @@
             font-weight: 600;
             font-size: 18px;
         }
+
+        #textSpace {
+            padding-top: 30px;
+            padding-left: 20px;
+        }
+
+        #btnSpace {
+            padding-top: 20px;
+            padding-left: 180px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -22,24 +32,31 @@
 
     <div class="tab-content">
         <div id="paper" class="tab-pane fade in active">
-            <p>
+            <div id="textSpace">
                 <asp:Literal ID="ltlTitle" runat="server">問卷名稱</asp:Literal>
-                <asp:TextBox ID="txtTitle" runat="server" Width="250"></asp:TextBox><br />
+                <asp:TextBox ID="txtTitle" runat="server" Width="320"></asp:TextBox><br />
+                <br />
                 <asp:Literal ID="ltlContent" runat="server">描述內容</asp:Literal>
-                <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Width="250"></asp:TextBox><br />
+                <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Width="320"></asp:TextBox><br />
+                <br />
                 <asp:Literal ID="ltlStartDate" runat="server">開始時間</asp:Literal>
-                <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="250"></asp:TextBox><br />
+                <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                <br />
                 <asp:Literal ID="ltlEndDate" runat="server">結束時間</asp:Literal>
-                <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="250"></asp:TextBox><br />
+                <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                <br />
+                <br />
                 <asp:Label runat="server" ID="lblMsg"></asp:Label>
                 <br />
                 <br />
                 <asp:CheckBox ID="ckbPaperEnable" runat="server" Text="已啟用" Checked="true" />
                 <br />
+            </div>
+            <div id="btnSpace">
                 <asp:Button ID="btnPaperCancel" runat="server" Text="取消" OnClick="btnPaperCancel_Click" />
                 &emsp;&emsp;&emsp;&emsp;&emsp;
                 <asp:Button ID="btnPaperSend" runat="server" Text="送出" OnClick="btnPaperSend_Click" />
-            </p>
+            </div>
         </div>
 
         <div id="question" class="tab-pane fade">
@@ -61,7 +78,7 @@
                 <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             </p>
             <br />
-            <asp:ImageButton ID="ImgBtnDel" runat="server" ImageUrl="../images/deleteICON.png" Width="50" />
+            <br />
             <table border="1">
                 <tr>
                     <th></th>

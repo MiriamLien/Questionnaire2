@@ -22,6 +22,8 @@ namespace questionnaire.BackAdmin
         {
             if (!IsPostBack)
             {
+                //this.txtStartDate.Text = DateTime.Now.ToString();
+
                 //問題類型下拉繫結
                 var QTypeList = this._mgrQuesType.GetQuesTypesList();
                 this.ddlAnsType.DataSource = QTypeList;
@@ -71,7 +73,6 @@ namespace questionnaire.BackAdmin
         {
             Response.Redirect("listPageA.aspx");
         }
-
 
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
@@ -144,7 +145,9 @@ namespace questionnaire.BackAdmin
                 };
 
                 this._mgrQuesDetail.CreateQuesDetail(model);
-                this.Response.Redirect("listPageA.aspx");
+
+                Session.Remove("questionList");
+                Response.Redirect("listPageA.aspx");
             }
         }
 
@@ -153,7 +156,6 @@ namespace questionnaire.BackAdmin
             Session.Remove("questionList");
             Response.Redirect("listPageA.aspx");
         }
-
 
         private bool CheckInput(out List<string> errorMsgList)
         {

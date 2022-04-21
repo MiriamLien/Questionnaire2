@@ -15,7 +15,7 @@ namespace questionnaire.Managers
         /// </summary>
         /// <param name="keyword"></param>
         /// <returns></returns>
-        public List<Content> GetQuesContentsList(string keyword)
+        public List<QuesContentsModel> GetQuesContentsList(string keyword)
         {
             try
             {
@@ -41,7 +41,23 @@ namespace questionnaire.Managers
 
                     //組合，並取回結果
                     var list = query.ToList();
-                    return list;
+                    var QuestionnaireList = new List<QuesContentsModel>();
+                    foreach (var item in list)
+                    {
+                        var questionnaire = new QuesContentsModel()
+                        {
+                            ID = item.ID,
+                            TitleID = item.TitleID,
+                            Title = item.Title,
+                            Body = item.Body,
+                            StartDate = item.StartDate,
+                            EndDate = item.EndDate,
+                            IsEnable = item.IsEnable,
+                            strIsEnable = item.IsEnable ? "開放中" : "已關閉"
+                        };
+                        QuestionnaireList.Add(questionnaire);
+                    }
+                    return QuestionnaireList;
                 }
 
             }
@@ -57,7 +73,7 @@ namespace questionnaire.Managers
         /// </summary>
         /// <param name="startDT"></param>
         /// <returns></returns>
-        public List<Content> GetStartDateQuesContentsList(DateTime startDT)
+        public List<QuesContentsModel> GetStartDateQuesContentsList(DateTime startDT)
         {
             var startDTString = startDT.ToString();
 
@@ -71,7 +87,7 @@ namespace questionnaire.Managers
                     {
                         query =
                         from item in contextModel.Contents
-                        where item.StartDate == startDT
+                        where item.StartDate >= startDT
                         orderby item.TitleID descending
                         select item;
                     }
@@ -85,7 +101,23 @@ namespace questionnaire.Managers
 
                     //組合，並取回結果
                     var list = query.ToList();
-                    return list;
+                    var QuestionnaireList = new List<QuesContentsModel>();
+                    foreach (var item in list)
+                    {
+                        var questionnaire = new QuesContentsModel()
+                        {
+                            ID = item.ID,
+                            TitleID = item.TitleID,
+                            Title = item.Title,
+                            Body = item.Body,
+                            StartDate = item.StartDate,
+                            EndDate = item.EndDate,
+                            IsEnable = item.IsEnable,
+                            strIsEnable = item.IsEnable ? "開放中" : "已關閉"
+                        };
+                        QuestionnaireList.Add(questionnaire);
+                    }
+                    return QuestionnaireList;
                 }
             }
             catch (Exception ex)
@@ -99,7 +131,7 @@ namespace questionnaire.Managers
         /// </summary>
         /// <param name="endDT"></param>
         /// <returns></returns>
-        public List<Content> GetEndDateQuesContentsList(DateTime endDT)
+        public List<QuesContentsModel> GetEndDateQuesContentsList(DateTime endDT)
         {
             var endDTString = endDT.ToString();
 
@@ -113,7 +145,7 @@ namespace questionnaire.Managers
                     {
                         query =
                         from item in contextModel.Contents
-                        where item.EndDate == endDT
+                        where item.EndDate <= endDT
                         orderby item.TitleID descending
                         select item;
                     }
@@ -127,7 +159,23 @@ namespace questionnaire.Managers
 
                     //組合，並取回結果
                     var list = query.ToList();
-                    return list;
+                    var QuestionnaireList = new List<QuesContentsModel>();
+                    foreach (var item in list)
+                    {
+                        var questionnaire = new QuesContentsModel()
+                        {
+                            ID = item.ID,
+                            TitleID = item.TitleID,
+                            Title = item.Title,
+                            Body = item.Body,
+                            StartDate = item.StartDate,
+                            EndDate = item.EndDate,
+                            IsEnable = item.IsEnable,
+                            strIsEnable = item.IsEnable ? "開放中" : "已關閉"
+                        };
+                        QuestionnaireList.Add(questionnaire);
+                    }
+                    return QuestionnaireList;
                 }
             }
             catch (Exception ex)
@@ -142,7 +190,7 @@ namespace questionnaire.Managers
         /// <param name="startDT"></param>
         /// <param name="endDT"></param>
         /// <returns></returns>
-        public List<Content> GetDateQuesContentsList(DateTime startDT, DateTime endDT)
+        public List<QuesContentsModel> GetDateQuesContentsList(DateTime startDT, DateTime endDT)
         {
             var startDTString = startDT.ToString();
             var endDTString = endDT.ToString();
@@ -158,8 +206,8 @@ namespace questionnaire.Managers
                     {
                         query =
                         from item in contextModel.Contents
-                        where item.StartDate == startDT
-                        where item.EndDate == endDT
+                        where item.StartDate >= startDT
+                        where item.EndDate <= endDT
                         orderby item.TitleID descending
                         select item;
                     }
@@ -173,7 +221,23 @@ namespace questionnaire.Managers
 
                     //組合，並取回結果
                     var list = query.ToList();
-                    return list;
+                    var QuestionnaireList = new List<QuesContentsModel>();
+                    foreach (var item in list)
+                    {
+                        var questionnaire = new QuesContentsModel()
+                        {
+                            ID = item.ID,
+                            TitleID = item.TitleID,
+                            Title = item.Title,
+                            Body = item.Body,
+                            StartDate = item.StartDate,
+                            EndDate = item.EndDate,
+                            IsEnable = item.IsEnable,
+                            strIsEnable = item.IsEnable ? "開放中" : "已關閉"
+                        };
+                        QuestionnaireList.Add(questionnaire);
+                    }
+                    return QuestionnaireList;
                 }
             }
             catch (Exception ex)

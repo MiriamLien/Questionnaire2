@@ -23,37 +23,38 @@
             <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date"></asp:TextBox>&nbsp;
             <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date"></asp:TextBox>
             &emsp;&emsp;
-            <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
+            <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click" />
         </p>
     </div>
     <br />
-    <asp:ImageButton ID="ImgBtnDel" runat="server" ImageUrl="../images/deleteICON.png" Width="50" OnClick="ImgBtnDel_Click" /><br />&nbsp;
     <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" OnClick="ImgBtnAdd_Click" /><br />
     <br />
     <asp:PlaceHolder ID="plcList" runat="server">
         <table id="tblA">
             <tr>
-                <th></th>
+                
                 <th>編號</th>
                 <th>問卷標題</th>
                 <th>狀態</th>
                 <th>開始時間</th>
                 <th>結束時間</th>
                 <th>觀看統計</th>
+                <th></th>
             </tr>
             <asp:Repeater ID="rptList" runat="server">
                 <ItemTemplate>
                     <tr>
-                        <td width="30px">
-                            <asp:CheckBox ID="ckbForDel" runat="server" />
+                        <td width="70px"><%# Eval("TitleID") %></td>
+                        <td width="280px">
+                            &nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a>
                         </td>
-                        <td width="50px"><%# Eval("TitleID") %></td>
-                        
-                        <td width="250px"><asp:LinkButton ID="linkBtnTitle" runat="server" OnClick="linkBtnTitle_Click"><%# Eval("Title") %></asp:LinkButton></td>
-                        <td width="80px"><%# Eval("IsEnable") %></td>
+                        <td width="120px"><%# Eval("strIsEnable") %></td>
                         <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
                         <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
-                        <td width="80px"><a href="#">前往</a></td>
+                        <td width="100px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
+                        <td width="80px">
+                            <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />
+                        </td>
                     </tr>
                 </ItemTemplate>
             </asp:Repeater>

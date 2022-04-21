@@ -20,6 +20,7 @@ namespace questionnaire.Models
         public DateTime EndDate { get; set; }
 
         public bool IsEnable { get; set; }
+        public string strIsEnable { get; set; }
 
         public string Content
         {

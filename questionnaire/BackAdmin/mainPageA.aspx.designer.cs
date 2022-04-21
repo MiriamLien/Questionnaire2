@@ -87,13 +87,22 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.TextBox txtEndDate;
 
         /// <summary>
-        /// ckbPaper 控制項。
+        /// lblMsg 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ckbPaper;
+        protected global::System.Web.UI.WebControls.Label lblMsg;
+
+        /// <summary>
+        /// ckbPaperEnable 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox ckbPaperEnable;
 
         /// <summary>
         /// btnPaperCancel 控制項。
@@ -105,13 +114,13 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.Button btnPaperCancel;
 
         /// <summary>
-        /// btnPaperSend 控制項。
+        /// btnNextTab 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPaperSend;
+        protected global::System.Web.UI.WebControls.Button btnNextTab;
 
         /// <summary>
         /// ltlQuesType 控制項。
@@ -204,31 +213,22 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
-        /// ImgBtnDel 控制項。
+        /// imgbtnDelete 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton ImgBtnDel;
+        protected global::System.Web.UI.WebControls.ImageButton imgbtnDelete;
 
         /// <summary>
-        /// ckbForDel 控制項。
+        /// rptQuestion 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ckbForDel;
-
-        /// <summary>
-        /// ckbMustAns2 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox ckbMustAns2;
+        protected global::System.Web.UI.WebControls.Repeater rptQuestion;
 
         /// <summary>
         /// btnQuesCancel 控制項。

@@ -15,35 +15,101 @@ namespace questionnaire.BackAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            string keyword = string.Empty;
-            var quesList = this._mgrQuesContents.GetQuesContentsList(keyword);
-            this.rptList.DataSource = quesList;
-            this.rptList.DataBind();
+            //string idtext = this.Request.QueryString["ID"];
+
+            if (!IsPostBack) //二次重整頁面就不會跑這裡
+            {
+                string keyword = string.Empty;
+                var quesList = this._mgrQuesContents.GetQuesContentsList(keyword);
+                this.rptList.DataSource = quesList;
+                this.rptList.DataBind();
+            }
         }
 
-        protected void ImgBtnDel_Click(object sender, ImageClickEventArgs e)
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
-            foreach (RepeaterItem item in this.rptList.Items)
-            {
-                CheckBox ckb = item.FindControl("ckbForDel") as CheckBox;
+            string titleText = this.txtTitle.Text;
+            string startDT = this.txtStartDate.Text;
+            string endtDT = this.txtEndDate.Text;
 
-                if (ckb != null && ckb.Checked)
+            if (!string.IsNullOrWhiteSpace(titleText))
+            {
+                var titleQList = this._mgrQuesContents.GetQuesContentsList(titleText);
+
+                this.rptList.DataSource = titleQList;
+                this.rptList.DataBind();
+
+                titleText = string.Empty;
+
+                if (titleQList.Count == 0 || titleQList == null)
                 {
-                    //this._mgrQuesContents.DeleteQues();
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(startDT))
+            {
+                DateTime sDT = Convert.ToDateTime(startDT);
+                var startDTQList = this._mgrQuesContents.GetStartDateQuesContentsList(sDT);
+
+                this.rptList.DataSource = startDTQList;
+                this.rptList.DataBind();
+
+                startDT = string.Empty;
+
+                if (startDTQList.Count == 0 || startDTQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(endtDT))
+            {
+                DateTime eDT = Convert.ToDateTime(endtDT);
+                var endDTQList = this._mgrQuesContents.GetEndDateQuesContentsList(eDT);
+
+                this.rptList.DataSource = endDTQList;
+                this.rptList.DataBind();
+
+                endtDT = string.Empty;
+                if (endDTQList.Count == 0 || endDTQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(startDT) &&
+                     !string.IsNullOrWhiteSpace(endtDT))
+            {
+                DateTime sDT = Convert.ToDateTime(startDT);
+                DateTime eDT = Convert.ToDateTime(endtDT);
+
+                var bothDTList = this._mgrQuesContents.GetDateQuesContentsList(sDT, eDT);
+
+                this.rptList.DataSource = bothDTList;
+                this.rptList.DataBind();
+
+                startDT = string.Empty;
+                endtDT = string.Empty;
+
+                if (bothDTList.Count == 0 || bothDTList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
         }
 
+        // 刪除項目
+        protected void btnDelete_Command(object sender, CommandEventArgs e)
+        {
+            Guid id = Guid.Parse(e.CommandName);
+            this._mgrQuesContents.DeleteQues(id);
+            Response.Redirect(Request.RawUrl);
+        }
+
+        // 導至新增模式頁面
         protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
         {
-            //導至新增模式頁面
             Response.Redirect("mainPageA_Add.aspx");
         }
 
-        protected void linkBtnTitle_Click(object sender, EventArgs e)
-        {
-            string idtext = Request.QueryString["ID"];
-            Response.Redirect("mainPageA.aspx?ID=" + idtext);
-        }
+        
     }
 }

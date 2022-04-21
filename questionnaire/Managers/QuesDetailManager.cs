@@ -11,32 +11,93 @@ namespace questionnaire.Managers
     public class QuesDetailManager
     {
         /// <summary>
-        /// 做字串切割，並取得問題列表
+        /// 輸入問卷id取得問題清單
         /// </summary>
-        /// <param name="ques"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public List<QuesAndTypeModel> GetQuestionList(string ques)
+        public List<QuesAndTypeModel> GetQuesDetailList(Guid id)
         {
-            ques = ques.TrimEnd('$');
-            string[] question = ques.Split('$');
+            string idText = id.ToString();
 
-            List<QuesAndTypeModel> quesList = new List<QuesAndTypeModel>();
-            foreach (string item in question)
+            try
             {
-                string[] questDetail = item.Split('&');
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    //取得加查詢條件的問題
+                    IQueryable<QuesAndTypeModel> query;
+                    if (!string.IsNullOrWhiteSpace(idText))
+                    {
+                        query =
+                        from item in contextModel.QuesDetails
+                        join item2 in contextModel.QuesTypes
+                        on item.QuesTypeID equals item2.QuesTypeID
+                        where item.ID == id
+                        select new QuesAndTypeModel
+                        {
+                            QuesTitle = item.QuesTitle,
+                            QuesType1 = item2.QuesType1,
+                            IsEnable = item.IsEnable
+                        };
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.QuesDetails
+                            join item2 in contextModel.QuesTypes
+                            on item.QuesTypeID equals item2.QuesTypeID
+                            select new QuesAndTypeModel
+                            {
+                                QuesTitle = item.QuesTitle,
+                                QuesType1 = item2.QuesType1,
+                                IsEnable = item.IsEnable
+                            };
+                    }
 
-                QuesAndTypeModel Ques = new QuesAndTypeModel();
-                Ques.QuesTitle = questDetail[0];
-                Ques.QuesChoices = questDetail[1];
-                Ques.QuesTypeID = Convert.ToInt32(questDetail[2]);
-                Ques.QuesType1 = questDetail[3];
-                Ques.IsEnable = Convert.ToBoolean(questDetail[4]);
-
-                quesList.Add(Ques);
+                    //組合，並取回結果
+                    var list = query.ToList();
+                    return list;
+                }
             }
-            return quesList;
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuesDetailManager.GetQuesDetailList", ex);
+                throw;
+            }
         }
 
+        /// <summary>
+        /// 輸入問題ID取得問題內容
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public QuesDetail GetQuesDetail(int id)
+        {
+            string idText = id.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    var query =
+                    from item in contextModel.QuesDetails
+                    where item.QuesID == id
+                    select item;
+
+                    var QuesDetail = query.FirstOrDefault();
+
+                    //檢查是否存在
+                    if (QuesDetail != null)
+                        return QuesDetail;
+
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuesDetailManager.GetQuesDetail", ex);
+                throw;
+            }
+        }
 
         #region "增刪修"
         /// <summary>
@@ -133,8 +194,7 @@ namespace questionnaire.Managers
 
                     //檢查是否存在
                     if (deleteQues != null)
-                        deleteQues.IsEnable = false;
-                    //contextModel.Contents.Remove(deleteQues);
+                        contextModel.QuesDetails.Remove(deleteQues);
 
                     //確定存檔
                     contextModel.SaveChanges();
@@ -147,5 +207,32 @@ namespace questionnaire.Managers
             }
         }
         #endregion
+
+        /// <summary>
+        /// 做字串切割，並取得問題列表
+        /// </summary>
+        /// <param name="ques"></param>
+        /// <returns></returns>
+        public List<QuesAndTypeModel> GetQuestionList(string ques)
+        {
+            ques = ques.TrimEnd('$');
+            string[] question = ques.Split('$');
+
+            List<QuesAndTypeModel> quesList = new List<QuesAndTypeModel>();
+            foreach (string item in question)
+            {
+                string[] questDetail = item.Split('&');
+
+                QuesAndTypeModel Ques = new QuesAndTypeModel();
+                Ques.QuesTitle = questDetail[0];
+                Ques.QuesChoices = questDetail[1];
+                Ques.QuesTypeID = Convert.ToInt32(questDetail[2]);
+                Ques.QuesType1 = questDetail[3];
+                Ques.IsEnable = Convert.ToBoolean(questDetail[4]);
+
+                quesList.Add(Ques);
+            }
+            return quesList;
+        }
     }
 }
