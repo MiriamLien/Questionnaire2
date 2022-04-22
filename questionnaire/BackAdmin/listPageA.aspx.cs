@@ -11,6 +11,7 @@ namespace questionnaire.BackAdmin
 {
     public partial class listPageA : System.Web.UI.Page
     {
+        private AccountManager _mgrAccount = new AccountManager();
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
 
         protected void Page_Load(object sender, EventArgs e)
@@ -96,7 +97,7 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        // 刪除項目
+        // 軟刪除問卷
         protected void btnDelete_Command(object sender, CommandEventArgs e)
         {
             Guid id = Guid.Parse(e.CommandName);
@@ -107,7 +108,10 @@ namespace questionnaire.BackAdmin
         // 導至新增模式頁面
         protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
         {
-            Response.Redirect("mainPageA_Add.aspx");
+            if (this._mgrAccount.IsLogined())
+                Response.Redirect("mainPageA_Add.aspx");
+            else
+                Response.Redirect("../Login.aspx");
         }
 
         

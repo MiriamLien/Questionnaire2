@@ -30,9 +30,8 @@
     <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" OnClick="ImgBtnAdd_Click" /><br />
     <br />
     <asp:PlaceHolder ID="plcList" runat="server">
-        <table id="tblA">
+        <table id="tblA" border="1">
             <tr>
-                
                 <th>編號</th>
                 <th>問卷標題</th>
                 <th>狀態</th>

@@ -57,7 +57,7 @@
             <div id="btnSpace1">
                 <asp:Button ID="btnPaperCancel" runat="server" Text="取消" OnClick="btnPaperCancel_Click" />
                 &emsp;&emsp;&emsp;&emsp;&emsp;
-                <asp:Button ID="btnNextTab" runat="server" Text="下一頁" />
+                <asp:Button ID="btnNextTab" runat="server" Text="送出" />
             </div>
         </div>
 
@@ -80,7 +80,7 @@
                 <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             <br />
             <br />
-            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" /><br />
+            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除這項問題嗎？')" /><br />
             <table border="1">
                 <tr>
                     <th></th>

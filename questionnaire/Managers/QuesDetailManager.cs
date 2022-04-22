@@ -28,16 +28,18 @@ namespace questionnaire.Managers
                     if (!string.IsNullOrWhiteSpace(idText))
                     {
                         query =
-                        from item in contextModel.QuesDetails
-                        join item2 in contextModel.QuesTypes
-                        on item.QuesTypeID equals item2.QuesTypeID
-                        where item.ID == id
-                        select new QuesAndTypeModel
-                        {
-                            QuesTitle = item.QuesTitle,
-                            QuesType1 = item2.QuesType1,
-                            IsEnable = item.IsEnable
-                        };
+                            from item in contextModel.QuesDetails
+                            join item2 in contextModel.QuesTypes
+                            on item.QuesTypeID equals item2.QuesTypeID
+                            where item.ID == id
+                            select new QuesAndTypeModel
+                            {
+                                QuesID = item.QuesID,
+                                QuesTitle = item.QuesTitle,
+                                QuesChoices = item.QuesChoices,
+                                QuesType1 = item2.QuesType1,
+                                IsEnable = item.IsEnable
+                            };
                     }
                     else
                     {
@@ -47,7 +49,9 @@ namespace questionnaire.Managers
                             on item.QuesTypeID equals item2.QuesTypeID
                             select new QuesAndTypeModel
                             {
+                                QuesID = item.QuesID,
                                 QuesTitle = item.QuesTitle,
+                                QuesChoices = item.QuesChoices,
                                 QuesType1 = item2.QuesType1,
                                 IsEnable = item.IsEnable
                             };
@@ -178,8 +182,8 @@ namespace questionnaire.Managers
         /// <summary>
         /// 刪除問題
         /// </summary>
-        /// <param name="id"></param>
-        public void DeleteQuesDetail(Guid id)
+        /// <param name="quesID"></param>
+        public void DeleteQuesDetail(int quesID)
         {
             try
             {
@@ -187,7 +191,7 @@ namespace questionnaire.Managers
                 using (ContextModel contextModel = new ContextModel())
                 {
                     //組查詢條件
-                    var query = contextModel.QuesDetails.Where(item => item.ID == id);
+                    var query = contextModel.QuesDetails.Where(item => item.QuesID == quesID);
 
                     //取得資料
                     var deleteQues = query.FirstOrDefault();

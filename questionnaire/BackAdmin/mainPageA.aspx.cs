@@ -23,6 +23,31 @@ namespace questionnaire.BackAdmin
         {
             if (!IsPostBack)
             {
+                string idText = Request.QueryString["ID"];
+                Guid questionnaireID = Guid.Parse(idText);
+
+                // 如果沒有帶 id ，跳回列表頁
+                if (string.IsNullOrWhiteSpace(idText))
+                    this.BackToListPage();
+
+                Guid iD;
+                if (!Guid.TryParse(idText, out iD))
+                    this.BackToListPage();
+
+                // 帶入問卷內容
+                var QList = this._mgrQuesContents.GetQuesContent(questionnaireID);
+                this.txtTitle.Text = QList.Title;
+                this.txtContent.Text = QList.Body;
+                this.txtStartDate.Text = QList.StartDate.ToString("yyyy-MM-dd");
+                this.txtEndDate.Text = QList.EndDate.ToString("yyyy-MM-dd");
+                this.ckbPaperEnable.Checked = QList.IsEnable;
+
+                // 帶入問題內容
+                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                this.rptQuestion.DataSource = questionList;
+                this.rptQuestion.DataBind();
+
+
                 //問題類型下拉繫結
                 var QTypeList = this._mgrQuesType.GetQuesTypesList();
                 this.ddlAnsType.DataSource = QTypeList;
@@ -38,51 +63,18 @@ namespace questionnaire.BackAdmin
                 this.ddlQuesType.DataBind();
 
                 this.ddlQuesType.Items.Insert(0, new ListItem("自訂問題", "0"));
-
-
-                // 帶入問卷內容
-                string idText = Request.QueryString["ID"];
-                Guid id = Guid.Parse(idText);
-                var QList = this._mgrQuesContents.GetQuesContent(id);
-                this.txtTitle.Text = QList.Title;
-                this.txtContent.Text = QList.Body;
-                this.txtStartDate.Text = QList.StartDate.ToString("yyyy-MM-dd");
-                this.txtEndDate.Text = QList.EndDate.ToString("yyyy-MM-dd");
-                this.ckbPaperEnable.Checked = QList.IsEnable;
-
-                // 帶入問題內容
-                var questionList = this._mgrQuesDetail.GetQuesDetailList(id);
-                this.rptQuestion.DataSource = questionList;
-                this.rptQuestion.DataBind();
             }
 
         }
 
-        /*
-        /// <summary> 編輯模式初始化 </summary>
-        private void InitEditMode()
-        {
-            string idText = this.Request.QueryString["ID"];
-            var quesList = this._mgrQuesContents.GetQuesContentsList(idText);
-
-            foreach (var item in quesList)
-            {
-                this.txtTitle.Text = item.Title;
-                this.txtContent.Text = item.Body;
-                this.txtStartDate.Text = item.StartDate.ToString();
-                this.txtEndDate.Text = item.EndDate.ToString();
-            }
-            
             //string url = this.Request.Url.LocalPath + "?ID=" + idText;
             //this.Response.Redirect(url);
-        }
-        */
+
 
         protected void btnPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
         }
-
 
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
@@ -104,7 +96,7 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        // 新增問題
+        // 新增問題至下方列表
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
@@ -141,17 +133,17 @@ namespace questionnaire.BackAdmin
         {
             foreach (RepeaterItem item in this.rptQuestion.Items)
             {
+                string idText = Request.QueryString["ID"];
                 HiddenField hfID = item.FindControl("hfID") as HiddenField;
-                CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
+                hfID.Value = idText;
 
-                if (ckbForDel != null && ckbForDel.Checked && Guid.TryParse(hfID.Value, out Guid questionnaireID))
+                CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
+                Button btnEdit = item.FindControl("btnEdit") as Button;
+
+                if (ckbForDel.Checked && Int32.TryParse(hfID.Value, out int id))
                 {
-                    this._mgrQuesDetail.DeleteQuesDetail(id);
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('確定要刪除這項問題嗎？');location.href='mainPageA.aspx';", true);
-                }
-                else
-                {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('請勾選要刪除的項目。');location.href='mainPageA.aspx';", true);
+                    this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
+                    Response.Redirect(Request.RawUrl + "?ID=" + id);
                 }
             }
         }
@@ -183,6 +175,11 @@ namespace questionnaire.BackAdmin
                 this.ddlAnsType.SelectedValue = ques.QuesTypeID.ToString();
                 this.ckbMustAns.Checked = ques.IsEnable;
             }
+        }
+
+        private void BackToListPage()
+        {
+            this.Response.Redirect("listPageA.aspx", true);
         }
     }
 }
