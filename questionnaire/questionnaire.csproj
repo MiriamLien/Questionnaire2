@@ -212,6 +212,8 @@
     <Compile Include="ORM\QuesDetail.cs" />
     <Compile Include="ORM\QuesType.cs" />
     <Compile Include="ORM\sysdiagram.cs" />
+    <Compile Include="ORM\UserInfo.cs" />
+    <Compile Include="ORM\UserQuesDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="statisticPage.aspx.cs">
       <DependentUpon>statisticPage.aspx</DependentUpon>

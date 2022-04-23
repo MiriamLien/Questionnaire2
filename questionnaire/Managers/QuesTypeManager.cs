@@ -41,7 +41,7 @@ namespace questionnaire.Managers
         }
 
         /// <summary>
-        /// 輸入ID取得CQType
+        /// 輸入QuesTypeID取得CQType
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

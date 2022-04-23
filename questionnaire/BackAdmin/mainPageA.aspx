@@ -55,29 +55,32 @@
                 <br />
             </div>
             <div id="btnSpace1">
-                <asp:Button ID="btnPaperCancel" runat="server" Text="取消" OnClick="btnPaperCancel_Click" />
+                <asp:Button ID="btnEditPaperCancel" runat="server" Text="取消" OnClick="btnEditPaperCancel_Click" />
                 &emsp;&emsp;&emsp;&emsp;&emsp;
-                <asp:Button ID="btnNextTab" runat="server" Text="送出" />
+                <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click" />
             </div>
         </div>
 
         <div id="question" class="tab-pane fade">
             <br /><p></p>
-                <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
-                <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
-                <asp:Button ID="btnUse" runat="server" Text="填入" OnClick="btnUse_Click" />
-                <br />
-                <br />
-                <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
-                <asp:TextBox ID="txtQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
-                <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
-                <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
-                <br />
-                <br />
-                <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
-                <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
-                <span>﹝多個答案以；分隔﹞</span>&emsp;
-                <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
+            <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
+            <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
+            <asp:Button ID="btnUse" runat="server" Text="填入" OnClick="btnUse_Click" />
+            <br />
+            <br />
+            <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
+            <asp:TextBox ID="txtQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
+            <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
+            <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
+            <br />
+            <br />
+            <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
+            <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+            <span>﹝多個答案以；分隔﹞</span>&emsp;
+            <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" />
+            <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" OnClick="btnEditCheck_Click" Visible ="false" />
+            <asp:Button ID="btnEditCancel" runat="server" Text="取消" OnClick="btnEditCancel_Click" />
+            <br />
             <br />
             <br />
             <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除這項問題嗎？')" /><br />
@@ -114,10 +117,6 @@
                     </ItemTemplate>
                 </asp:Repeater>
             </table>
-            <p></p>
-            <asp:Button ID="btnQuesCancel" runat="server" Text="取消" OnClick="btnQuesCancel_Click" />
-            &emsp;&emsp;&emsp;&emsp;&emsp;
-            <asp:Button ID="btnQuesSend" runat="server" Text="送出" />
         </div>
 
         <div id="userInfo" class="tab-pane fade">

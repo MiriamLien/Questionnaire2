@@ -171,8 +171,8 @@ namespace questionnaire.Managers
 
                     //檢查是否存在
                     if (deleteQues != null)
-                        deleteQues.CQIsEnable = false;
-                    //contextModel.Contents.Remove(deleteQues);
+                        contextModel.CommonQues.Remove(deleteQues);
+                    //deleteQues.CQIsEnable = false;
 
                     //確定存檔
                     contextModel.SaveChanges();

@@ -6,14 +6,18 @@
     <style>
         #topDiv {
             border: 2px solid #000000;
-            /*margin: 50px;*/
+            margin: 10px;
             padding: 30px;
         }
 
         #AllDiv {
-            margin: 60px;
+            width: 80%;
+            margin-left: 150px;
         }
 
+        #tbl, #pageDiv {
+            margin-left: 40px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -41,14 +45,14 @@
             <th>結束時間</th>
             <th>觀看統計</th>
         </tr>
-        <asp:Repeater ID="rptQues" runat="server">
+        <asp:Repeater ID="rptList" runat="server">
             <ItemTemplate>
                 <tr>
-                    <td width="50px"><%# Eval("TitleID") %></td>
-                    <td width="250px"><a href="mainPage.aspx"><%# Eval("Title") %></a></td>
-                    <td width="80px"><%# Eval("IsEnable") %></td>
-                    <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
-                    <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
+                    <td width="80px"><%# Eval("TitleID") %></td>
+                    <td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>
+                    <td width="100px"><%# Eval("strIsEnable") %></td>
+                    <td width="150px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
+                    <td width="150px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
                     <td width="80px"><a href="#">前往</a></td>
                 </tr>
             </ItemTemplate>
@@ -56,7 +60,9 @@
     </table>
     <br />
     <br />
+        <div id="pageDiv">
     <span id='table_page'></span>
+        </div>
     </div>
     <script>
         $("#tbl").tablepage($("#table_page"), 10);

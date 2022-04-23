@@ -15,7 +15,6 @@ namespace questionnaire.ORM
             QuesDetails = new HashSet<QuesDetail>();
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int QuesTypeID { get; set; }
 
         [Column("QuesType")]

@@ -9,7 +9,6 @@ namespace questionnaire.ORM
     public partial class CommonQue
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int CQID { get; set; }
 
         [Required]

@@ -60,6 +60,7 @@
         </div>
 
         <div id="question" class="tab-pane fade">
+            <br /><p></p>
             <p>
                 <asp:HiddenField ID="hfID" runat="server" />
                 <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>

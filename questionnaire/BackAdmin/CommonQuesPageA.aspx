@@ -17,20 +17,49 @@
         <p></p>
     </div>
     <div id="topDiv">
-        <p>
-            <asp:Literal ID="ltlTitle" runat="server">問卷標題</asp:Literal>
-            <asp:TextBox ID="txtTitle" runat="server"></asp:TextBox>
-        </p>
-        <p>
-            <asp:Literal ID="ltlDate" runat="server">開始／結束</asp:Literal>
-            <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date"></asp:TextBox>&nbsp;
-            <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date"></asp:TextBox>
-            &emsp;&emsp;
-            <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
-        </p>
+        <p></p>
+        <asp:Literal ID="ltlTitle" runat="server">問卷標題</asp:Literal>
+        <asp:TextBox ID="txtTitle" runat="server"></asp:TextBox>
+        <br />
+        <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
+        &emsp;&emsp;
+        <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
     </div>
     <br />
-    <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" /><br />
+    <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" OnClick="ImgBtnAdd_Click" />
+    <br />
+    <br />
+    <asp:PlaceHolder ID="plcAddCQ" runat="server" Visible="false">
+            <h4>新增</h4>
+            <div>
+                <p>問題：<asp:TextBox ID="txtAddQues" runat="server"></asp:TextBox></p><br />
+                <p>回答：<asp:TextBox ID="txtAddAns" runat="server"></asp:TextBox></p>
+                <p>類型：<asp:DropDownList ID="ddlAddAnsType" runat="server"></asp:DropDownList></p>
+                <p>必填：<asp:CheckBox ID="ckbAddCQMustAns" runat="server" /></p>
+            </div>
+            <div>
+                <asp:Button ID="btnSaveAddCQ" runat="server" CssClass="nes-pointer" Text="儲存" />
+                &nbsp;
+                <asp:Button ID="btnCancelAddCQ" runat="server" CssClass="nes-pointer" Text="取消" />
+            </div>
+        </asp:PlaceHolder>
+
+    <asp:PlaceHolder ID="plcEditCQ" runat="server" Visible="false">
+            <h4>變更</h4>
+            <div>
+                <p>編號：<asp:TextBox ID="txtEditNum" runat="server" Enabled="false"></asp:TextBox></p>
+                <p>問題：<asp:TextBox ID="txtEditQues" runat="server"></asp:TextBox></p>
+                <p>回答：<asp:TextBox ID="txtEditAns" runat="server"></asp:TextBox></p>
+                <p>類型：<asp:DropDownList ID="ddlEditAnsType" runat="server"></asp:DropDownList></p>
+                <p>必填：<asp:CheckBox ID="ckbEditCQMustAns" runat="server" /></p>
+            </div>
+            <div>
+                <asp:Button ID="btnSaveEditCQ" runat="server" CssClass="nes-pointer" Text="儲存" OnClick="btnSaveEditCQ_Click" />
+                &nbsp;
+                <asp:Button ID="btnCancelEditCQ" runat="server" CssClass="nes-pointer" Text="取消" OnClick="btnCancelEditCQ_Click" />
+            </div>
+        </asp:PlaceHolder>
+
     <br />
     <asp:PlaceHolder ID="plcCQ" runat="server">
         <table id="tblB">
@@ -39,6 +68,7 @@
                 <th>編號</th>
                 <th>問題</th>
                 <th>回答</th>
+                <th>類型</th>
                 <th>必填</th>
                 <th></th>
                 <th></th>
@@ -46,10 +76,11 @@
             <asp:Repeater ID="rptCQ" runat="server">
                 <ItemTemplate>
                     <tr>
-                        <td width="60px">&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
-                        <td width="410px"><%# Eval("CQTitle") %></td>
-                        <td width="390px"><%# Eval("CQChoices") %></td>
-                        <td width="60px">
+                        <td width="50px">&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
+                        <td width="400px"><%# Eval("CQTitle") %></td>
+                        <td width="380px"><%# Eval("CQChoices") %></td>
+                        <td width="100"><%# Eval("QuesType1") %></td>
+                        <td width="50px">
                             &nbsp;<asp:CheckBox ID="ckbMustAns" runat="server" Checked='<%# Eval("CQIsEnable") %>' />
                         </td>
                         <td width="60px">

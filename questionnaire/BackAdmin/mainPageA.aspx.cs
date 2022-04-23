@@ -71,11 +71,39 @@ namespace questionnaire.BackAdmin
             //this.Response.Redirect(url);
 
 
-        protected void btnPaperCancel_Click(object sender, EventArgs e)
+        protected void btnEditPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
         }
+        
+        // 編輯問卷後送出
+        protected void btnEditPaperSend_Click(object sender, EventArgs e)
+        {
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+            var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
 
+            string title = this.txtTitle.Text;
+            string content = this.txtContent.Text;
+            if (title != null && content != null)
+            {
+                QuesContentsModel model = new QuesContentsModel
+                {
+                    ID = questionnaireID,
+                    TitleID = q.TitleID,
+                    Title = title,
+                    Body = content,
+                    StartDate = q.StartDate,
+                    EndDate = q.EndDate,
+                    IsEnable = q.IsEnable
+                };
+
+                this._mgrQuesContents.UpdateQues(model);
+            }
+        }
+
+
+        #region "編輯問題"
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
         {
@@ -96,37 +124,12 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        // 新增問題至下方列表
+        // 新增問題至DB(編輯模式)
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
-            Session["questionList"] += this.txtQuesAns.Text.Trim() + "&";
-            Session["questionList"] += Convert.ToInt32(this.ddlAnsType.SelectedValue) + "&";
-            Session["questionList"] += (this.ddlAnsType.SelectedItem.ToString()).Trim() + "&";
-            Session["questionList"] += this.ckbMustAns.Checked + "$";
-
-            var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
-            this.rptQuestion.DataSource = quesList;
-            this.rptQuestion.DataBind();
-
-            if (quesList != null || quesList.Count > 0)
-            {
-                // 生成問題編號
-                int i = 1;
-                foreach (RepeaterItem item in this.rptQuestion.Items)
-                {
-                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                    ltlNum.Text = i.ToString();
-                    i++;
-                }
-            }
+            
         }
 
-        protected void btnQuesCancel_Click(object sender, EventArgs e)
-        {
-            Session.Remove("questionList");
-            Response.Redirect("listPageA.aspx#paper");
-        }
 
         // 刪除問題
         protected void imgbtnDelete_Click(object sender, ImageClickEventArgs e)
@@ -151,6 +154,9 @@ namespace questionnaire.BackAdmin
         // 編輯問題
         protected void btnEdit_Command(object sender, CommandEventArgs e)
         {
+            this.btnAdd.Visible = false;
+            this.btnEditCheck.Visible = true;
+
             //取得該問題的資料
             int quesID = Convert.ToInt32(e.CommandName);
             var ques = this._mgrQuesDetail.GetQuesDetail(quesID);
@@ -177,9 +183,28 @@ namespace questionnaire.BackAdmin
             }
         }
 
+        // !!! 有問題(問題編輯後的確認按鈕)
+        protected void btnEditCheck_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        // 取消編輯
+        protected void btnEditCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(Request.RawUrl);
+            this.btnAdd.Visible = true;
+            this.btnEditCheck.Visible = false;
+        }
+
+
+        #endregion
+
         private void BackToListPage()
         {
             this.Response.Redirect("listPageA.aspx", true);
         }
+
+        
     }
 }

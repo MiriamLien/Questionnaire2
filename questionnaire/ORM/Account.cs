@@ -12,6 +12,7 @@ namespace questionnaire.ORM
         public Account()
         {
             AccountChecks = new HashSet<AccountCheck>();
+            UserInfos = new HashSet<UserInfo>();
         }
 
         public Guid AccountID { get; set; }
@@ -33,5 +34,8 @@ namespace questionnaire.ORM
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AccountCheck> AccountChecks { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserInfo> UserInfos { get; set; }
     }
 }

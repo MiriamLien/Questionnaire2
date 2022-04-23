@@ -74,6 +74,8 @@ namespace questionnaire.BackAdmin
             Response.Redirect("listPageA.aspx");
         }
 
+
+        #region "新增問題"
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
         {
@@ -94,7 +96,7 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        // 新增問題
+        // 新增問題(寫入Session)
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
@@ -126,29 +128,35 @@ namespace questionnaire.BackAdmin
             var idText = new Guid(this.hfID.Value);
             var quesContent = this._mgrQuesContents.GetQuesContent(idText);
 
-            var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+            var quesDetailList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
 
-            string qTitle = this.txtQuesTitle.Text.Trim();
-            string qAnser = this.txtQuesAns.Text.Trim();
-            int typeID = Convert.ToInt32(this.ddlAnsType.SelectedValue.Trim());
-            bool mustAns = this.ckbMustAns.Checked;
-
-            if (quesList != null || quesList.Count > 0)
+            if (quesDetailList != null || quesDetailList.Count > 0)
             {
-                QuesDetailModel model = new QuesDetailModel()
+                int i = 1;
+                foreach (RepeaterItem item in this.rptQuestion.Items)
                 {
-                    ID = quesContent.ID,
-                    QuesTitle = qTitle,
-                    QuesChoices = qAnser,
-                    QuesTypeID = typeID,
-                    IsEnable = mustAns
-                };
+                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                    ltlNum.Text = i.ToString();
+                    i++;
+                }
 
-                this._mgrQuesDetail.CreateQuesDetail(model);
+                foreach (var item in quesDetailList)
+                {
+                    QuesDetailModel model = new QuesDetailModel()
+                    {
+                        ID = quesContent.ID,
+                        QuesID = i,
+                        QuesTitle = item.QuesTitle,
+                        QuesChoices = item.QuesChoices,
+                        QuesTypeID = item.QuesTypeID,
+                        IsEnable = item.IsEnable
+                    };
 
-                Session.Remove("questionList");
-                Response.Redirect("listPageA.aspx");
+                    this._mgrQuesDetail.CreateQuesDetail(model);
+                }
             }
+            Session.Remove("questionList");
+            Response.Redirect("listPageA.aspx");
         }
 
         protected void btnQuesCancel_Click(object sender, EventArgs e)
@@ -156,6 +164,7 @@ namespace questionnaire.BackAdmin
             Session.Remove("questionList");
             Response.Redirect("listPageA.aspx");
         }
+        #endregion
 
         private bool CheckInput(out List<string> errorMsgList)
         {

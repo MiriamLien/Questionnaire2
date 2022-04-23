@@ -121,6 +121,7 @@ namespace questionnaire.Managers
                         QuesID = ques.QuesID,
                         ID = ques.ID,
                         QuesTitle = ques.QuesTitle,
+                        QuesChoices = ques.QuesChoices,
                         QuesTypeID = ques.QuesTypeID,
                         IsEnable = ques.IsEnable
                     };

@@ -105,22 +105,22 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.CheckBox ckbPaperEnable;
 
         /// <summary>
-        /// btnPaperCancel 控制項。
+        /// btnEditPaperCancel 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPaperCancel;
+        protected global::System.Web.UI.WebControls.Button btnEditPaperCancel;
 
         /// <summary>
-        /// btnNextTab 控制項。
+        /// btnEditPaperSend 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNextTab;
+        protected global::System.Web.UI.WebControls.Button btnEditPaperSend;
 
         /// <summary>
         /// ltlQuesType 控制項。
@@ -213,6 +213,24 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
+        /// btnEditCheck 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEditCheck;
+
+        /// <summary>
+        /// btnEditCancel 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEditCancel;
+
+        /// <summary>
         /// imgbtnDelete 控制項。
         /// </summary>
         /// <remarks>
@@ -229,24 +247,6 @@ namespace questionnaire.BackAdmin
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptQuestion;
-
-        /// <summary>
-        /// btnQuesCancel 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnQuesCancel;
-
-        /// <summary>
-        /// btnQuesSend 控制項。
-        /// </summary>
-        /// <remarks>
-        /// 自動產生的欄位。
-        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnQuesSend;
 
         /// <summary>
         /// plcInfo1 控制項。

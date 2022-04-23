@@ -18,48 +18,78 @@ namespace questionnaire
             {
                 string str = string.Empty;
                 var quesList = this._mgrQuesContents.GetQuesContentsList(str);
-                this.rptQues.DataSource = quesList;
-                this.rptQues.DataBind();
+                this.rptList.DataSource = quesList;
+                this.rptList.DataBind();
             }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            // 標題搜尋
-            string title = this.txtTitle.Text;
-            var quesList = this._mgrQuesContents.GetQuesContentsList(title);
-            this.rptQues.DataSource = quesList;
-            this.rptQues.DataBind();
-            
-            string url = this.Request.Url.LocalPath + "?Caption=" + this.txtTitle.Text;
-            this.Response.Redirect(url);
+            string titleText = this.txtTitle.Text;
+            string startDT = this.txtStartDate.Text;
+            string endtDT = this.txtEndDate.Text;
 
-            // 日期搜尋
-            var startDT = this.txtStartDate.Text;
-            var endDT = this.txtEndDate.Text;
-            
-            if (string.IsNullOrWhiteSpace(startDT) && 
-                string.IsNullOrWhiteSpace(endDT))
+            if (!string.IsNullOrWhiteSpace(titleText))
             {
-                var dateQuesList = this._mgrQuesContents.GetDateQuesContentsList(Convert.ToDateTime(startDT), Convert.ToDateTime(endDT));
-                this.rptQues.DataSource = dateQuesList;
-                this.rptQues.DataBind();
+                var titleQList = this._mgrQuesContents.GetQuesContentsList(titleText);
 
+                this.rptList.DataSource = titleQList;
+                this.rptList.DataBind();
 
-                string url2 = this.Request.Url.LocalPath + "?StartDate=" + this.txtStartDate.Text + "&EndDate=" + this.txtEndDate.Text;
-                this.Response.Redirect(url2);
+                titleText = string.Empty;
+
+                if (titleQList.Count == 0 || titleQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
             }
-            else if(string.IsNullOrWhiteSpace(startDT))
+            else if (!string.IsNullOrWhiteSpace(startDT))
             {
-                var startDateQuesList = this._mgrQuesContents.GetStartDateQuesContentsList(Convert.ToDateTime(startDT));
-                this.rptQues.DataSource = startDateQuesList;
-                this.rptQues.DataBind();
+                DateTime sDT = Convert.ToDateTime(startDT);
+                var startDTQList = this._mgrQuesContents.GetStartDateQuesContentsList(sDT);
+
+                this.rptList.DataSource = startDTQList;
+                this.rptList.DataBind();
+
+                startDT = string.Empty;
+
+                if (startDTQList.Count == 0 || startDTQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
             }
-            else if (string.IsNullOrWhiteSpace(endDT))
+            else if (!string.IsNullOrWhiteSpace(endtDT))
             {
-                var endDateQuesList = this._mgrQuesContents.GetEndDateQuesContentsList(Convert.ToDateTime(endDT));
-                this.rptQues.DataSource = endDateQuesList;
-                this.rptQues.DataBind();
+                DateTime eDT = Convert.ToDateTime(endtDT);
+                var endDTQList = this._mgrQuesContents.GetEndDateQuesContentsList(eDT);
+
+                this.rptList.DataSource = endDTQList;
+                this.rptList.DataBind();
+
+                endtDT = string.Empty;
+                if (endDTQList.Count == 0 || endDTQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
+            }
+            else if (!string.IsNullOrWhiteSpace(startDT) &&
+                     !string.IsNullOrWhiteSpace(endtDT))
+            {
+                DateTime sDT = Convert.ToDateTime(startDT);
+                DateTime eDT = Convert.ToDateTime(endtDT);
+
+                var bothDTList = this._mgrQuesContents.GetDateQuesContentsList(sDT, eDT);
+
+                this.rptList.DataSource = bothDTList;
+                this.rptList.DataBind();
+
+                startDT = string.Empty;
+                endtDT = string.Empty;
+
+                if (bothDTList.Count == 0 || bothDTList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                }
             }
         }
     }
