@@ -1,14 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BackAdmin/Admin.Master" AutoEventWireup="true" CodeBehind="listPageA.aspx.cs" Inherits="questionnaire.BackAdmin.listPageA" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <!--套用jQuery-->
-    <script src="../JavaScript/jquery-tablepage-1.0.js"></script>
+    <%-- 列表 --%>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
     <style>
         #topDiv {
             border: 2px solid #000000;
-            padding-left: 30px;
-            padding-top: 20px;
             margin-top: 10px;
+            padding: 30px;
         }
     </style>
 </asp:Content>
@@ -30,39 +31,58 @@
     <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" OnClick="ImgBtnAdd_Click" /><br />
     <br />
     <asp:PlaceHolder ID="plcList" runat="server">
-        <table id="tblA" border="1">
-            <tr>
-                <th>編號</th>
-                <th>問卷標題</th>
-                <th>狀態</th>
-                <th>開始時間</th>
-                <th>結束時間</th>
-                <th>觀看統計</th>
-                <th></th>
-            </tr>
-            <asp:Repeater ID="rptList" runat="server">
-                <ItemTemplate>
-                    <tr>
-                        <td width="70px"><%# Eval("TitleID") %></td>
-                        <td width="280px">
-                            &nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a>
-                        </td>
-                        <td width="120px"><%# Eval("strIsEnable") %></td>
-                        <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
-                        <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
-                        <td width="100px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
-                        <td width="80px">
-                            <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />
-                        </td>
-                    </tr>
-                </ItemTemplate>
-            </asp:Repeater>
+        <table id="tblQuestionnaireA" class="display">
+            <thead>
+                <tr>
+                    <th>編號</th>
+                    <th>問卷標題</th>
+                    <th>狀態</th>
+                    <th>開始時間</th>
+                    <th>結束時間</th>
+                    <th>觀看統計</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <asp:Repeater ID="rptList" runat="server">
+                    <ItemTemplate>
+                        <tr>
+                            <td width="70px"><%# Eval("TitleID") %></td>
+                            <td width="280px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a>
+                            </td>
+                            <td width="120px"><%# Eval("strIsEnable") %></td>
+                            <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
+                            <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
+                            <td width="100px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
+                            <td width="80px">
+                                <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </tbody>
         </table>
+        <br />
     </asp:PlaceHolder>
-    <br />
-    <span id='table_pageA'></span>
 
     <script>
-        $("#tblA").tablepage($("#table_pageA"), 10);
+        $(document).ready(function () {
+            $('#tblQuestionnaireA').DataTable({
+                "searching": false,
+                language: {
+                    //url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/zh-HANT.json",
+                    "lengthMenu": "* 點擊加號進入新增；點擊標題進入修改 *"+ "<br/>"+ "<br/>" +"顯示 _MENU_ 項結果"  ,
+                    "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+                    "paginate": {
+                        "first": "第一頁",
+                        "last": "尾頁",
+                        "next": "下一頁",
+                        "previous": "前一頁"
+                    },
+                },
+                "lengthMenu": [[10, 15, 20, "全部"], [10, 15, 20, "全部"]],
+                "order": [[0, "desc"]],
+            });
+        });
     </script>
 </asp:Content>

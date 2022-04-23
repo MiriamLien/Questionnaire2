@@ -89,7 +89,7 @@ namespace questionnaire.Managers
                 using (ContextModel contextModel = new ContextModel())
                 {
                     //建立新問卷
-                    var newCQ = new CommonQue
+                    CommonQue newCQ = new CommonQue
                     {
                         CQID = ques.CQID,
                         CQTitle = ques.CQTitle,

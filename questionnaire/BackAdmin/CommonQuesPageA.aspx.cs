@@ -16,6 +16,13 @@ namespace questionnaire.BackAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 問題類型下拉繫結
+            var QTypeList = this._mgrQuesType.GetQuesTypesList();
+            this.ddlAnsType.DataSource = QTypeList;
+            this.ddlAnsType.DataValueField = "QuesTypeID";
+            this.ddlAnsType.DataTextField = "QuesType1";
+            this.ddlAnsType.DataBind();
+
             var quesList = this._mgrCQ.GetCQsList();
             this.rptCQ.DataSource = quesList;
             this.rptCQ.DataBind();
@@ -32,13 +39,7 @@ namespace questionnaire.BackAdmin
                 }
             }
 
-            //問題類型下拉繫結
-            var QTypeList = this._mgrQuesType.GetQuesTypesList();
-            this.ddlAnsType.DataSource = QTypeList;
-            this.ddlAnsType.DataValueField = "QuesTypeID";
-            this.ddlAnsType.DataTextField = "QuesType1";
-            this.ddlAnsType.DataBind();
-
+            
         }
 
         protected void btnDelete_Command(object sender, CommandEventArgs e)

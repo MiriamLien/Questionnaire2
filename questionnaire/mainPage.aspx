@@ -2,24 +2,30 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        #rptTitle, #userInfoQues, #btnSpace {
+        #userInfoQues, #contentDiv {
+            padding-left: 280px;
+        }
+
+        #btnSpace {
             margin: 30px;
-            text-align: center;
+            text-align: right;
+            padding-right: 200px;
         }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <asp:Repeater runat="server" ID="rptTitle">
-        <ItemTemplate>
-            <h2 align="center"><%# Eval("Title") %></h2>
-            <br />
-            <p align="center">
-                <%# Eval("Body") %>
-            </p>
-            <p align="center">活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！</p>
-        </ItemTemplate>
-    </asp:Repeater>
-    <br />
+    <div id="titleDiv">
+        <h2 align="center">
+            <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Literal></h2>
+        <br />
+    </div>
+    <div id="contentDiv">
+        <h5>
+            <asp:Literal ID="ltlBody" Text='<%# Eval("Body") %>' runat="server"></asp:Literal></h5>
+        <br />
+        <p>* 活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！*</p>
+        <br />
+    </div>
     <div id="userInfoQues">
         <asp:Literal ID="ltlName" runat="server">姓名</asp:Literal>&emsp;&emsp;
         <asp:TextBox ID="txtName" runat="server" Width="350"></asp:TextBox><br />
@@ -34,9 +40,13 @@
         <asp:TextBox ID="txtAge" runat="server" TextMode="Number" min="10" Width="350"></asp:TextBox><br />
         <br />
         <br />
+        <br />
     </div>
-    <asp:Repeater runat="server" ID="rptTitle2">
+    <asp:Repeater runat="server" ID="rptQuestion">
         <ItemTemplate>
+            <p><%# Eval("quesTitle") %></p>
+            <p><%# Eval("QuesChoices") %></p>
+
         </ItemTemplate>
     </asp:Repeater>
     <div id="btnSpace">

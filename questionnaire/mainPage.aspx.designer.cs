@@ -15,13 +15,22 @@ namespace questionnaire
     {
 
         /// <summary>
-        /// rptTitle 控制項。
+        /// ltlTitle 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptTitle;
+        protected global::System.Web.UI.WebControls.Literal ltlTitle;
+
+        /// <summary>
+        /// ltlBody 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlBody;
 
         /// <summary>
         /// ltlName 控制項。
@@ -96,13 +105,13 @@ namespace questionnaire
         protected global::System.Web.UI.WebControls.TextBox txtAge;
 
         /// <summary>
-        /// rptTitle2 控制項。
+        /// rptQuestion 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptTitle2;
+        protected global::System.Web.UI.WebControls.Repeater rptQuestion;
 
         /// <summary>
         /// btnCancel 控制項。

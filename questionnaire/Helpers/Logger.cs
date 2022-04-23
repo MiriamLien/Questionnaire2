@@ -8,7 +8,7 @@ namespace questionnaire.Helpers
 {
     public class Logger
     {
-        private const string _savePath = "D:\\ccc\\Logs\\log.log";
+        private const string _savePath = "F:\\ccc\\Logs\\log.log";
 
         /// <summary> 紀錄錯誤 </summary>
         /// <param name="moduleName"></param>

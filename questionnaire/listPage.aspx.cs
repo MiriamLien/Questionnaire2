@@ -20,6 +20,13 @@ namespace questionnaire
                 var quesList = this._mgrQuesContents.GetQuesContentsList(str);
                 this.rptList.DataSource = quesList;
                 this.rptList.DataBind();
+
+                string idText = Request.QueryString["ID"];
+                Guid id = new Guid(idText);
+                var q = this._mgrQuesContents.GetQuesContent(id);
+                if (q.IsEnable == false)
+                {
+                }
             }
         }
 

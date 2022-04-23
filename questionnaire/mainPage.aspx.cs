@@ -13,15 +13,21 @@ namespace questionnaire
     {
         //private AccountManager _mgrAccount = new AccountManager();
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
+        private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                string str = string.Empty;
-                var quesList = this._mgrQuesContents.GetQuesContentsList(str);
-                this.rptTitle.DataSource = quesList;
-                this.rptTitle.DataBind();
+                string idText = Request.QueryString["ID"];
+                Guid questionnaireID = Guid.Parse(idText);
+                var quesList = this._mgrQuesContents.GetQuesContent(questionnaireID);
+                this.ltlTitle.Text = quesList.Title;
+                this.ltlBody.Text = quesList.Body;
+
+                var question = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                this.rptQuestion.DataSource = question;
+                this.rptQuestion.DataBind();
             }
         }
 
