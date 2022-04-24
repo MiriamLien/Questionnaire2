@@ -16,7 +16,7 @@ namespace questionnaire.ORM
         }
 
         [Key]
-        public int UserID { get; set; }
+        public Guid UserID { get; set; }
 
         public Guid? AccountID { get; set; }
 

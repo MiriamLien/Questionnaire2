@@ -38,11 +38,6 @@ namespace questionnaire.ORM
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Content>()
-                .HasMany(e => e.AccountChecks)
-                .WithRequired(e => e.Content)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Content>()
                 .HasMany(e => e.QuesDetails)
                 .WithRequired(e => e.Content)
                 .WillCascadeOnDelete(false);

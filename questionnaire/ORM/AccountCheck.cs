@@ -18,7 +18,5 @@ namespace questionnaire.ORM
         public bool Checks { get; set; }
 
         public virtual Account Account { get; set; }
-
-        public virtual Content Content { get; set; }
     }
 }
