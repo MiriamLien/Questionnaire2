@@ -52,18 +52,21 @@
                             <tr>
                                 <td width="50px">&nbsp;<%# Eval("TitleID") %></td>
                                 <td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">&nbsp;<%# Eval("Title") %></a></td>
+                                <%--<td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">
+                                    &nbsp;<asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>--%>
                                 <td width="100px">&nbsp;<%# Eval("strIsEnable") %></td>
                                 <td width="130px">&nbsp;<%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
                                 <td width="130px">&nbsp;<%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
-                                <td width="80px"><a href="#">前往</a></td>
+                                <td width="80px"><a href="statisticPage.aspx?ID=<%# Eval("ID") %>">前往</a></td>
                             </tr>
                         </ItemTemplate>
                     </asp:Repeater>
                 </tbody>
             </table>
-        <br />
+            <br />
         </asp:PlaceHolder>
     </div>
+
     <script>
         $(document).ready(function () {
             $('#tblQuestionnaire').DataTable({

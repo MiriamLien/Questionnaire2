@@ -38,8 +38,6 @@ namespace questionnaire.BackAdmin
                     i++;
                 }
             }
-
-            
         }
 
         protected void btnDelete_Command(object sender, CommandEventArgs e)
@@ -54,7 +52,6 @@ namespace questionnaire.BackAdmin
             this.plcEditCQ.Visible = true;
             int id = Convert.ToInt32(e.CommandName);
             var cq = this._mgrCQ.GetCQs(id);
-
 
             this.txtEditNum.Text = cq.CQID.ToString();
             this.txtEditQues.Text = cq.CQTitle.ToString();
@@ -98,7 +95,22 @@ namespace questionnaire.BackAdmin
         protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
         {
             this.plcAddCQ.Visible = true;
+            this.ImgBtnAdd.Visible = false;
+            this.ltlAddMsg.Visible = false;
 
+
+            // 問題類型下拉繫結
+            var QTypeList = this._mgrQuesType.GetQuesTypesList();
+            this.ddlAddAnsType.DataSource = QTypeList;
+            this.ddlAddAnsType.DataValueField = "QuesTypeID";
+            this.ddlAddAnsType.DataTextField = "QuesType1";
+            this.ddlAddAnsType.DataBind();
+
+        }
+
+        //新增問題的儲存按鈕
+        protected void btnSaveAddCQ_Click(object sender, EventArgs e)
+        {
             string title = this.txtAddQues.Text.Trim();
             string ans = this.txtAddAns.Text.Trim();
             bool mustAns = this.ckbAddCQMustAns.Checked;
@@ -115,13 +127,20 @@ namespace questionnaire.BackAdmin
             {
                 CQID = i,
                 CQTitle = title,
-                QuesTypeID = this.ddlAnsType.SelectedIndex,
+                QuesTypeID = Convert.ToInt32(this.ddlAddAnsType.SelectedValue),
                 CQChoices = ans,
                 CQIsEnable = mustAns
             };
 
             this._mgrCQ.CreateCQ(newCQ);
             this.plcAddCQ.Visible = false;
+            this.ImgBtnAdd.Visible = true;
+            Response.Redirect(Request.RawUrl);
+        }
+
+        protected void btnCancelAddCQ_Click(object sender, EventArgs e)
+        {
+            this.ImgBtnAdd.Visible = true;
         }
     }
 }

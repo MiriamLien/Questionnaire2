@@ -20,15 +20,22 @@ namespace questionnaire
                 var quesList = this._mgrQuesContents.GetQuesContentsList(str);
                 this.rptList.DataSource = quesList;
                 this.rptList.DataBind();
-
-                string idText = Request.QueryString["ID"];
-                Guid id = new Guid(idText);
-                var q = this._mgrQuesContents.GetQuesContent(id);
-                if (q.IsEnable == false)
-                {
-                }
             }
         }
+
+        //string idText = Request.QueryString["ID"];
+        //Guid id = new Guid(idText);
+        //var q = this._mgrQuesContents.GetQuesContent(id);
+
+        //foreach (RepeaterItem item in rptList.Items)
+        //{
+        //    if (q.IsEnable == false)
+        //    {
+        //        Label ltlWarningTitle = item.FindControl("ltlWarningTitle") as Label;
+
+        //        ltlWarningTitle.Attributes.Add("style", "background-color:Green;");
+        //    }
+        //}
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {

@@ -154,8 +154,8 @@ namespace questionnaire.BackAdmin
         // 編輯問題
         protected void btnEdit_Command(object sender, CommandEventArgs e)
         {
-            this.btnAdd.Visible = false;
-            this.btnEditCheck.Visible = true;
+            this.plcQues.Visible = false;
+            this.plcEditQues.Visible = true;
 
             //取得該問題的資料
             int quesID = Convert.ToInt32(e.CommandName);
@@ -170,16 +170,16 @@ namespace questionnaire.BackAdmin
 
             if (!hasChoise)
             {
-                this.txtQuesTitle.Text = ques.QuesTitle.ToString();
-                this.ddlAnsType.SelectedValue = ques.QuesTypeID.ToString();
-                this.ckbMustAns.Checked = ques.IsEnable;
+                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
+                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
+                this.ckbEditMustAns.Checked = ques.IsEnable;
             }
             else
             {
-                this.txtQuesTitle.Text = ques.QuesTitle.ToString();
-                this.txtQuesAns.Text = ques.QuesChoices.ToString();
-                this.ddlAnsType.SelectedValue = ques.QuesTypeID.ToString();
-                this.ckbMustAns.Checked = ques.IsEnable;
+                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
+                this.txtEditQuesAns.Text = ques.QuesChoices.ToString();
+                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
+                this.ckbEditMustAns.Checked = ques.IsEnable;
             }
         }
 
@@ -204,7 +204,5 @@ namespace questionnaire.BackAdmin
         {
             this.Response.Redirect("listPageA.aspx", true);
         }
-
-        
     }
 }

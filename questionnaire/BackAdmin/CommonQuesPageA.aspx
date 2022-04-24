@@ -36,15 +36,14 @@
         <h4>新增</h4>
         <div>
             <p>問題：<asp:TextBox ID="txtAddQues" runat="server"></asp:TextBox></p>
-            <br />
             <p>回答：<asp:TextBox ID="txtAddAns" runat="server"></asp:TextBox></p>
             <p>類型：<asp:DropDownList ID="ddlAddAnsType" runat="server"></asp:DropDownList></p>
             <p>必填：<asp:CheckBox ID="ckbAddCQMustAns" runat="server" /></p>
         </div>
         <div>
-            <asp:Button ID="btnSaveAddCQ" runat="server" CssClass="nes-pointer" Text="儲存" />
+            <asp:Button ID="btnSaveAddCQ" runat="server" CssClass="nes-pointer" Text="儲存" OnClick="btnSaveAddCQ_Click" />
             &nbsp;
-                <asp:Button ID="btnCancelAddCQ" runat="server" CssClass="nes-pointer" Text="取消" />
+                <asp:Button ID="btnCancelAddCQ" runat="server" CssClass="nes-pointer" Text="取消" OnClick="btnCancelAddCQ_Click" />
         </div>
     </asp:PlaceHolder>
 
@@ -63,7 +62,8 @@
                 <asp:Button ID="btnCancelEditCQ" runat="server" CssClass="nes-pointer" Text="取消" OnClick="btnCancelEditCQ_Click" />
         </div>
     </asp:PlaceHolder>
-
+    <br />
+    <asp:Literal ID="ltlAddMsg" runat="server">* 點擊加號進入新增 *</asp:Literal><br />
     <br />
     <asp:PlaceHolder ID="plcCQ" runat="server">
         <table id="tblCQ" class="display">
@@ -81,10 +81,10 @@
                 <asp:Repeater ID="rptCQ" runat="server">
                     <ItemTemplate>
                         <tr>
-                            <td width="60px">&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
-                            <td width="400px"><%# Eval("CQTitle") %></td>
-                            <td width="380px"><%# Eval("CQChoices") %></td>
-                            <td width="50px">&nbsp;<asp:CheckBox ID="ckbMustAns" runat="server" Checked='<%# Eval("CQIsEnable") %>' />
+                            <td width="60px">&emsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
+                            <td width="380px"><%# Eval("CQTitle") %></td>
+                            <td width="350px"><%# Eval("CQChoices") %></td>
+                            <td width="80px">&emsp;<asp:CheckBox ID="ckbMustAns" runat="server" Checked='<%# Eval("CQIsEnable") %>' />
                             </td>
                             <td width="60px">
                                 <asp:Button ID="btnEdit" runat="server" CommandName='<%# Eval("CQID") %>' OnCommand="btnEdit_Command" Text="編輯" />
@@ -105,7 +105,7 @@
             $('#tblCQ').DataTable({
                 "searching": false,
                 language: {
-                    "lengthMenu": "* 點擊加號進入新增 *" + "<br/>" + "<br/>" + "顯示 _MENU_ 項結果",
+                    "lengthMenu": "顯示 _MENU_ 項結果",
                     "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
                     "paginate": {
                         "first": "第一頁",

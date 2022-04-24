@@ -71,7 +71,7 @@
                 "searching": false,
                 language: {
                     //url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/zh-HANT.json",
-                    "lengthMenu": "* 點擊加號進入新增；點擊標題進入修改 *"+ "<br/>"+ "<br/>" +"顯示 _MENU_ 項結果"  ,
+                    "lengthMenu": "* 點擊加號進入新增；點擊標題進入修改 *" + "<br/>" + "<br/>" + "顯示 _MENU_ 項結果",
                     "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
                     "paginate": {
                         "first": "第一頁",

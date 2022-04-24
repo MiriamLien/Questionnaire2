@@ -62,6 +62,7 @@
         </div>
 
         <div id="question" class="tab-pane fade">
+            <asp:PlaceHolder ID="plcQues" runat="server">
             <br /><p></p>
             <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
             <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
@@ -78,8 +79,23 @@
             <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" />
+            </asp:PlaceHolder>
+
+            <%--編輯問題--%>
+            <asp:PlaceHolder ID="plcEditQues" runat="server" Visible="false">
+                <asp:Literal ID="ltlEditQuesTitle" runat="server">問題</asp:Literal>
+            <asp:TextBox ID="txtEditQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
+            <asp:DropDownList ID="ddlEditAnsType" runat="server"></asp:DropDownList>&nbsp;
+            <asp:CheckBox ID="ckbEditMustAns" runat="server" Text="必填" />
+            <br />
+            <br />
+            <asp:Literal ID="ltlEditQuesAns" runat="server">回答</asp:Literal>
+            <asp:TextBox ID="txtEditQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+            <span>﹝多個答案以；分隔﹞</span>&emsp;
+            <asp:Button ID="btnEditAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" OnClick="btnEditCheck_Click" Visible ="false" />
             <asp:Button ID="btnEditCancel" runat="server" Text="取消" OnClick="btnEditCancel_Click" />
+                </asp:PlaceHolder>
             <br />
             <br />
             <br />

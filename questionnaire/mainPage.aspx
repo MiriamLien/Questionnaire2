@@ -23,28 +23,46 @@
         <h5>
             <asp:Literal ID="ltlBody" Text='<%# Eval("Body") %>' runat="server"></asp:Literal></h5>
         <br />
-        <p>* 活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！*</p>
+        <p>* 活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！（僅接受Gmail信箱） *</p>
         <br />
     </div>
     <div id="userInfoQues">
         <asp:Literal ID="ltlName" runat="server">姓名</asp:Literal>&emsp;&emsp;
         <asp:TextBox ID="txtName" runat="server" Width="350"></asp:TextBox><br />
+        <h6>
+            <asp:Label ID="lblMsgName" runat="server" Visible="false" ForeColor="Red">此欄位為必填。</asp:Label>
+        </h6>
         <br />
         <asp:Literal ID="ltlPhone" runat="server">手機</asp:Literal>&emsp;&emsp;
         <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone" Width="350"></asp:TextBox><br />
+        <h6>
+        <asp:Label ID="lblMsgPhone" runat="server" Visible="false" ForeColor="Red">此欄位為必填。</asp:Label><br />
+        <asp:Label ID="lblMsgPhone2" runat="server" Text="Label" Visible="false" ForeColor="Red">手機輸入不正確，請輸入09開頭、共十位數的號碼。</asp:Label>
+            </h6>
         <br />
         <asp:Literal ID="ltlEmail" runat="server">Email </asp:Literal>&emsp;&nbsp;
         <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" Width="350"></asp:TextBox><br />
+        <h6>
+            <asp:Label ID="lblMsgEmail" runat="server" Visible="false" ForeColor="Red">此欄位為必填。</asp:Label>
+            <asp:Label ID="lblMsgEmail2" runat="server" Text="Label" Visible="false" ForeColor="Red">信箱格式輸入不正確</asp:Label>
+            <asp:Label ID="Label6" runat="server" Text="Label" Visible="false" ForeColor="Red"></asp:Label>
+        </h6>
         <br />
         <asp:Literal ID="ltlAge" runat="server">年齡</asp:Literal>&emsp;&emsp;
         <asp:TextBox ID="txtAge" runat="server" TextMode="Number" min="10" Width="350"></asp:TextBox><br />
+        <h6>
+            <asp:Label ID="lblMsgAge" runat="server" Visible="false" ForeColor="Red">此欄位為必填。</asp:Label>
+        </h6>
         <br />
         <br />
         <br />
     </div>
     <asp:Repeater runat="server" ID="rptQuestion">
         <ItemTemplate>
-            <p><%# Eval("quesTitle") %></p>
+            <p>
+                <asp:Literal ID="ltlNum" runat="server"></asp:Literal>
+                <%# Eval("quesTitle") %>
+            </p>
             <p><%# Eval("QuesChoices") %></p>
 
         </ItemTemplate>
