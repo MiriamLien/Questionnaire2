@@ -19,7 +19,7 @@ namespace questionnaire
         protected void Page_Load(object sender, EventArgs e)
         {
             int i = 1;
-
+            // 沒有ID 執行這頁會出錯!!!!!
             if (!IsPostBack)
             {
                 string idText = Request.QueryString["ID"];
@@ -55,7 +55,7 @@ namespace questionnaire
                 this.txtAge.Text = string.Empty;
 
                 // 取得問題內容
-                var question = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                var question = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
                 this.rptQuestion.DataSource = question;
                 this.rptQuestion.DataBind();
 
@@ -66,8 +66,6 @@ namespace questionnaire
                     ltlNum.Text = i.ToString();
                     i++;
                 }
-                
-
             }
         }
 

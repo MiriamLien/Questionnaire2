@@ -20,16 +20,17 @@
         <h3>常用問題管理</h3>
         <p></p>
     </div>
+    <asp:PlaceHolder ID="plcCQA" runat="server">
     <div id="topDiv">
         <p></p>
-        <asp:Literal ID="ltlTitle" runat="server">問卷標題</asp:Literal>
-        <asp:TextBox ID="txtTitle" runat="server"></asp:TextBox>
-        &nbsp;
+        <asp:Literal ID="ltlTitle" runat="server">問卷標題</asp:Literal>&nbsp;
+        <asp:TextBox ID="txtTitle" runat="server"></asp:TextBox>&nbsp;
         <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&emsp;
         &emsp;&emsp;
         <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
     </div>
     <hr />
+        </asp:PlaceHolder>
     <asp:ImageButton ID="ImgBtnAdd" runat="server" ImageUrl="../images/addICON.png" Width="30" OnClick="ImgBtnAdd_Click" />
     <br />
     <asp:PlaceHolder ID="plcAddCQ" runat="server" Visible="false">
@@ -48,7 +49,7 @@
     </asp:PlaceHolder>
 
     <asp:PlaceHolder ID="plcEditCQ" runat="server" Visible="false">
-        <h4>變更</h4>
+        <h4>編輯</h4>
         <div>
             <p>編號：<asp:TextBox ID="txtEditNum" runat="server" Enabled="false"></asp:TextBox></p>
             <p>問題：<asp:TextBox ID="txtEditQues" runat="server"></asp:TextBox></p>

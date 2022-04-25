@@ -49,11 +49,12 @@
                 <tbody>
                     <asp:Repeater ID="rptList" runat="server">
                         <ItemTemplate>
+                            <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
                             <tr>
                                 <td width="50px">&nbsp;<%# Eval("TitleID") %></td>
-                                <td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">&nbsp;<%# Eval("Title") %></a></td>
-                                <%--<td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">
-                                    &nbsp;<asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>--%>
+                                <%--<td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">&nbsp;<%# Eval("Title") %></a></td>--%>
+                                <td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">
+                                    <asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>
                                 <td width="100px">&nbsp;<%# Eval("strIsEnable") %></td>
                                 <td width="130px">&nbsp;<%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
                                 <td width="130px">&nbsp;<%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>

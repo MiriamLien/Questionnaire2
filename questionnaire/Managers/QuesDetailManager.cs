@@ -15,7 +15,7 @@ namespace questionnaire.Managers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public List<QuesAndTypeModel> GetQuesDetailList(Guid id)
+        public List<QuesDetail> GetQuesDetailList(Guid id)
         {
             string idText = id.ToString();
 
@@ -24,6 +24,47 @@ namespace questionnaire.Managers
                 using (ContextModel contextModel = new ContextModel())
                 {
                     //取得加查詢條件的問題
+                    IQueryable<QuesDetail> query;
+                    if (!string.IsNullOrWhiteSpace(idText))
+                    {
+                        query =
+                            from item in contextModel.QuesDetails
+                            where item.ID == id
+                            select item;
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.QuesDetails
+                            select item;
+                    }
+
+                    //組合，並取回結果
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("QuesDetailManager.GetQuesDetailList", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 輸入問卷ID取得問題(含答案類型)的清單
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<QuesAndTypeModel> GetQuesDetailAndTypeList(Guid id)
+        {
+            string idText = id.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    // 取得加查詢條件的問題
                     IQueryable<QuesAndTypeModel> query;
                     if (!string.IsNullOrWhiteSpace(idText))
                     {
@@ -57,7 +98,7 @@ namespace questionnaire.Managers
                             };
                     }
 
-                    //組合，並取回結果
+                    // 組合，並取回結果
                     var list = query.ToList();
                     return list;
                 }
@@ -118,7 +159,7 @@ namespace questionnaire.Managers
                     //建立新問題
                     var newQuesDetail = new QuesDetail
                     {
-                        QuesID = ques.QuesID,
+                        //QuesID = ques.QuesID,
                         ID = ques.ID,
                         QuesTitle = ques.QuesTitle,
                         QuesChoices = ques.QuesChoices,
@@ -152,7 +193,7 @@ namespace questionnaire.Managers
                 using (ContextModel contextModel = new ContextModel())
                 {
                     //組查詢條件
-                    var query = contextModel.QuesDetails.Where(item => item.ID == ques.ID);
+                    var query = contextModel.QuesDetails.Where(item => item.QuesID == ques.QuesID);
 
                     //取得資料
                     var updateQues = query.FirstOrDefault();
@@ -163,6 +204,7 @@ namespace questionnaire.Managers
                         updateQues.QuesID = ques.QuesID;
                         updateQues.ID = ques.ID;
                         updateQues.QuesTitle = ques.QuesTitle;
+                        updateQues.QuesChoices = ques.QuesChoices;
                         updateQues.QuesTypeID = ques.QuesTypeID;
                         updateQues.IsEnable = ques.IsEnable;
                     }

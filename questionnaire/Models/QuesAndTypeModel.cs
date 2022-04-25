@@ -7,6 +7,8 @@ namespace questionnaire.Models
 {
     public class QuesAndTypeModel
     {
+        public Guid ID { get; set; }
+
         public int QuesID { get; set; }
 
         public string QuesTitle { get; set; }

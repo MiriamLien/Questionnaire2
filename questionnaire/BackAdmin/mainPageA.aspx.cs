@@ -43,7 +43,7 @@ namespace questionnaire.BackAdmin
                 this.ckbPaperEnable.Checked = QList.IsEnable;
 
                 // 帶入問題內容
-                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
                 this.rptQuestion.DataSource = questionList;
                 this.rptQuestion.DataBind();               
 
@@ -111,7 +111,7 @@ namespace questionnaire.BackAdmin
                 this._mgrQuesContents.UpdateQues(model);
             }
             
-            Response.Redirect($"listPageA.aspx?ID={questionnaireID}");
+            Response.Redirect($"mainPageA.aspx?ID={questionnaireID}");
         }
         #endregion
 
@@ -181,13 +181,16 @@ namespace questionnaire.BackAdmin
         // 新增問題至DB(編輯模式)
         protected void btnAdd_Command(object sender, CommandEventArgs e)
         {
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+            var ques = this._mgrQuesContents.GetQuesContent(questionnaireID);
+
             string q = this.txtQuesTitle.Text.Trim();
             string a = this.txtQuesAns.Text.Trim();
 
             QuesDetailModel model = new QuesDetailModel()
             {
-                ID = id,
-                QuesID = Convert.ToInt32(btnEditCheck.CommandName),
+                ID = ques.ID,
                 QuesTitle = q,
                 QuesChoices = a,
                 QuesTypeID = Convert.ToInt32(this.ddlAnsType.SelectedValue),
@@ -208,7 +211,8 @@ namespace questionnaire.BackAdmin
 
             QuesDetailModel model = new QuesDetailModel()
             {
-                ID = questionnaireID,
+                ID = item.ID,
+                QuesID = item.QuesID,
                 QuesTitle = this.txtEditQuesTitle.Text,
                 QuesChoices = this.txtEditQuesAns.Text,
                 QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
@@ -216,7 +220,7 @@ namespace questionnaire.BackAdmin
             };
 
             this._mgrQuesDetail.UpdateQuesDetail(model);
-            Response.Redirect(Request.RawUrl + "?ID=" + questionnaireID);
+            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
 
         // 取消編輯
@@ -231,11 +235,12 @@ namespace questionnaire.BackAdmin
         // 刪除問題
         protected void imgbtnDelete_Click(object sender, ImageClickEventArgs e)
         {
+            string idText = Request.QueryString["ID"];
+
             foreach (RepeaterItem item in this.rptQuestion.Items)
             {
-                string idText = Request.QueryString["ID"];
                 HiddenField hfID = item.FindControl("hfID") as HiddenField;
-                hfID.Value = idText;
+                //hfID.Value = idText;
 
                 CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
                 Button btnEdit = item.FindControl("btnEdit") as Button;
@@ -243,13 +248,10 @@ namespace questionnaire.BackAdmin
                 if (ckbForDel.Checked && Int32.TryParse(hfID.Value, out int id))
                 {
                     this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
-                    Response.Redirect(Request.RawUrl + "?ID=" + id);
-                }
-                else
-                {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('請勾選欲刪除的問題。');location.href='mainPageA.aspx';", true);
                 }
             }
+
+            Response.Redirect("mainPageA.aspx?ID=" + idText);
         }
 
         private void BackToListPage()

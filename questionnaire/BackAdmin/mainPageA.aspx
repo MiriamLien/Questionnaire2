@@ -99,6 +99,7 @@
             <br />
             <br />
             <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除嗎？')" /><br />
+            
             <table border="1">
                 <tr>
                     <th></th>
@@ -110,6 +111,7 @@
                 </tr>
                 <asp:Repeater ID="rptQuestion" runat="server">
                     <ItemTemplate>
+                        <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("QuesID") %>' />
                         <tr>
                             <td width="50">&emsp;<asp:CheckBox ID="ckbForDel" runat="server" />
                             </td>

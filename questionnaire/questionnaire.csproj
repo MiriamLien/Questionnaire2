@@ -204,6 +204,9 @@
     <Compile Include="Models\QuesContentsModel.cs" />
     <Compile Include="Models\QuesDetailModel.cs" />
     <Compile Include="Models\QuesTypeModel.cs" />
+    <Compile Include="Models\StatisticModel.cs" />
+    <Compile Include="Models\UserInfoModel.cs" />
+    <Compile Include="Models\UserQuesDetail.cs" />
     <Compile Include="ORM\Account.cs" />
     <Compile Include="ORM\AccountCheck.cs" />
     <Compile Include="ORM\CommonQue.cs" />

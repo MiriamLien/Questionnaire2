@@ -45,6 +45,7 @@ namespace questionnaire.BackAdmin
         {
             this.plcAddCQ.Visible = true;
             this.ImgBtnAdd.Visible = false;
+            this.plcCQA.Visible = false;
             this.ltlAddMsg.Visible = false;
 
             // 問題類型下拉繫結
@@ -83,12 +84,18 @@ namespace questionnaire.BackAdmin
             this._mgrCQ.CreateCQ(newCQ);
             this.plcAddCQ.Visible = false;
             this.ImgBtnAdd.Visible = true;
+            this.plcCQA.Visible = true;
+            this.plcCQA.Visible = true;
+            this.ltlAddMsg.Visible = true;
             Response.Redirect(Request.RawUrl);
         }
 
         protected void btnCancelAddCQ_Click(object sender, EventArgs e)
         {
+            this.plcAddCQ.Visible = false;
             this.ImgBtnAdd.Visible = true;
+            this.plcCQA.Visible = true;
+            this.ltlAddMsg.Visible = true;
         }
         #endregion
 
