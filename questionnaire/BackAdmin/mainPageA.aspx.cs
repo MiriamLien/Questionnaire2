@@ -45,8 +45,7 @@ namespace questionnaire.BackAdmin
                 // 帶入問題內容
                 var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
                 this.rptQuestion.DataSource = questionList;
-                this.rptQuestion.DataBind();
-
+                this.rptQuestion.DataBind();               
 
                 //問題類型下拉繫結
                 var QTypeList = this._mgrQuesType.GetQuesTypesList();
@@ -63,19 +62,30 @@ namespace questionnaire.BackAdmin
                 this.ddlQuesType.DataBind();
 
                 this.ddlQuesType.Items.Insert(0, new ListItem("自訂問題", "0"));
-            }
 
+                if (questionList != null || questionList.Count > 0)
+                {
+                    // 生成問題編號
+                    int i = 1;
+                    foreach (RepeaterItem item in this.rptQuestion.Items)
+                    {
+                        Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                        ltlNum.Text = i.ToString();
+                        i++;
+                    }
+                }
+            }
         }
 
-            //string url = this.Request.Url.LocalPath + "?ID=" + idText;
-            //this.Response.Redirect(url);
+        //string url = this.Request.Url.LocalPath + "?ID=" + idText;
+        //this.Response.Redirect(url);
 
-
+        #region "問卷"
         protected void btnEditPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
         }
-        
+
         // 編輯問卷後送出
         protected void btnEditPaperSend_Click(object sender, EventArgs e)
         {
@@ -83,8 +93,8 @@ namespace questionnaire.BackAdmin
             Guid questionnaireID = Guid.Parse(idText);
             var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
 
-            string title = this.txtTitle.Text;
-            string content = this.txtContent.Text;
+            string title = this.txtTitle.Text.Trim();
+            string content = this.txtContent.Text.Trim();
             if (title != null && content != null)
             {
                 QuesContentsModel model = new QuesContentsModel
@@ -100,10 +110,54 @@ namespace questionnaire.BackAdmin
 
                 this._mgrQuesContents.UpdateQues(model);
             }
+            
+            Response.Redirect($"listPageA.aspx?ID={questionnaireID}");
         }
+        #endregion
 
 
         #region "編輯問題"
+        // (問題)點擊編輯鈕
+        protected void btnEdit_Command(object sender, CommandEventArgs e)
+        {
+            this.plcQues.Visible = false;
+            this.plcEditQues.Visible = true;
+
+            //取得該問題的資料
+            int quesID = Convert.ToInt32(e.CommandName);
+            var ques = this._mgrQuesDetail.GetQuesDetail(quesID);
+
+            //問題類型下拉繫結
+            var QTypeList = this._mgrQuesType.GetQuesTypesList();
+            this.ddlEditAnsType.DataSource = QTypeList;
+            this.ddlEditAnsType.DataValueField = "QuesTypeID";
+            this.ddlEditAnsType.DataTextField = "QuesType1";
+            this.ddlEditAnsType.DataBind();
+
+            //判斷該問題有無答案
+            bool hasChoise;
+            if (ques.QuesTypeID == 2 || ques.QuesTypeID == 3)
+                hasChoise = true;
+            else
+                hasChoise = false;
+
+            if (!hasChoise)
+            {
+                this.btnEditCheck.CommandName = ques.QuesID.ToString();
+                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
+                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
+                this.ckbEditMustAns.Checked = ques.IsEnable;
+            }
+            else
+            {
+                this.btnEditCheck.CommandName = ques.QuesID.ToString();
+                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
+                this.txtEditQuesAns.Text = ques.QuesChoices.ToString();
+                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
+                this.ckbEditMustAns.Checked = ques.IsEnable;
+            }
+        }
+
         // 把問題填入TextBox裡
         protected void btnUse_Click(object sender, EventArgs e)
         {
@@ -125,11 +179,54 @@ namespace questionnaire.BackAdmin
         }
 
         // 新增問題至DB(編輯模式)
-        protected void btnAdd_Click(object sender, EventArgs e)
+        protected void btnAdd_Command(object sender, CommandEventArgs e)
         {
-            
+            string q = this.txtQuesTitle.Text.Trim();
+            string a = this.txtQuesAns.Text.Trim();
+
+            QuesDetailModel model = new QuesDetailModel()
+            {
+                ID = id,
+                QuesID = Convert.ToInt32(btnEditCheck.CommandName),
+                QuesTitle = q,
+                QuesChoices = a,
+                QuesTypeID = Convert.ToInt32(this.ddlAnsType.SelectedValue),
+                IsEnable = this.ckbMustAns.Checked
+            };
+            this._mgrQuesDetail.CreateQuesDetail(model);
+            Response.Redirect(Request.RawUrl);
         }
 
+        // 問題編輯好後的確認鈕
+        protected void btnEditCheck_Command(object sender, CommandEventArgs e)
+        {
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+
+            int quesid = Convert.ToInt32(this.btnEditCheck.CommandName);
+            var item = this._mgrQuesDetail.GetQuesDetail(quesid);
+
+            QuesDetailModel model = new QuesDetailModel()
+            {
+                ID = questionnaireID,
+                QuesTitle = this.txtEditQuesTitle.Text,
+                QuesChoices = this.txtEditQuesAns.Text,
+                QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
+                IsEnable = this.ckbEditMustAns.Checked
+            };
+
+            this._mgrQuesDetail.UpdateQuesDetail(model);
+            Response.Redirect(Request.RawUrl + "?ID=" + questionnaireID);
+        }
+
+        // 取消編輯
+        protected void btnEditCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect(Request.RawUrl);
+            this.plcQues.Visible = true;
+            this.plcEditQues.Visible = false;
+        }
+        #endregion
 
         // 刪除問題
         protected void imgbtnDelete_Click(object sender, ImageClickEventArgs e)
@@ -148,61 +245,18 @@ namespace questionnaire.BackAdmin
                     this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
                     Response.Redirect(Request.RawUrl + "?ID=" + id);
                 }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('請勾選欲刪除的問題。');location.href='mainPageA.aspx';", true);
+                }
             }
         }
-
-        // 編輯問題
-        protected void btnEdit_Command(object sender, CommandEventArgs e)
-        {
-            this.plcQues.Visible = false;
-            this.plcEditQues.Visible = true;
-
-            //取得該問題的資料
-            int quesID = Convert.ToInt32(e.CommandName);
-            var ques = this._mgrQuesDetail.GetQuesDetail(quesID);
-
-            //判斷該問題有無答案
-            bool hasChoise;
-            if (ques.QuesTypeID == 2 || ques.QuesTypeID == 3)
-                hasChoise = true;
-            else
-                hasChoise = false;
-
-            if (!hasChoise)
-            {
-                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
-                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
-                this.ckbEditMustAns.Checked = ques.IsEnable;
-            }
-            else
-            {
-                this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
-                this.txtEditQuesAns.Text = ques.QuesChoices.ToString();
-                this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
-                this.ckbEditMustAns.Checked = ques.IsEnable;
-            }
-        }
-
-        // !!! 有問題(問題編輯後的確認按鈕)
-        protected void btnEditCheck_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        // 取消編輯
-        protected void btnEditCancel_Click(object sender, EventArgs e)
-        {
-            Response.Redirect(Request.RawUrl);
-            this.btnAdd.Visible = true;
-            this.btnEditCheck.Visible = false;
-        }
-
-
-        #endregion
 
         private void BackToListPage()
         {
             this.Response.Redirect("listPageA.aspx", true);
         }
+
+        
     }
 }

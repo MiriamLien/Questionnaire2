@@ -57,9 +57,9 @@
             <p>必填：<asp:CheckBox ID="ckbEditCQMustAns" runat="server" /></p>
         </div>
         <div>
-            <asp:Button ID="btnSaveEditCQ" runat="server" CssClass="nes-pointer" Text="儲存" OnClick="btnSaveEditCQ_Click" />
+            <asp:Button ID="btnSaveEditCQ" runat="server" Text="儲存" OnClick="btnSaveEditCQ_Click" />
             &nbsp;
-                <asp:Button ID="btnCancelEditCQ" runat="server" CssClass="nes-pointer" Text="取消" OnClick="btnCancelEditCQ_Click" />
+            <asp:Button ID="btnCancelEditCQ" runat="server" Text="取消" OnClick="btnCancelEditCQ_Click" />
         </div>
     </asp:PlaceHolder>
     <br />

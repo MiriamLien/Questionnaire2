@@ -78,7 +78,7 @@
             <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
             <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
-            <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" />
+            <asp:Button ID="btnAdd" runat="server" Text="加入" CommandName='<%# Eval("QuesID") %>' OnCommand="btnAdd_Command" />
             </asp:PlaceHolder>
 
             <%--編輯問題--%>
@@ -92,14 +92,13 @@
             <asp:Literal ID="ltlEditQuesAns" runat="server">回答</asp:Literal>
             <asp:TextBox ID="txtEditQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
-            <asp:Button ID="btnEditAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
-            <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" OnClick="btnEditCheck_Click" Visible ="false" />
+            <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEditCheck_Command" />&nbsp;
             <asp:Button ID="btnEditCancel" runat="server" Text="取消" OnClick="btnEditCancel_Click" />
                 </asp:PlaceHolder>
             <br />
             <br />
             <br />
-            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除這項問題嗎？')" /><br />
+            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除嗎？')" /><br />
             <table border="1">
                 <tr>
                     <th></th>
@@ -129,7 +128,6 @@
                                 <asp:Button ID="btnEdit" runat="server" Text="編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEdit_Command" />
                             </td>
                         </tr>
-                        <asp:HiddenField ID="hfID" runat="server" />
                     </ItemTemplate>
                 </asp:Repeater>
             </table>

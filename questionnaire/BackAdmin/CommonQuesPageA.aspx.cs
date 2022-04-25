@@ -40,13 +40,61 @@ namespace questionnaire.BackAdmin
             }
         }
 
-        protected void btnDelete_Command(object sender, CommandEventArgs e)
+        #region "新增"
+        protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
         {
-            int id = Convert.ToInt32(e.CommandName);
-            this._mgrCQ.DeleteCQ(id);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已刪除。');location.href='CommonQuesPageA.aspx';", true);
+            this.plcAddCQ.Visible = true;
+            this.ImgBtnAdd.Visible = false;
+            this.ltlAddMsg.Visible = false;
+
+            // 問題類型下拉繫結
+            var QTypeList = this._mgrQuesType.GetQuesTypesList();
+            this.ddlAddAnsType.DataSource = QTypeList;
+            this.ddlAddAnsType.DataValueField = "QuesTypeID";
+            this.ddlAddAnsType.DataTextField = "QuesType1";
+            this.ddlAddAnsType.DataBind();
         }
 
+        //新增問題視窗內的儲存按鈕
+        protected void btnSaveAddCQ_Click(object sender, EventArgs e)
+        {
+            string title = this.txtAddQues.Text.Trim();
+            string ans = this.txtAddAns.Text.Trim();
+            bool mustAns = this.ckbAddCQMustAns.Checked;
+
+            // 生成問題編號
+            int i = 1;
+            foreach (RepeaterItem item in this.rptCQ.Items)
+            {
+                Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                ltlNum.Text = i.ToString();
+                i++;
+            }
+
+            CQModel newCQ = new CQModel()
+            {
+                CQID = i,
+                CQTitle = title,
+                QuesTypeID = Convert.ToInt32(this.ddlAddAnsType.SelectedValue),
+                CQChoices = ans,
+                CQIsEnable = mustAns
+            };
+
+            this._mgrCQ.CreateCQ(newCQ);
+            this.plcAddCQ.Visible = false;
+            this.ImgBtnAdd.Visible = true;
+            Response.Redirect(Request.RawUrl);
+        }
+
+        protected void btnCancelAddCQ_Click(object sender, EventArgs e)
+        {
+            this.ImgBtnAdd.Visible = true;
+        }
+        #endregion
+
+
+        #region "編輯"
+        // 點擊編輯鈕(彈出編輯視窗)
         protected void btnEdit_Command(object sender, CommandEventArgs e)
         {
             this.plcEditCQ.Visible = true;
@@ -59,6 +107,7 @@ namespace questionnaire.BackAdmin
             this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
         }
 
+        // 編輯視窗內的儲存鈕
         protected void btnSaveEditCQ_Click(object sender, EventArgs e)
         {
             try
@@ -91,56 +140,13 @@ namespace questionnaire.BackAdmin
         {
             this.plcEditCQ.Visible = false;
         }
+        #endregion
 
-        protected void ImgBtnAdd_Click(object sender, ImageClickEventArgs e)
+        protected void btnDelete_Command(object sender, CommandEventArgs e)
         {
-            this.plcAddCQ.Visible = true;
-            this.ImgBtnAdd.Visible = false;
-            this.ltlAddMsg.Visible = false;
-
-
-            // 問題類型下拉繫結
-            var QTypeList = this._mgrQuesType.GetQuesTypesList();
-            this.ddlAddAnsType.DataSource = QTypeList;
-            this.ddlAddAnsType.DataValueField = "QuesTypeID";
-            this.ddlAddAnsType.DataTextField = "QuesType1";
-            this.ddlAddAnsType.DataBind();
-
-        }
-
-        //新增問題的儲存按鈕
-        protected void btnSaveAddCQ_Click(object sender, EventArgs e)
-        {
-            string title = this.txtAddQues.Text.Trim();
-            string ans = this.txtAddAns.Text.Trim();
-            bool mustAns = this.ckbAddCQMustAns.Checked;
-            // 生成問題編號
-            int i = 1;
-            foreach (RepeaterItem item in this.rptCQ.Items)
-            {
-                Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                ltlNum.Text = i.ToString();
-                i++;
-            }
-
-            CQModel newCQ = new CQModel()
-            {
-                CQID = i,
-                CQTitle = title,
-                QuesTypeID = Convert.ToInt32(this.ddlAddAnsType.SelectedValue),
-                CQChoices = ans,
-                CQIsEnable = mustAns
-            };
-
-            this._mgrCQ.CreateCQ(newCQ);
-            this.plcAddCQ.Visible = false;
-            this.ImgBtnAdd.Visible = true;
-            Response.Redirect(Request.RawUrl);
-        }
-
-        protected void btnCancelAddCQ_Click(object sender, EventArgs e)
-        {
-            this.ImgBtnAdd.Visible = true;
+            int id = Convert.ToInt32(e.CommandName);
+            this._mgrCQ.DeleteCQ(id);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已刪除。');location.href='CommonQuesPageA.aspx';", true);
         }
     }
 }
