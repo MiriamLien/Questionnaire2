@@ -42,6 +42,16 @@ namespace questionnaire.ORM
                 .WithRequired(e => e.Content)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Content>()
+                .HasMany(e => e.UserInfos)
+                .WithRequired(e => e.Content)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<QuesDetail>()
+                .HasMany(e => e.UserQuesDetails)
+                .WithRequired(e => e.QuesDetail)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<QuesType>()
                 .HasMany(e => e.CommonQues)
                 .WithRequired(e => e.QuesType)

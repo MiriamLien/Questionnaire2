@@ -137,7 +137,7 @@ namespace questionnaire.BackAdmin
         {
             Guid id = Guid.Parse(e.CommandName);
             this._mgrQuesContents.DeleteQues(id);
-            Response.Redirect(Request.RawUrl);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問卷已關閉。');location.href='listPageA.aspx';", true);
         }
 
         // 導至新增模式頁面
@@ -146,7 +146,7 @@ namespace questionnaire.BackAdmin
             if (this._mgrAccount.IsLogined())
                 Response.Redirect("mainPageA_Add.aspx");
             else
-                Response.Redirect("../Login.aspx");
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('請先進行登入。');location.href='../Login.aspx';", true);
         }
 
         public static string ConvertBoolToString(bool b)

@@ -87,7 +87,7 @@ namespace questionnaire.BackAdmin
             this.plcCQA.Visible = true;
             this.plcCQA.Visible = true;
             this.ltlAddMsg.Visible = true;
-            Response.Redirect(Request.RawUrl);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
         }
 
         protected void btnCancelAddCQ_Click(object sender, EventArgs e)

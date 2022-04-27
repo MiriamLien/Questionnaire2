@@ -9,24 +9,20 @@ namespace questionnaire.ORM
     public partial class UserQuesDetail
     {
         [Key]
-        public int UserQuesID { get; set; }
+        public int AnsID { get; set; }
+
+        public Guid ID { get; set; }
 
         public Guid UserID { get; set; }
 
         public int QuesID { get; set; }
 
-        public Guid ID { get; set; }
-
         [Required]
-        [StringLength(200)]
-        public string QuesTitle { get; set; }
+        public string Answer { get; set; }
 
-        [Required]
-        public string QuesChoices { get; set; }
+        public Guid? AccountID { get; set; }
 
-        public int QuesTypeID { get; set; }
-
-        public bool IsEnable { get; set; }
+        public virtual QuesDetail QuesDetail { get; set; }
 
         public virtual UserInfo UserInfo { get; set; }
     }

@@ -42,6 +42,8 @@ namespace questionnaire.ORM
 
         public virtual Account Account { get; set; }
 
+        public virtual Content Content { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserQuesDetail> UserQuesDetails { get; set; }
     }

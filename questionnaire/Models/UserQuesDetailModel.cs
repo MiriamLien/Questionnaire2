@@ -5,7 +5,7 @@ using System.Web;
 
 namespace questionnaire.Models
 {
-    public class UserQuesDetail
+    public class UserQuesDetailModel
     {
         public int AnsID { get; set; }
 

@@ -196,6 +196,8 @@
     <Compile Include="Managers\QuesContentsManager.cs" />
     <Compile Include="Managers\QuesDetailManager.cs" />
     <Compile Include="Managers\QuesTypeManager.cs" />
+    <Compile Include="Managers\UserInfoManager.cs" />
+    <Compile Include="Managers\UserQuesDetailManager.cs" />
     <Compile Include="Models\AccountCheckModel.cs" />
     <Compile Include="Models\AccountModel.cs" />
     <Compile Include="Models\CQAndTypeModel.cs" />
@@ -206,7 +208,7 @@
     <Compile Include="Models\QuesTypeModel.cs" />
     <Compile Include="Models\StatisticModel.cs" />
     <Compile Include="Models\UserInfoModel.cs" />
-    <Compile Include="Models\UserQuesDetail.cs" />
+    <Compile Include="Models\UserQuesDetailModel.cs" />
     <Compile Include="ORM\Account.cs" />
     <Compile Include="ORM\AccountCheck.cs" />
     <Compile Include="ORM\CommonQue.cs" />

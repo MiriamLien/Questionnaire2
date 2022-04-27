@@ -250,7 +250,7 @@ namespace questionnaire.BackAdmin
                     this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
                 }
             }
-
+            
             Response.Redirect("mainPageA.aspx?ID=" + idText);
         }
 

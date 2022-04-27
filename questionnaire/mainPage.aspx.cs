@@ -1,5 +1,6 @@
 ﻿using questionnaire.Managers;
 using questionnaire.Models;
+using questionnaire.ORM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace questionnaire
                 if (!Guid.TryParse(idText, out id))
                     this.BackToListPage();
 
-                // 查資料
+                // 查問卷資料
                 ORM.Content model = this._mgrQuesContents.GetQuesContent(questionnaireID);
                 if (model == null)
                     this.BackToListPage();
@@ -54,20 +55,84 @@ namespace questionnaire
                 this.txtEmail.Text = string.Empty;
                 this.txtAge.Text = string.Empty;
 
-                // 取得問題內容
-                var question = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
-                this.rptQuestion.DataSource = question;
-                this.rptQuestion.DataBind();
 
-                
-                foreach (RepeaterItem item in this.rptQuestion.Items)
+                // 取得問題內容
+                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
+                foreach (var question in questionList)
                 {
-                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                    ltlNum.Text = i.ToString();
-                    i++;
+                    string title = $"<br /><br />{i}. {(question.QuesTitle).Trim()}";
+                    if (question.IsEnable == true)
+                        title += " (*)";
+
+                    i += 1;
+                    Literal ltlQuestion = new Literal();
+                    ltlQuestion.Text = title + "<br />";
+                    this.plcForQuestion.Controls.Add(ltlQuestion);
+
+                    switch (question.QuesTypeID)
+                    {
+                        case 1:
+                            createTextBox(question);
+                            break;
+                        case 2:
+                            createRdb(question);
+                            break;
+                        case 3:
+                            createCkb(question);
+                            break;
+                    }
                 }
+
+
             }
         }
+
+        private void createTextBox(QuesDetail ques)
+        {
+            TextBox textBox = new TextBox();
+            textBox.ID = "q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(textBox);
+        }
+        
+        private void createRdb(QuesDetail ques)
+        {
+            RadioButtonList rdbList = new RadioButtonList();
+            rdbList.ID = "q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(rdbList);
+
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
+            for (int i = 0; i < ansArray.Length; i++)
+            {
+                RadioButton rdb = new RadioButton();
+                rdb.Text = ansArray[i].ToString();
+                rdb.ID = ques.QuesID + i.ToString();
+                rdb.GroupName = "group" + ques.QuesID;
+                this.plcForQuestion.Controls.Add(rdb);
+                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+            }
+        }
+
+        private void createCkb(QuesDetail ques)
+        {
+            CheckBoxList ckbList = new CheckBoxList();
+            ckbList.ID = "q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(ckbList);
+
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
+            for (int i = 0; i < ansArray.Length; i++)
+            {
+
+                CheckBox item = new CheckBox();
+                item.Text = ansArray[i].ToString();
+                item.ID = ques.QuesID + i.ToString();
+                this.plcForQuestion.Controls.Add(item);
+                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+            }
+        }
+
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
@@ -76,6 +141,7 @@ namespace questionnaire
 
         protected void btnSend_Click(object sender, EventArgs e)
         {
+            #region "基本資料檢查"
             bool isNameRight = false;
             bool isPhoneRight = false;
             bool isEmailRight = false;
@@ -124,7 +190,7 @@ namespace questionnaire
                 this.lblMsgEmail2.Visible = false;
                 isEmailRight = true;
             }
-                
+
             if (string.IsNullOrWhiteSpace(this.txtAge.Text))
             {
                 this.lblMsgAge.Visible = true;
@@ -146,6 +212,10 @@ namespace questionnaire
 
                 Response.Redirect("checkPage.aspx");
             }
+            #endregion
+
+            // if true, 必須有填答案
+
         }
 
         private void BackToListPage()

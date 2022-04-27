@@ -65,6 +65,7 @@ namespace questionnaire.BackAdmin
             //Account account = new AccountManager().GetCurrentUser();
 
             this._mgrQuesContents.CreateQues(model);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問卷已新增。');location.href='mainPageA.aspx';", true);
 
             this.hfID.Value = model.ID.ToString();
         }
@@ -156,7 +157,7 @@ namespace questionnaire.BackAdmin
                 }
             }
             Session.Remove("questionList");
-            Response.Redirect("listPageA.aspx");
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='listPageA.aspx';", true);
         }
 
         protected void btnQuesCancel_Click(object sender, EventArgs e)
