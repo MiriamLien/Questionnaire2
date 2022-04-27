@@ -1,11 +1,13 @@
 ﻿using questionnaire.Managers;
 using questionnaire.Models;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
 
 namespace questionnaire.BackAdmin
 {
@@ -17,6 +19,8 @@ namespace questionnaire.BackAdmin
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
         private QuesTypeManager _mgrQuesType = new QuesTypeManager();
         private CQManager _mgrCQ = new CQManager();
+        private UserInfoManager _mgruserInfo = new UserInfoManager();
+        private UserQuesDetailManager _mgruserQuesDetail = new UserQuesDetailManager();
         Guid id = Guid.NewGuid();
 
         protected void Page_Load(object sender, EventArgs e)    //編輯模式
@@ -74,14 +78,31 @@ namespace questionnaire.BackAdmin
                         i++;
                     }
                 }
+                
+                // 填寫資料頁籤(使用者資料)
+                var userInfo = this._mgruserInfo.GetUserInfoList(questionnaireID);
+                this.rptUserInfo.DataSource = userInfo;
+                this.rptUserInfo.DataBind();
+
+                if (questionList != null || questionList.Count > 0)
+                {
+                    // 生成問題編號
+                    int i = 1;
+                    foreach (RepeaterItem item in this.rptUserInfo.Items)
+                    {
+                        Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                        ltlNum.Text = i.ToString();
+                        i++;
+                    }
+                }
             }
         }
+        
+            //string url = this.Request.Url.LocalPath + "?ID=" + idText;
+            //this.Response.Redirect(url);
 
-        //string url = this.Request.Url.LocalPath + "?ID=" + idText;
-        //this.Response.Redirect(url);
-
-        #region "問卷"
-        protected void btnEditPaperCancel_Click(object sender, EventArgs e)
+            #region "問卷"
+            protected void btnEditPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
         }
@@ -111,7 +132,7 @@ namespace questionnaire.BackAdmin
                 this._mgrQuesContents.UpdateQues(model);
             }
             
-            Response.Redirect($"mainPageA.aspx?ID={questionnaireID}");
+            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
         #endregion
 
@@ -236,6 +257,7 @@ namespace questionnaire.BackAdmin
         protected void imgbtnDelete_Click(object sender, ImageClickEventArgs e)
         {
             string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
 
             foreach (RepeaterItem item in this.rptQuestion.Items)
             {
@@ -251,7 +273,7 @@ namespace questionnaire.BackAdmin
                 }
             }
             
-            Response.Redirect("mainPageA.aspx?ID=" + idText);
+            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
 
         private void BackToListPage()
@@ -259,6 +281,26 @@ namespace questionnaire.BackAdmin
             this.Response.Redirect("listPageA.aspx", true);
         }
 
-        
+        protected void btnDownload_Click(object sender, EventArgs e)
+        {
+            string idText = Request.QueryString["ID"];
+            Guid id = new Guid(idText);
+            var quesList = this._mgrQuesDetail.GetQuesDetailList(id);
+
+            string filePath = $"F:\\ccc\\{idText}.csv";
+
+            //ExportToCSV(, filePath);
+        }
+
+        public void ExportToCSV(List<QuesDetailModel> dt, string filePath)
+        {
+            using (var file = new StreamWriter(filePath))
+            {
+                foreach (var item in dt)
+                {
+                    file.WriteLineAsync($"{item.QuesTitle},{item.QuesChoices},{item.ID}");
+                }
+            }
+        }
     }
 }

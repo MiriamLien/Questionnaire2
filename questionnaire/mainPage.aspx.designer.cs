@@ -15,6 +15,24 @@ namespace questionnaire
     {
 
         /// <summary>
+        /// ltlState 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlState;
+
+        /// <summary>
+        /// ltlDate 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlDate;
+
+        /// <summary>
         /// ltlTitle 控制項。
         /// </summary>
         /// <remarks>
@@ -175,6 +193,15 @@ namespace questionnaire
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
         protected global::System.Web.UI.WebControls.PlaceHolder plcForQuestion;
+
+        /// <summary>
+        /// ltlQCount 控制項。
+        /// </summary>
+        /// <remarks>
+        /// 自動產生的欄位。
+        /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltlQCount;
 
         /// <summary>
         /// btnCancel 控制項。

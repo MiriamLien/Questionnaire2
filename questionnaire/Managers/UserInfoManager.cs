@@ -23,7 +23,7 @@ namespace questionnaire.Managers
                 {
                     var idText = id.ToString();
 
-                    //取得所有或加查詢條件的帳戶
+                    //取得所有或加查詢條件的UserInfo
                     IQueryable<UserInfo> query;
                     if (!string.IsNullOrWhiteSpace(idText))
                     {
@@ -64,7 +64,7 @@ namespace questionnaire.Managers
                 {
                     var userIDText = userID.ToString();
 
-                    //取得所有或加查詢條件的帳戶
+                    //取得所有或加查詢條件的UserInfo
                     IQueryable<UserInfo> query;
                     if (!string.IsNullOrWhiteSpace(userIDText))
                     {
@@ -103,7 +103,7 @@ namespace questionnaire.Managers
             {
                 using (ContextModel contextModel = new ContextModel())
                 {
-                    //取得所有或加查詢條件的帳戶
+                    //取得所有或加查詢條件的UserInfo列表
                     var query =
                           from item in contextModel.UserInfos
                           where item.AccountID == id

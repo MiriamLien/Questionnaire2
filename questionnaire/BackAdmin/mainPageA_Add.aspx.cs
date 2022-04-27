@@ -22,8 +22,6 @@ namespace questionnaire.BackAdmin
         {
             if (!IsPostBack)
             {
-                //this.txtStartDate.Text = DateTime.Now.ToString();
-
                 //問題類型下拉繫結
                 var QTypeList = this._mgrQuesType.GetQuesTypesList();
                 this.ddlAnsType.DataSource = QTypeList;
@@ -39,6 +37,8 @@ namespace questionnaire.BackAdmin
                 this.ddlQuesType.DataBind();
 
                 this.ddlQuesType.Items.Insert(0, new ListItem("自訂問題", "0"));
+
+                this.txtStartDate.Text = DateTime.Now.ToString();
             }
         }
 
@@ -65,9 +65,8 @@ namespace questionnaire.BackAdmin
             //Account account = new AccountManager().GetCurrentUser();
 
             this._mgrQuesContents.CreateQues(model);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問卷已新增。');location.href='mainPageA.aspx';", true);
-
             this.hfID.Value = model.ID.ToString();
+            Response.Redirect("mainPageA_Add.aspx?ID=" + model.ID.ToString());
         }
 
         protected void btnPaperCancel_Click(object sender, EventArgs e)
@@ -121,13 +120,20 @@ namespace questionnaire.BackAdmin
                     i++;
                 }
             }
+
+            // 重置輸入問題處
+            this.ddlQuesType.SelectedIndex = 0;
+            this.txtQuesTitle.Text = string.Empty;
+            this.txtQuesAns.Text = string.Empty;
+            this.ddlAnsType.SelectedValue = "1";
         }
 
         // 把問題傳送至DB(新增模式)
         protected void btnQuesSend_Click(object sender, EventArgs e)
         {
-            var idText = new Guid(this.hfID.Value);
-            var quesContent = this._mgrQuesContents.GetQuesContent(idText);
+            var idText = Request.QueryString["ID"];
+            Guid id = new Guid(idText);
+            var quesContent = this._mgrQuesContents.GetQuesContent(id);
 
             var quesDetailList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
 

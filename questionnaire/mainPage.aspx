@@ -2,8 +2,14 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
+        #topDiv {
+            margin-top: -70px;
+            margin-right: 50px;
+        }
+
         #userInfoQues, #contentDiv, #questionDiv {
-            padding-left: 280px;
+            padding-left: 270px;
+            padding-right: 210px;
         }
 
         #btnSpace {
@@ -14,20 +20,24 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div id="titleDiv">
-        <h2 align="center">
-            <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Literal></h2>
-        <br />
+    <div id="topDiv" align="right">
+        <asp:Literal ID="ltlState" runat="server"></asp:Literal>
+        <asp:Literal ID="ltlDate" runat="server"></asp:Literal>
     </div>
-    <div id="contentDiv">
-        <h5>
-            <asp:Literal ID="ltlBody" Text='<%# Eval("Body") %>' runat="server"></asp:Literal></h5>
-        <br />
-        <p>◎ 活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！（僅接受Gmail信箱）</p>
-        <br />
-        <p>打 * 號者為必填(或必選)</p>
-    </div>
+        <div id="titleDiv">
+            <h2 align="center">
+                <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Literal></h2>
+            <br />
+        </div>
+        <div id="contentDiv">
+            <h5>
+                <asp:Literal ID="ltlBody" Text='<%# Eval("Body") %>' runat="server"></asp:Literal></h5>
+            <br />
+            <p>◎ 活動完成後，將會進行抽獎，因此請注意基本資料請留真實資料，以及確認Email和手機號碼是否正確喔！（僅接受Gmail信箱）</p>
+            <br /><br />
+        </div>
     <div id="userInfoQues">
+        <p>打 * 號者為必填(或必選)</p>
         <asp:Literal ID="ltlName" runat="server">姓名 (*)</asp:Literal>&emsp;&emsp;
         <asp:TextBox ID="txtName" runat="server" Width="350"></asp:TextBox><br />
         <h6>
@@ -60,6 +70,11 @@
         <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
     </div>
     <div id="btnSpace">
+        <br />
+        <br />
+        <br />
+        <asp:Literal ID="ltlQCount" runat="server"></asp:Literal><br />
+        <br />
         <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />
         &emsp;&emsp;&emsp;&emsp;&emsp;
         <asp:Button ID="btnSend" runat="server" Text="送出" OnClick="btnSend_Click" />

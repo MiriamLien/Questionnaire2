@@ -139,7 +139,7 @@
         <div id="userInfo" class="tab-pane fade">
             <asp:PlaceHolder runat="server" ID="plcInfo1">
                 <br />
-                <asp:Button ID="btnDownload" runat="server" Text="匯出" />
+                <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
                 <p></p>
                 <table id="tblUserInfo" border="1">
                     <thead>
@@ -157,7 +157,7 @@
                                     <td width="60px">
                                         <asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
                                     <td width="120px"><%# Eval("Name") %></td>
-                                    <td width="150px"><%# Eval("CreateDate") %></td>
+                                    <td width="150px"><%# Eval("CreateDate", "{0:yyyy/MM/dd}") %></td>
                                     <td width="80px"><a>前往</a></td>
                                 </tr>
                             </ItemTemplate>
@@ -219,6 +219,7 @@
                         "previous": "前一頁"
                     },
                 },
+                "lengthMenu": [[5, 10, 15, "全部"], [5, 10, 15, "全部"]],
                 "order": [[0, "desc"]],
             });
         });

@@ -48,13 +48,13 @@
                     <ItemTemplate>
                         <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
                         <tr>
-                            <td width="70px"><%# Eval("TitleID") %></td>
+                            <td width="70px">&nbsp;<%# Eval("TitleID") %></td>
                             <%--<td width="280px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>--%>
                             <td width="280px"><a href="mainPageA.aspx?ID=<%# Eval("ID") %>">
-                                    <asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>
-                            <td width="120px"><%# Eval("strIsEnable") %></td>
-                            <td width="130px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
-                            <td width="130px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
+                                    &nbsp;<asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>
+                            <td width="120px">&nbsp;<%# Eval("strIsEnable") %></td>
+                            <td width="130px">&nbsp;<%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
+                            <td width="130px">&nbsp;<%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
                             <td width="100px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
                             <td width="80px">
                                 <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />

@@ -16,11 +16,10 @@ namespace questionnaire
         //private AccountManager _mgrAccount = new AccountManager();
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
+        int i = 1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            int i = 1;
-            // 沒有ID 執行這頁會出錯!!!!!
             if (!IsPostBack)
             {
                 string idText = Request.QueryString["ID"];
@@ -46,28 +45,22 @@ namespace questionnaire
                 //}
 
                 // 顯示資料
+                this.ltlDate.Text = $"{model.StartDate.ToShortDateString()} ~ {model.EndDate.ToShortDateString()}";
                 this.ltlTitle.Text = model.Title;
                 this.ltlBody.Text = model.Body;
-
-                // 重置基本資料
-                this.txtName.Text = string.Empty;
-                this.txtPhone.Text = string.Empty;
-                this.txtEmail.Text = string.Empty;
-                this.txtAge.Text = string.Empty;
-
 
                 // 取得問題內容
                 var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
                 foreach (var question in questionList)
                 {
-                    string title = $"<br /><br />{i}. {(question.QuesTitle).Trim()}";
+                    string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
                     if (question.IsEnable == true)
                         title += " (*)";
 
                     i += 1;
                     Literal ltlQuestion = new Literal();
-                    ltlQuestion.Text = title + "<br />";
+                    ltlQuestion.Text = title + "<br />&emsp;";
                     this.plcForQuestion.Controls.Add(ltlQuestion);
 
                     switch (question.QuesTypeID)
@@ -82,53 +75,53 @@ namespace questionnaire
                             createCkb(question);
                             break;
                     }
+
+                    string count = questionList.Count.ToString();
+                    this.ltlQCount.Text = "共 " + count + " 個問題";
                 }
-
-
             }
         }
 
         private void createTextBox(QuesDetail ques)
         {
-            TextBox textBox = new TextBox();
-            textBox.ID = "q" + ques.QuesID.ToString();
-            this.plcForQuestion.Controls.Add(textBox);
+            TextBox txt = new TextBox();
+            txt.ID = "Q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(txt);
         }
-        
+
         private void createRdb(QuesDetail ques)
         {
             RadioButtonList rdbList = new RadioButtonList();
-            rdbList.ID = "q" + ques.QuesID.ToString();
+            rdbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(rdbList);
 
             string[] ansArray = (ques.QuesChoices).Trim().Split(';');
 
             for (int i = 0; i < ansArray.Length; i++)
             {
-                RadioButton rdb = new RadioButton();
-                rdb.Text = ansArray[i].ToString();
-                rdb.ID = ques.QuesID + i.ToString();
-                rdb.GroupName = "group" + ques.QuesID;
-                this.plcForQuestion.Controls.Add(rdb);
-                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+                RadioButton radio = new RadioButton();
+                radio.Text = ansArray[i].ToString();
+                radio.ID = ques.QuesID + i.ToString();
+                radio.GroupName = "group" + ques.QuesID;
+                this.plcForQuestion.Controls.Add(radio);
+                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
             }
         }
 
         private void createCkb(QuesDetail ques)
         {
             CheckBoxList ckbList = new CheckBoxList();
-            ckbList.ID = "q" + ques.QuesID.ToString();
+            ckbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(ckbList);
 
             string[] ansArray = (ques.QuesChoices).Trim().Split(';');
 
             for (int i = 0; i < ansArray.Length; i++)
             {
-
-                CheckBox item = new CheckBox();
-                item.Text = ansArray[i].ToString();
-                item.ID = ques.QuesID + i.ToString();
-                this.plcForQuestion.Controls.Add(item);
+                CheckBox check = new CheckBox();
+                check.Text = ansArray[i].ToString();
+                check.ID = ques.QuesID + i.ToString();
+                this.plcForQuestion.Controls.Add(check);
                 this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
             }
         }
@@ -209,13 +202,68 @@ namespace questionnaire
                 this.Session["Phone"] = this.txtPhone.Text;
                 this.Session["Email"] = this.txtEmail.Text;
                 this.Session["Age"] = this.txtAge.Text;
-
-                Response.Redirect("checkPage.aspx");
             }
             #endregion
 
-            // if true, 必須有填答案
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+            var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
+            for (int i = 0; i < questionList.Count; i++)
+            {
+                switch (questionList[i].QuesTypeID)
+                {
+                    case 1:
+                        TextBox textBox = this.plcForQuestion.FindControl($"Q{questionList[i].QuesID}") as TextBox;
+                        string[] ansList1 = textBox.Text.Trim().Split(';');
+                        var ans1 = ansList1[i].TrimEnd(';').ToString();
+                        this.Session["ans1"] = ans1;
+                        break;
+
+                    case 2:
+                        for (int j = -1; j < questionList.Count; j++)
+                        {
+                            // QArray -> 把一個題目的所有選項放在陣列裡
+                            string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
+                            for (int k = 0; k < QArray.Length; k++)
+                            {
+                                RadioButton rdb = Page.Master.Master.FindControl("ContentPlaceHolder1").FindControl($"{questionList[i].QuesID}{k}") as RadioButton;
+                                if (rdb.Checked == true)
+                                {
+                                    string[] ansList2 = rdb.Text.Trim().Split(';');
+                                    var ans2 = ansList2[i].TrimEnd(';').ToString();
+                                    this.Session["ans2"] = ans2;
+                                }
+                            }
+                        }
+                        break;
+
+                    case 3:
+                        for (int j = -1; j < questionList.Count; j++)
+                        {
+                            // QArray -> 把一個題目的所有選項放在陣列裡
+                            string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
+                            for (int k = 0; k < QArray.Length; k++)
+                            {
+                                CheckBox ckb = this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}") as CheckBox;
+                                if (ckb.Checked == true)
+                                {
+                                    string[] ansList3 = ckb.Text.Trim().Split(';');
+                                    var ans3 = ansList3[i].TrimEnd(';').ToString();
+                                    this.Session["ans3"] = ans3;
+                                }
+                            }
+                        }
+                        break;
+                }
+
+            }
+
+
+
+
+
+            Response.Redirect($"checkPage.aspx?ID={questionnaireID}");
         }
 
         private void BackToListPage()
