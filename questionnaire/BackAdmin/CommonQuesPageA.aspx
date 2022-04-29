@@ -27,7 +27,7 @@
         <asp:TextBox ID="txtTitle" runat="server"></asp:TextBox>&nbsp;
         <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&emsp;
         &emsp;&emsp;
-        <asp:Button ID="btnSearch" runat="server" Text="搜尋" />
+        <asp:Button ID="btnSearch" runat="server" Text="搜尋" OnClick="btnSearch_Click" />
     </div>
     <hr />
         </asp:PlaceHolder>

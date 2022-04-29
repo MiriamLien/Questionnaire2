@@ -105,7 +105,7 @@ namespace questionnaire.Managers
             }
             catch (Exception ex)
             {
-                Logger.WriteLog("QuesDetailManager.GetQuesDetailList", ex);
+                Logger.WriteLog("QuesDetailManager.GetQuesDetailAndTypeList", ex);
                 throw;
             }
         }

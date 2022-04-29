@@ -30,7 +30,8 @@ namespace questionnaire.BackAdmin
                 this.ddlAnsType.DataBind();
 
                 //自訂、常用問題下拉繫結
-                var TypeList = this._mgrCQ.GetCQsList();
+                string a = string.Empty;
+                var TypeList = this._mgrCQ.GetCQsList(a);
                 this.ddlQuesType.DataSource = TypeList;
                 this.ddlQuesType.DataValueField = "CQID";
                 this.ddlQuesType.DataTextField = "CQTitle";

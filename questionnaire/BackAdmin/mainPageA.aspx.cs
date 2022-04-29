@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
+using System.Text;
+using questionnaire.ORM;
 
 namespace questionnaire.BackAdmin
 {
@@ -22,6 +24,7 @@ namespace questionnaire.BackAdmin
         private UserInfoManager _mgruserInfo = new UserInfoManager();
         private UserQuesDetailManager _mgruserQuesDetail = new UserQuesDetailManager();
         Guid id = Guid.NewGuid();
+        int i = 1;
 
         protected void Page_Load(object sender, EventArgs e)    //編輯模式
         {
@@ -38,6 +41,7 @@ namespace questionnaire.BackAdmin
                 if (!Guid.TryParse(idText, out iD))
                     this.BackToListPage();
 
+                #region "帶入內容"
                 // 帶入問卷內容
                 var QList = this._mgrQuesContents.GetQuesContent(questionnaireID);
                 this.txtTitle.Text = QList.Title;
@@ -49,7 +53,7 @@ namespace questionnaire.BackAdmin
                 // 帶入問題內容
                 var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
                 this.rptQuestion.DataSource = questionList;
-                this.rptQuestion.DataBind();               
+                this.rptQuestion.DataBind();
 
                 //問題類型下拉繫結
                 var QTypeList = this._mgrQuesType.GetQuesTypesList();
@@ -59,7 +63,8 @@ namespace questionnaire.BackAdmin
                 this.ddlAnsType.DataBind();
 
                 //自訂、常用問題下拉繫結
-                var TypeList = this._mgrCQ.GetCQsList();
+                string a = string.Empty;
+                var TypeList = this._mgrCQ.GetCQsList(a);
                 this.ddlQuesType.DataSource = TypeList;
                 this.ddlQuesType.DataValueField = "CQID";
                 this.ddlQuesType.DataTextField = "CQTitle";
@@ -78,10 +83,10 @@ namespace questionnaire.BackAdmin
                         i++;
                     }
                 }
-                
+
                 // 填寫資料頁籤(使用者資料)
-                var userInfo = this._mgruserInfo.GetUserInfoList(questionnaireID);
-                this.rptUserInfo.DataSource = userInfo;
+                var userInfoList = this._mgruserInfo.GetUserInfoList(questionnaireID);
+                this.rptUserInfo.DataSource = userInfoList;
                 this.rptUserInfo.DataBind();
 
                 if (questionList != null || questionList.Count > 0)
@@ -95,14 +100,43 @@ namespace questionnaire.BackAdmin
                         i++;
                     }
                 }
+                #endregion
+
+                // 取得問題內容!!!!!!!!!!!!! 沒顯示答案!!!!!!!!
+                var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
+                foreach (var question in quesList)
+                {
+                    string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                    if (question.IsEnable == true)
+                        title += " (*)";
+
+                    i += 1;
+                    Literal ltlQuestion = new Literal();
+                    ltlQuestion.Text = title + "<br />&emsp;";
+                    this.plcStatistic.Controls.Add(ltlQuestion);
+
+                    switch (question.QuesTypeID)
+                    {
+                        case 1:
+                            createTextBox(question);
+                            break;
+                        case 2:
+                            createRdb(question);
+                            break;
+                        case 3:
+                            createCkb(question);
+                            break;
+                    }
+                }
             }
         }
-        
-            //string url = this.Request.Url.LocalPath + "?ID=" + idText;
-            //this.Response.Redirect(url);
 
-            #region "問卷"
-            protected void btnEditPaperCancel_Click(object sender, EventArgs e)
+        //string url = this.Request.Url.LocalPath + "?ID=" + idText;
+        //this.Response.Redirect(url);
+
+        #region "問卷"
+        protected void btnEditPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
         }
@@ -131,7 +165,7 @@ namespace questionnaire.BackAdmin
 
                 this._mgrQuesContents.UpdateQues(model);
             }
-            
+
             Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
         #endregion
@@ -272,7 +306,7 @@ namespace questionnaire.BackAdmin
                     this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
                 }
             }
-            
+
             Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
 
@@ -281,25 +315,221 @@ namespace questionnaire.BackAdmin
             this.Response.Redirect("listPageA.aspx", true);
         }
 
+
+        #region "問卷管理內頁3"
+        // 匯出鈕
         protected void btnDownload_Click(object sender, EventArgs e)
         {
             string idText = Request.QueryString["ID"];
             Guid id = new Guid(idText);
             var quesList = this._mgrQuesDetail.GetQuesDetailList(id);
 
-            string filePath = $"F:\\ccc\\{idText}.csv";
+            string folder = "F:\\ccc\\ExportToCSV";
+            string fileName = $"Q_{idText}.csv";
+            string fullPath = $"F:\\ccc\\ExportToCSV\\Q_{idText}.csv";
+            //string folderPath = System.Web.Hosting.HostingEnvironment.MapPath(folder);
 
-            //ExportToCSV(, filePath);
+            DataTable dt = new DataTable();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            if (!File.Exists(fileName))
+            {
+                File.Create(fileName);
+            }
+            ExportToCSV(dt, fullPath);
         }
 
-        public void ExportToCSV(List<QuesDetailModel> dt, string filePath)
+        // DataTable匯出成CSV檔
+        public void ExportToCSV(DataTable dt, string filePath)
         {
-            using (var file = new StreamWriter(filePath))
+            string idText = Request.QueryString["ID"];
+            Guid id = new Guid(idText);
+            var questionList = this._mgrQuesDetail.GetQuesDetailList(id);
+            var userInfoList = this._mgruserInfo.GetUserInfoList(id);
+
+            DataTable dataTable = new DataTable();
+            DataRow row;
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Phone", typeof(string));
+            dataTable.Columns.Add("Email", typeof(string));
+            dataTable.Columns.Add("Age", typeof(string));
+            dataTable.Columns.Add("CreateDate", typeof(DateTime));
+
+            try
             {
-                foreach (var item in dt)
+                for (int i = 0; i < userInfoList.Count; i++)
                 {
-                    file.WriteLineAsync($"{item.QuesTitle},{item.QuesChoices},{item.ID}");
+                    row = dataTable.NewRow();
+                    row["Name"] = userInfoList[i].Name;
+                    row["Phone"] = userInfoList[i].Phone;
+                    row["Email"] = userInfoList[i].Email;
+                    row["Age"] = userInfoList[i].Age;
+                    row["CreateDate"] = userInfoList[i].CreateDate;
+
+                    for (int j = 0; j < questionList.Count; j++)
+                    {
+                        if (dataTable.Columns.Contains($"QuesTitle{j + 1}") == false)
+                        {
+                            dataTable.Columns.Add($"QuesTitle{j + 1}", typeof(string));
+                            dataTable.Columns.Add($"Answer{j + 1}", typeof(string));
+                        }
+
+                        row[$"QuesTitle{j + 1}"] = questionList[j].QuesTitle;
+                        Guid userID = userInfoList[i].UserID;
+                        var userAndAns = this._mgruserQuesDetail.GetUserInfoList(userID);
+                        foreach (var item in userAndAns)
+                        {
+                            if (item.QuesID == questionList[j].QuesID)
+                            {
+                                row[$"Answer{j + 1}"] = item.Answer;
+                            }
+                        }
+                    }
+
+                    dataTable.Rows.Add(row);
                 }
+
+                FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
+                string data = "";
+
+                for (int i = 0; i < dataTable.Columns.Count; i++)//寫入列名
+                {
+                    data += dataTable.Columns[i].ColumnName.ToString();
+                    if (i < dataTable.Columns.Count - 1)
+                    {
+                        data += ",";
+                    }
+                }
+                sw.WriteLine(data);
+
+                //寫入各行資料
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    data = "";
+                    for (int j = 0; j < dataTable.Columns.Count; j++)
+                    {
+                        string str = dataTable.Rows[i][j].ToString();
+                        //替換英文冒號 英文冒號需要換成兩個冒號
+                        str = str.Replace("\"", "\"\"");
+                        //含逗號 冒號 換行符的需要放到引號中
+                        if (str.Contains(',') || str.Contains('"')
+                          || str.Contains('\r') || str.Contains('\n'))
+                        {
+                            str = string.Format("\"{0}\"", str);
+                        }
+
+                        data += str;
+                        if (j < dataTable.Columns.Count - 1)
+                        {
+                            data += ",";
+                        }
+                    }
+                    sw.WriteLine(data);
+                }
+                sw.Close();
+                fs.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        // 前往觀看填寫的詳細內容
+        protected void btnUserInfoAndQues_Command(object sender, CommandEventArgs e)
+        {
+            this.plcInfo1.Visible = false;
+            this.plcInfo2.Visible = true;
+
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+            var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
+            Guid userID = new Guid(e.CommandName);
+            var userInfoList = this._mgruserInfo.GetUserInfoList2(userID);
+
+            for (int i = 0; i < userInfoList.Count; i++)
+            {
+                this.txtName.Text = userInfoList[i].Name;
+                this.txtPhone.Text = userInfoList[i].Phone;
+                this.txtEmail.Text = userInfoList[i].Email;
+                this.txtAge.Text = userInfoList[i].Age;
+                this.ltlCreateDate.Text = "填寫日期 " + (userInfoList[i].CreateDate).ToString("yyyy/MM/dd");
+            }
+
+            // 動態生成控制項和題目
+            foreach (var question in quesList)
+            {
+                string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                if (question.IsEnable == true)
+                    title += " (*)";
+
+                i += 1;
+                Literal ltlQuestion = new Literal();
+                ltlQuestion.Text = title + "<br />&emsp;";
+                this.plcForQuestion.Controls.Add(ltlQuestion);
+
+                switch (question.QuesTypeID)
+                {
+                    case 1:
+                        createTextBox(question);
+                        break;
+                    case 2:
+                        createRdb(question);
+                        break;
+                    case 3:
+                        createCkb(question);
+                        break;
+                }
+            }
+        }
+        #endregion
+
+        private void createTextBox(QuesDetail ques)
+        {
+            TextBox txt = new TextBox();
+            txt.ID = "Q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(txt);
+        }
+
+        private void createRdb(QuesDetail ques)
+        {
+            RadioButtonList rdbList = new RadioButtonList();
+            rdbList.ID = "Q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(rdbList);
+
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
+            for (int i = 0; i < ansArray.Length; i++)
+            {
+                RadioButton radio = new RadioButton();
+                radio.Text = ansArray[i].ToString();
+                radio.ID = ques.QuesID + i.ToString();
+                radio.GroupName = "group" + ques.QuesID;
+                this.plcForQuestion.Controls.Add(radio);
+                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+            }
+        }
+
+        private void createCkb(QuesDetail ques)
+        {
+            CheckBoxList ckbList = new CheckBoxList();
+            ckbList.ID = "Q" + ques.QuesID.ToString();
+            this.plcForQuestion.Controls.Add(ckbList);
+
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
+            for (int i = 0; i < ansArray.Length; i++)
+            {
+                CheckBox check = new CheckBox();
+                check.Text = ansArray[i].ToString();
+                check.ID = ques.QuesID + i.ToString();
+                this.plcForQuestion.Controls.Add(check);
+                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
             }
         }
     }

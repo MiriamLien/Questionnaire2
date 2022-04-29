@@ -83,5 +83,72 @@ namespace questionnaire.Managers
             }
         }
 
+
+        /// <summary>
+        /// 輸入問卷ID取得使用者資訊及問題內容
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public List<UserInfoAndQuesModel> GetUserInfoAndQuesList(Guid id)
+        {
+            string idText = id.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                {
+                    // 取得加查詢條件的問題
+                    IQueryable<UserInfoAndQuesModel> query;
+                    if (!string.IsNullOrWhiteSpace(idText))
+                    {
+                        query =
+                            from item in contextModel.QuesDetails
+                            join item2 in contextModel.UserInfos
+                            on item.ID equals item2.ID
+                            where item.ID == id
+                            select new UserInfoAndQuesModel
+                            {
+                                UserID = item2.UserID,
+                                ID = item.ID,
+                                Name = item2.Name,
+                                Phone = item2.Phone,
+                                Age = item2.Age,
+                                Email = item2.Phone,
+                                QuesID = item.QuesID,
+                                QuesTitle = item.QuesTitle,
+                                QuesChoices = item.QuesChoices,
+                            };
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.QuesDetails
+                            join item2 in contextModel.UserInfos
+                            on item.ID equals item2.ID
+                            select new UserInfoAndQuesModel
+                            {
+                                UserID = item2.UserID,
+                                ID = item.ID,
+                                Name = item2.Name,
+                                Phone = item2.Phone,
+                                Age = item2.Age,
+                                Email = item2.Phone,
+                                QuesID = item.QuesID,
+                                QuesTitle = item.QuesTitle,
+                                QuesChoices = item.QuesChoices,
+                            };
+                    }
+
+                    // 組合，並取回結果
+                    var list = query.ToList();
+                    return list;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("UserQuesDetailManager.GetUserInfoAndQuesList", ex);
+                throw;
+            }
+        }
     }
 }

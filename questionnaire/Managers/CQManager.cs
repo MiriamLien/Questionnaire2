@@ -14,7 +14,7 @@ namespace questionnaire.Managers
         /// 取得所有或附加查詢條件的CQ，及其所有資料
         /// </summary>
         /// <returns></returns>
-        public List<CommonQue> GetCQsList()
+        public List<CommonQue> GetCQsList(string keyword)
         {
             try
             {
@@ -22,10 +22,19 @@ namespace questionnaire.Managers
                 {
                     //取得所有或加查詢條件的問卷
                     IQueryable<CommonQue> query;
-
-                    query =
+                    if (!string.IsNullOrWhiteSpace(keyword))
+                    {
+                        query =
                         from item in contextModel.CommonQues
+                        where item.CQTitle.Contains(keyword)
                         select item;
+                    }
+                    else
+                    {
+                        query =
+                            from item in contextModel.CommonQues
+                            select item;
+                    }
 
                     //組合，並取回結果
                     var list = query.ToList();

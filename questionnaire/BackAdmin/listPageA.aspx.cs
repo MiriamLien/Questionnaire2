@@ -46,7 +46,6 @@ namespace questionnaire.BackAdmin
                         ConvertBoolToString(false);
                     }
                 }
-
             }
         }
 

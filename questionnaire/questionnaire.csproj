@@ -111,6 +111,7 @@
     <Content Include="listPage.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="mainPage.aspx" />
+    <Content Include="mainPage1.aspx" />
     <Content Include="statisticPage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -190,6 +191,13 @@
     <Compile Include="mainPage.aspx.designer.cs">
       <DependentUpon>mainPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="mainPage1.aspx.cs">
+      <DependentUpon>mainPage1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="mainPage1.aspx.designer.cs">
+      <DependentUpon>mainPage1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Managers\AccountCheckManager.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\CQManager.cs" />
@@ -207,6 +215,7 @@
     <Compile Include="Models\QuesDetailModel.cs" />
     <Compile Include="Models\QuesTypeModel.cs" />
     <Compile Include="Models\StatisticModel.cs" />
+    <Compile Include="Models\UserInfoAndQuesModel.cs" />
     <Compile Include="Models\UserInfoModel.cs" />
     <Compile Include="Models\UserQuesDetailModel.cs" />
     <Compile Include="ORM\Account.cs" />

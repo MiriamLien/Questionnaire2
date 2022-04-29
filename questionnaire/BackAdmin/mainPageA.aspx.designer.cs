@@ -429,30 +429,30 @@ namespace questionnaire.BackAdmin
         protected global::System.Web.UI.WebControls.TextBox txtAge;
 
         /// <summary>
-        /// ltlMsg 控制項。
+        /// ltlCreateDate 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal ltlMsg;
+        protected global::System.Web.UI.WebControls.Literal ltlCreateDate;
 
         /// <summary>
-        /// rptQuesDetail 控制項。
+        /// plcForQuestion 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptQuesDetail;
+        protected global::System.Web.UI.WebControls.PlaceHolder plcForQuestion;
 
         /// <summary>
-        /// rptStatistic 控制項。
+        /// plcStatistic 控制項。
         /// </summary>
         /// <remarks>
         /// 自動產生的欄位。
         /// 若要修改，請將欄位宣告從設計工具檔案移到程式碼後置檔案。
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptStatistic;
+        protected global::System.Web.UI.WebControls.PlaceHolder plcStatistic;
     }
 }

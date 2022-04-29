@@ -23,7 +23,8 @@ namespace questionnaire.BackAdmin
             this.ddlAnsType.DataTextField = "QuesType1";
             this.ddlAnsType.DataBind();
 
-            var quesList = this._mgrCQ.GetCQsList();
+            string a = string.Empty;
+            var quesList = this._mgrCQ.GetCQsList(a);
             this.rptCQ.DataSource = quesList;
             this.rptCQ.DataBind();
 
@@ -99,18 +100,28 @@ namespace questionnaire.BackAdmin
         }
         #endregion
 
-
         #region "編輯"
         // 點擊編輯鈕(彈出編輯視窗)
         protected void btnEdit_Command(object sender, CommandEventArgs e)
         {
             this.plcEditCQ.Visible = true;
+            this.ImgBtnAdd.Visible = false;
+            this.ltlAddMsg.Visible = false;
+
+            // 問題類型下拉繫結
+            var QTypeList = this._mgrQuesType.GetQuesTypesList();
+            this.ddlEditAnsType.DataSource = QTypeList;
+            this.ddlEditAnsType.DataValueField = "QuesTypeID";
+            this.ddlEditAnsType.DataTextField = "QuesType1";
+            this.ddlEditAnsType.DataBind();
+
             int id = Convert.ToInt32(e.CommandName);
             var cq = this._mgrCQ.GetCQs(id);
 
             this.txtEditNum.Text = cq.CQID.ToString();
             this.txtEditQues.Text = cq.CQTitle.ToString();
             this.txtEditAns.Text = cq.CQChoices.ToString();
+            this.ddlEditAnsType.SelectedValue = cq.QuesTypeID.ToString();
             this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
         }
 
@@ -140,12 +151,18 @@ namespace questionnaire.BackAdmin
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('内容輸入錯誤。');location.href='CommonQuesPageA.aspx';", true);
             }
+
+            this.plcEditCQ.Visible = false;
+            this.ImgBtnAdd.Visible = true;
+            this.ltlAddMsg.Visible = true;
         }
 
         // 取消編輯按鈕
         protected void btnCancelEditCQ_Click(object sender, EventArgs e)
         {
             this.plcEditCQ.Visible = false;
+            this.ImgBtnAdd.Visible = true;
+            this.ltlAddMsg.Visible = true;
         }
         #endregion
 
@@ -154,6 +171,39 @@ namespace questionnaire.BackAdmin
             int id = Convert.ToInt32(e.CommandName);
             this._mgrCQ.DeleteCQ(id);
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已刪除。');location.href='CommonQuesPageA.aspx';", true);
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string title = this.txtTitle.Text;
+            var quesTypeID = (this.ddlAnsType.SelectedValue).ToString();
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                var titleCQList = this._mgrCQ.GetCQsList(title);
+
+                this.rptCQ.DataSource = titleCQList;
+                this.rptCQ.DataBind();
+
+                this.txtTitle.Text = string.Empty;
+
+                if (titleCQList.Count == 0 || titleCQList == null)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='CommonQuesPageA.aspx';", true);
+                }
+            }
+            else if (quesTypeID == "1")
+            {
+
+            }
+            else
+            {
+                string keyword = string.Empty;
+                var QList = this._mgrCQ.GetCQsList(keyword);
+
+                this.rptCQ.DataSource = QList;
+                this.rptCQ.DataBind();
+            }
         }
     }
 }

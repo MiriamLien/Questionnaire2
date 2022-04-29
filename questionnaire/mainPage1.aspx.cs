@@ -11,9 +11,8 @@ using System.Web.UI.WebControls;
 
 namespace questionnaire
 {
-    public partial class mainPage : System.Web.UI.Page
+    public partial class mainPage1 : System.Web.UI.Page
     {
-        //private AccountManager _mgrAccount = new AccountManager();
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
         int i = 1;
@@ -82,7 +81,6 @@ namespace questionnaire
             }
         }
 
-        // !!!!!!!!!!!!!!!!
         private void createTextBox(QuesDetail ques)
         {
             TextBox txt = new TextBox();
@@ -103,6 +101,7 @@ namespace questionnaire
                 RadioButton radio = new RadioButton();
                 radio.Text = ansArray[i].ToString();
                 radio.ID = ques.QuesID + i.ToString();
+                //radio.ID = "132";
                 radio.GroupName = "group" + ques.QuesID;
                 this.plcForQuestion.Controls.Add(radio);
                 this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
@@ -127,14 +126,11 @@ namespace questionnaire
             }
         }
 
-
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPage.aspx");
         }
 
-
-        // 找不到動態控制項ID!!!!!!!!!!!
         protected void btnSend_Click(object sender, EventArgs e)
         {
             #region "基本資料檢查"
@@ -212,8 +208,18 @@ namespace questionnaire
             Guid questionnaireID = Guid.Parse(idText);
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
+            List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
             for (int i = 0; i < questionList.Count; i++)
             {
+                var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
+                UserQuesDetailModel Ans = new UserQuesDetailModel()
+                {
+                    ID = q.ID,
+                    QuesID = q.QuesID,
+                    QuesTypeID = q.QuesTypeID,
+                };
+
+
                 switch (questionList[i].QuesTypeID)
                 {
                     case 1:
@@ -230,10 +236,9 @@ namespace questionnaire
                             string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
                             for (int k = 0; k < QArray.Length; k++)
                             {
-                                //ContentPlaceHolder ctl = (ContentPlaceHolder)Page.FindControl("ContentPlaceHolder1");
-                                //PlaceHolder plc = (PlaceHolder)ctl.Page.FindControl("plcForQuestion");
-                                RadioButton rdb = FindControl<RadioButton>(this.Page, "plcForQuestion") as RadioButton;
-                                //RadioButton rdb = plc.FindControl($"{questionList[i].QuesID}{k}") as RadioButton;
+                                RadioButton rdb = FindControl<RadioButton>(this.Page, $"{questionList[i].QuesID}{k}") as RadioButton;
+                                //RadioButton rdb = this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}") as RadioButton;
+                                //RadioButton rdb = this.plcForQuestion.FindControl("132") as RadioButton;
                                 if (rdb.Checked == true)
                                 {
                                     string[] ansList2 = rdb.Text.Trim().Split(';');
@@ -242,12 +247,12 @@ namespace questionnaire
                                 }
                             }
                         }
-
                         break;
 
                     case 3:
                         for (int j = -1; j < questionList.Count; j++)
                         {
+                            // QArray -> 把一個題目的所有選項放在陣列裡
                             string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
                             for (int k = 0; k < QArray.Length; k++)
                             {
@@ -262,7 +267,9 @@ namespace questionnaire
                         }
                         break;
                 }
+
             }
+
             Response.Redirect($"checkPage.aspx?ID={questionnaireID}");
         }
 
@@ -300,25 +307,6 @@ namespace questionnaire
         }
 
 
-        //public override Control FindControl(string id)
-        //{
-        //    Control ctl = base.FindControl(id);
-        //    if (ctl == null && this.Master != null) return FindControlRecursive(this.Master, id);
-        //    else return ctl;
-        //}
-        //private Control FindControlRecursive(Control rootControl, string controlID)
-        //{
-        //    if (rootControl.ID == controlID)
-        //        return rootControl;
-
-        //    foreach (Control controlToSearch in rootControl.Controls)
-        //    {
-        //        Control controlToReturn = FindControlRecursive(controlToSearch, controlID);
-        //        if (controlToReturn != null)
-        //            return controlToReturn;
-        //    }
-        //    return null/* TODO Change to default(_) if this is not a reference type */;
-        //}
         private void BackToListPage()
         {
             this.Response.Redirect("listPage.aspx", true);

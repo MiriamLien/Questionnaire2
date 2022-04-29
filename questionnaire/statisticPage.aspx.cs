@@ -86,7 +86,6 @@ namespace questionnaire
 
             for (int i = 0; i < ansArray.Length; i++)
             {
-
                 CheckBox item = new CheckBox();
                 item.Text = ansArray[i].ToString();
                 item.ID = ques.QuesID + i.ToString();

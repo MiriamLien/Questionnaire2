@@ -22,6 +22,20 @@
             padding-top: 20px;
             padding-left: 180px;
         }
+
+        #info2 {
+            margin-left: 30px;
+        }
+
+        #dateDiv {
+            text-align: right;
+            margin-right: 250px;
+            margin-bottom: -20px;
+        }
+
+        #questionDiv {
+            margin-bottom: 80px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -39,7 +53,7 @@
                 <asp:TextBox ID="txtTitle" runat="server" Width="320"></asp:TextBox><br />
                 <br />
                 <asp:Literal ID="ltlContent" runat="server">描述內容</asp:Literal>
-                <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Width="320"></asp:TextBox><br />
+                <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="5" Width="320"></asp:TextBox><br />
                 <br />
                 <asp:Literal ID="ltlStartDate" runat="server">開始時間</asp:Literal>
                 <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
@@ -141,7 +155,7 @@
                 <br />
                 <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
                 <p></p>
-                <table id="tblUserInfo" border="1">
+                <table id="tblUserInfo" class="display" border="1">
                     <thead>
                         <tr>
                             <th>編號</th>
@@ -158,7 +172,9 @@
                                         <asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
                                     <td width="120px"><%# Eval("Name") %></td>
                                     <td width="150px"><%# Eval("CreateDate", "{0:yyyy/MM/dd}") %></td>
-                                    <td width="80px"><a>前往</a></td>
+                                    <td width="80px">
+                                        <asp:Button ID="btnUserInfoAndQues" runat="server" Text="前往" CommandName='<%# Eval("UserID") %>' OnCommand="btnUserInfoAndQues_Command" />
+                                    </td>
                                 </tr>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -168,39 +184,33 @@
             </asp:PlaceHolder>
 
             <asp:PlaceHolder runat="server" ID="plcInfo2" Visible="false">
-                <asp:Literal ID="ltlName" runat="server">姓名</asp:Literal>
-                <asp:TextBox ID="txtName" runat="server"></asp:TextBox>&emsp;&emsp;&emsp;
-                <asp:Literal ID="ltlPhone" runat="server">手機</asp:Literal>
-                <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone"></asp:TextBox><br />
-                <asp:Literal ID="ltlEmail" runat="server">Email</asp:Literal>
-                <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>&emsp;&emsp;&emsp;
-                <asp:Literal ID="ltlAge" runat="server">年齡</asp:Literal>
-                <asp:TextBox ID="txtAge" runat="server" TextMode="Number"></asp:TextBox><br />
-                <br />
-                <asp:Literal ID="ltlMsg" runat="server">填寫時間</asp:Literal>
-                <br />
-                <br />
-                <br />
-                <asp:Repeater ID="rptQuesDetail" runat="server">
-                    <ItemTemplate>
-                        <asp:Literal ID="ltlNumQuesDetail" runat="server"></asp:Literal>
-                        <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("QuesTitle") %>'></asp:Literal>
-                        <asp:TextBox ID="txtAns" runat="server" Text='<%# Eval("QuesChoice") %>'></asp:TextBox>
-                    </ItemTemplate>
-                </asp:Repeater>
+                <div id="info2">
+                    <br />
+                    <asp:Literal ID="ltlName" runat="server">&nbsp;&nbsp;姓名 </asp:Literal>
+                    <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <asp:Literal ID="ltlPhone" runat="server"> 手機 </asp:Literal>
+                    <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone"></asp:TextBox><br /><br />
+                    <asp:Literal ID="ltlEmail" runat="server">Email </asp:Literal>
+                    <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
+                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                <asp:Literal ID="ltlAge" runat="server"> 年齡 </asp:Literal>
+                    <asp:TextBox ID="txtAge" runat="server" TextMode="Number"></asp:TextBox><br />
+                    <br />
+                    <div id="dateDiv">
+                        <asp:Literal ID="ltlCreateDate" runat="server"></asp:Literal>
+                    </div>
+                    <div id="questionDiv">
+                        <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
+                    </div>
+                </div>
             </asp:PlaceHolder>
         </div>
 
         <div id="statistic" class="tab-pane fade">
-            <p>
-                <asp:Repeater ID="rptStatistic" runat="server">
-                    <ItemTemplate>
-                        <asp:Literal ID="ltlNumStatistic" runat="server"></asp:Literal>
-                        <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("QuesTitle") %>'></asp:Literal>
-                        <asp:TextBox ID="txtAns" runat="server" Text='<%# Eval("QuesChoice") %>'></asp:TextBox>
-                    </ItemTemplate>
-                </asp:Repeater>
-            </p>
+            <div id="statisticDiv">
+                <asp:PlaceHolder ID="plcStatistic" runat="server"></asp:PlaceHolder>
+            </div>
         </div>
     </div>
 
