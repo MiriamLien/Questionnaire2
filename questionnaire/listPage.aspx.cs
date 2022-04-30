@@ -22,25 +22,29 @@ namespace questionnaire
                 this.rptList.DataBind();
 
                 // !!!狀態：投票中、尚未開始、已完結，只有投票中顯示問卷填寫頁超連結，已完結則不會顯示
-                foreach (RepeaterItem item in rptList.Items)
+                foreach (RepeaterItem item in this.rptList.Items)
                 {
+                    Literal ltlState = item.FindControl("ltlState") as Literal;
                     HiddenField hfID = item.FindControl("hfID") as HiddenField;
+                    //HiddenField hfStartDate = item.FindControl("hfStartDate") as HiddenField;
+                    //HiddenField hfEndDate = item.FindControl("hfEndDate") as HiddenField;
+                    //var StartDT = Convert.ToDateTime(hfStartDate.Value);
+                    //var EndDT = Convert.ToDateTime(hfEndDate.Value);
                     Guid id = new Guid(hfID.Value);
                     var q = this._mgrQuesContents.GetQuesContent(id);
 
-                    if (q.IsEnable == false)
-                    {
-                        if (!(q.StartDate >= DateTime.Now || q.EndDate <= DateTime.Now))
-                        {
-                            ConvertBoolToString(true);
-                        }
-                        else
-                        {
-                            Label lblWarningTitle = item.FindControl("lblWarningTitle") as Label;
-                            lblWarningTitle.Attributes.Add("style", "background-color:Red;");
-                        }
 
-                        ConvertBoolToString(false);
+                    if (q.StartDate > DateTime.Now && int.TryParse(hfID.Value, out int qID))
+                    {
+                        ltlState.Text = "尚未開始";
+                    }
+                    else if (q.EndDate < DateTime.Now && int.TryParse(hfID.Value, out int qID2))
+                    {
+                        ltlState.Text = "已完結";
+                    }
+                    else if (q.StartDate <= DateTime.Now && q.EndDate >= DateTime.Now && int.TryParse(hfID.Value, out int qID3))
+                    {
+                        ltlState.Text = "投票中";
                     }
                 }
             }
@@ -126,21 +130,6 @@ namespace questionnaire
                 this.rptList.DataSource = QList;
                 this.rptList.DataBind();
             }
-        }
-
-        public static string ConvertBoolToString(bool b)
-        {
-            if (b)
-            {
-                if (b == true)
-                {
-                    return "投票中";
-                }
-
-                return "尚未開始";
-            }
-
-            return "已完結";
         }
     }
 }

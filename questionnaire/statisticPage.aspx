@@ -2,12 +2,17 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         #titleDiv {
-            margin-top: -45px;
+            margin-top: -30px;
         }
 
         #questionDiv {
             padding-left: 330px;
             margin-bottom: 120px;
+        }
+
+        #btnDiv {
+            margin-right: 150px;
+            margin-bottom: 50px;
         }
     </style>
 </asp:Content>
@@ -18,5 +23,8 @@
         <div id="questionDiv">
         <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
     </div>
+        </div>
+        <div id="btnDiv" align="right">
+            <asp:Button ID="btnToListPage" runat="server" Text=" 返回列表頁 " OnClick="btnToListPage_Click" />
         </div>
 </asp:Content>

@@ -93,5 +93,10 @@ namespace questionnaire
                 this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
             }
         }
+
+        protected void btnToListPage_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("listPage.aspx");
+        }
     }
 }

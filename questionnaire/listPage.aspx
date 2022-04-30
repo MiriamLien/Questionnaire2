@@ -50,15 +50,17 @@
                     <asp:Repeater ID="rptList" runat="server">
                         <ItemTemplate>
                             <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
+                            <asp:HiddenField ID="hfStartDate" runat="server" Value='<%# Eval("StartDate") %>' />
+                            <asp:HiddenField ID="hfEndDate" runat="server" Value='<%# Eval("EndDate") %>' />
                             <tr>
                                 <td width="50px">&nbsp;<%# Eval("TitleID") %></td>
-                                <%--<td width="330px"><a href="mainPage.aspx?ID=<%# Eval("ID") %>">&nbsp;<%# Eval("Title") %></a></td>--%>
-                                <td width="330px"><a href="mainPage1.aspx?ID=<%# Eval("ID") %>">
-                                    <asp:Label ID="lblWarningTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Label></a></td>
-                                <td width="100px">&nbsp;<%# Eval("strIsEnable") %></td>
+                                <td width="330px">&nbsp;<a href="mainPage.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>
+                                <td width="90px">
+                                    &nbsp;<asp:Literal ID="ltlState" runat="server" Text='<%# Eval("strIsEnable") %>'></asp:Literal>
+                                </td>
                                 <td width="130px">&nbsp;<%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
                                 <td width="130px">&nbsp;<%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
-                                <td width="80px"><a href="statisticPage.aspx?ID=<%# Eval("ID") %>">前往</a></td>
+                                <td width="80px">&nbsp;<a href="statisticPage.aspx?ID=<%# Eval("ID") %>">前往</a></td>
                             </tr>
                         </ItemTemplate>
                     </asp:Repeater>

@@ -102,6 +102,7 @@
     <Content Include="bootstrap\js\bootstrap.js" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="checkPage.aspx" />
+    <Content Include="Form1.aspx" />
     <Content Include="Global.asax" />
     <Content Include="images\addICON.png" />
     <Content Include="images\deleteICON.png" />
@@ -157,6 +158,13 @@
     </Compile>
     <Compile Include="checkPage.aspx.designer.cs">
       <DependentUpon>checkPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.aspx.cs">
+      <DependentUpon>Form1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Form1.aspx.designer.cs">
+      <DependentUpon>Form1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

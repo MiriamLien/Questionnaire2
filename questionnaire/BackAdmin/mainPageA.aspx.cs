@@ -100,9 +100,25 @@ namespace questionnaire.BackAdmin
                         i++;
                     }
                 }
+
+                // 帶入問卷和問題內容(統計頁)
+                this.rptStatistic.DataSource = questionList;
+                this.rptStatistic.DataBind();
+
+                if (questionList != null || questionList.Count > 0)
+                {
+                    // 生成問題編號
+                    int i = 1;
+                    foreach (RepeaterItem item in this.rptStatistic.Items)
+                    {
+                        Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                        ltlNum.Text = i.ToString();
+                        i++;
+                    }
+                }
                 #endregion
 
-                // 取得問題內容!!!!!!!!!!!!! 沒顯示答案!!!!!!!!
+                // 取得問題內容
                 var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
                 foreach (var question in quesList)
@@ -114,7 +130,7 @@ namespace questionnaire.BackAdmin
                     i += 1;
                     Literal ltlQuestion = new Literal();
                     ltlQuestion.Text = title + "<br />&emsp;";
-                    this.plcStatistic.Controls.Add(ltlQuestion);
+                    this.plcForQuestion.Controls.Add(ltlQuestion);
 
                     switch (question.QuesTypeID)
                     {
@@ -315,7 +331,6 @@ namespace questionnaire.BackAdmin
             this.Response.Redirect("listPageA.aspx", true);
         }
 
-
         #region "問卷管理內頁3"
         // 匯出鈕
         protected void btnDownload_Click(object sender, EventArgs e)
@@ -487,7 +502,6 @@ namespace questionnaire.BackAdmin
                 }
             }
         }
-        #endregion
 
         private void createTextBox(QuesDetail ques)
         {
@@ -532,5 +546,6 @@ namespace questionnaire.BackAdmin
                 this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
             }
         }
+        #endregion
     }
 }

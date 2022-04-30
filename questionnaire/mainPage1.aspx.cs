@@ -230,22 +230,27 @@ namespace questionnaire
                         break;
 
                     case 2:
-                        for (int j = -1; j < questionList.Count; j++)
+                        for (int j = -1; j < i; j++)
                         {
+                            int check = 0;
+
                             // QArray -> 把一個題目的所有選項放在陣列裡
                             string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
                             for (int k = 0; k < QArray.Length; k++)
                             {
-                                RadioButton rdb = FindControl<RadioButton>(this.Page, $"{questionList[i].QuesID}{k}") as RadioButton;
-                                //RadioButton rdb = this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}") as RadioButton;
+                                //RadioButton rdb = FindControl<RadioButton>(this.Page, $"{questionList[i].QuesID}{k}") as RadioButton;
+                                RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}");
                                 //RadioButton rdb = this.plcForQuestion.FindControl("132") as RadioButton;
                                 if (rdb.Checked == true)
                                 {
-                                    string[] ansList2 = rdb.Text.Trim().Split(';');
-                                    var ans2 = ansList2[i].TrimEnd(';').ToString();
-                                    this.Session["ans2"] = ans2;
+                                    Ans.Answer = rdb.Text + ";";
+                                    answerList.Add(Ans);
+                                    check = 1;
+                                    break;
                                 }
                             }
+                            if (check == 1)
+                                break;
                         }
                         break;
 

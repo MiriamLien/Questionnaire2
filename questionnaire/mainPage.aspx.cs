@@ -102,7 +102,8 @@ namespace questionnaire
             {
                 RadioButton radio = new RadioButton();
                 radio.Text = ansArray[i].ToString();
-                radio.ID = ques.QuesID + i.ToString();
+                //radio.ID = ques.QuesID + i.ToString();
+                radio.ID = "580";
                 radio.GroupName = "group" + ques.QuesID;
                 this.plcForQuestion.Controls.Add(radio);
                 this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
@@ -224,16 +225,17 @@ namespace questionnaire
                         break;
 
                     case 2:
-                        for (int j = -1; j < questionList.Count; j++)
+                        for (int j = -1; j < i; j++)
                         {
                             // QArray -> 把一個題目的所有選項放在陣列裡
                             string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
                             for (int k = 0; k < QArray.Length; k++)
                             {
-                                //ContentPlaceHolder ctl = (ContentPlaceHolder)Page.FindControl("ContentPlaceHolder1");
+                                ContentPlaceHolder ctl = (ContentPlaceHolder)Page.FindControl("ContentPlaceHolder1");
                                 //PlaceHolder plc = (PlaceHolder)ctl.Page.FindControl("plcForQuestion");
-                                RadioButton rdb = FindControl<RadioButton>(this.Page, "plcForQuestion") as RadioButton;
-                                //RadioButton rdb = plc.FindControl($"{questionList[i].QuesID}{k}") as RadioButton;
+                                //RadioButton rdb = FindControl<RadioButton>(this.Page, "plcForQuestion") as RadioButton;
+                                RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}");
+                                //RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl("ContentPlaceHolder1_580");
                                 if (rdb.Checked == true)
                                 {
                                     string[] ansList2 = rdb.Text.Trim().Split(';');

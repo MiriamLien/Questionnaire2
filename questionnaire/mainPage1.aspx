@@ -66,7 +66,6 @@
                     <asp:Label ID="lblMsgPhone" runat="server" Visible="false" ForeColor="Red">此欄位為必填。</asp:Label><br />
                     <asp:Label ID="lblMsgPhone2" runat="server" Text="Label" Visible="false" ForeColor="Red">手機輸入不正確，請輸入09開頭、共十位數的號碼。</asp:Label>
                 </h6>
-                <br />
                 <asp:Literal ID="ltlEmail" runat="server">Email (*) </asp:Literal>&emsp;&nbsp;
         <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" Width="350"></asp:TextBox><br />
                 <h6>

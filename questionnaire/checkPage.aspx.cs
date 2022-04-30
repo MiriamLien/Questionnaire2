@@ -185,11 +185,5 @@ namespace questionnaire
 
             Response.Redirect("listPage.aspx");
         }
-
-
-        private void BackToListPage()
-        {
-            this.Response.Redirect("listPage.aspx", true);
-        }
     }
 }

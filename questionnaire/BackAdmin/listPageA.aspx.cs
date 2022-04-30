@@ -30,21 +30,6 @@ namespace questionnaire.BackAdmin
                     HiddenField hfID = item.FindControl("hfID") as HiddenField;
                     Guid id = new Guid(hfID.Value);
                     var q = this._mgrQuesContents.GetQuesContent(id);
-
-                    if (q.IsEnable == false)
-                    {
-                        if (!(q.StartDate >= DateTime.Now || q.EndDate <= DateTime.Now))
-                        {
-                            ConvertBoolToString(true);
-                        }
-                        else
-                        {
-                            Label lblWarningTitle = item.FindControl("lblWarningTitle") as Label;
-                            lblWarningTitle.Attributes.Add("style", "background-color:Red;");
-                        }
-
-                        ConvertBoolToString(false);
-                    }
                 }
             }
         }
@@ -146,21 +131,6 @@ namespace questionnaire.BackAdmin
                 Response.Redirect("mainPageA_Add.aspx");
             else
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('請先進行登入。');location.href='../Login.aspx';", true);
-        }
-
-        public static string ConvertBoolToString(bool b)
-        {
-            if (b)
-            {
-                if (b == true)
-                {
-                    return "投票中";
-                }
-
-                return "尚未開始";
-            }
-
-            return "已完結";
         }
     }
 }
