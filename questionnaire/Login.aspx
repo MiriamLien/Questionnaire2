@@ -8,7 +8,7 @@
     <title>登入</title>
     <style>
         #form1 {
-            margin-left: 550px;
+            margin-left: 590px;
             margin-top: 240px;
         }
     </style>
@@ -18,14 +18,16 @@
         <div></div>
         <asp:PlaceHolder runat="server" ID="plcLogin">
             <br />
-            Account: 
+            &nbsp;&nbsp;Account: 
             <asp:TextBox ID="txtAccount" runat="server"></asp:TextBox><br />
             <br />
             Password: 
             <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"></asp:TextBox><br />
             <br />
             <br />
-            &emsp;&emsp;&emsp;&emsp;&emsp;
+            &emsp;&emsp;&emsp;&emsp;
+            <asp:Button ID="btnBack" runat="server" ToolTip="返回前台" Text="返回" OnClick="btnBack_Click" />
+            &emsp;&emsp;&emsp;
             <asp:Button ID="btnLogin" runat="server" Text=" 登入 " OnClick="btnLogin_Click" /><br />
             <asp:Literal ID="ltlMessage" runat="server"></asp:Literal>
         </asp:PlaceHolder>

@@ -4,8 +4,12 @@
     <%-- 列表 --%>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
-
     <style>
+        #loginDiv {
+            margin-top: -120px;
+            margin-right: 30px;
+            margin-bottom: 90px;
+        }
         #topDiv {
             border: 2px solid #000000;
             margin: 80px;
@@ -20,6 +24,9 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div id="loginDiv" align="right">
+        <asp:Button ID="btnLogin" runat="server" ToolTip="前往後台請先登入" Text=" 登入 " OnClick="btnLogin_Click" />
+    </div>
     <div id="topDiv">
         <p>
             <asp:Literal ID="ltlTitle" runat="server">問卷標題</asp:Literal>
@@ -50,8 +57,6 @@
                     <asp:Repeater ID="rptList" runat="server">
                         <ItemTemplate>
                             <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
-                            <asp:HiddenField ID="hfStartDate" runat="server" Value='<%# Eval("StartDate") %>' />
-                            <asp:HiddenField ID="hfEndDate" runat="server" Value='<%# Eval("EndDate") %>' />
                             <tr>
                                 <td width="50px">&nbsp;<%# Eval("TitleID") %></td>
                                 <td width="330px">&nbsp;<a href="mainPage.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>

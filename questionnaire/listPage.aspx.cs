@@ -21,28 +21,23 @@ namespace questionnaire
                 this.rptList.DataSource = quesList;
                 this.rptList.DataBind();
 
-                // !!!狀態：投票中、尚未開始、已完結，只有投票中顯示問卷填寫頁超連結，已完結則不會顯示
+                // !!!狀態：只有投票中顯示問卷填寫頁超連結，已完結則不會顯示(隱藏)
                 foreach (RepeaterItem item in this.rptList.Items)
                 {
                     Literal ltlState = item.FindControl("ltlState") as Literal;
                     HiddenField hfID = item.FindControl("hfID") as HiddenField;
-                    //HiddenField hfStartDate = item.FindControl("hfStartDate") as HiddenField;
-                    //HiddenField hfEndDate = item.FindControl("hfEndDate") as HiddenField;
-                    //var StartDT = Convert.ToDateTime(hfStartDate.Value);
-                    //var EndDT = Convert.ToDateTime(hfEndDate.Value);
                     Guid id = new Guid(hfID.Value);
                     var q = this._mgrQuesContents.GetQuesContent(id);
 
-
-                    if (q.StartDate > DateTime.Now && int.TryParse(hfID.Value, out int qID))
+                    if (q.StartDate > DateTime.Now && Guid.TryParse(hfID.Value, out Guid qID))
                     {
                         ltlState.Text = "尚未開始";
                     }
-                    else if (q.EndDate < DateTime.Now && int.TryParse(hfID.Value, out int qID2))
+                    else if (q.EndDate < DateTime.Now && Guid.TryParse(hfID.Value, out Guid qID2))
                     {
                         ltlState.Text = "已完結";
                     }
-                    else if (q.StartDate <= DateTime.Now && q.EndDate >= DateTime.Now && int.TryParse(hfID.Value, out int qID3))
+                    else if (q.StartDate <= DateTime.Now && q.EndDate >= DateTime.Now && Guid.TryParse(hfID.Value, out Guid qID3))
                     {
                         ltlState.Text = "投票中";
                     }
@@ -56,11 +51,11 @@ namespace questionnaire
             string startDT = this.txtStartDate.Text;
             string endDT = this.txtEndDate.Text;
 
-            bool hasTitle = string.IsNullOrWhiteSpace(titleText);
-            bool hasStartDT = string.IsNullOrWhiteSpace(startDT);
-            bool hasEndDT = string.IsNullOrWhiteSpace(endDT);
+            bool hasTitle = !string.IsNullOrWhiteSpace(titleText);
+            bool hasStartDT = !string.IsNullOrWhiteSpace(startDT);
+            bool hasEndDT = !string.IsNullOrWhiteSpace(endDT);
 
-            if (!hasTitle)
+            if (hasTitle)
             {
                 var titleQList = this._mgrQuesContents.GetQuesContentsList(titleText);
 
@@ -74,7 +69,7 @@ namespace questionnaire
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (!hasStartDT && hasEndDT)
+            else if (hasStartDT && !hasEndDT)
             {
                 DateTime sDT = Convert.ToDateTime(startDT);
                 var startDTQList = this._mgrQuesContents.GetStartDateQuesContentsList(sDT);
@@ -89,7 +84,7 @@ namespace questionnaire
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (hasStartDT && !hasEndDT)
+            else if (!hasStartDT && hasEndDT)
             {
                 DateTime eDT = Convert.ToDateTime(endDT);
                 var endDTQList = this._mgrQuesContents.GetEndDateQuesContentsList(eDT);
@@ -104,7 +99,7 @@ namespace questionnaire
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (!hasStartDT && !hasEndDT)
+            else if (hasStartDT && hasEndDT)
             {
                 DateTime sDT = Convert.ToDateTime(startDT);
                 DateTime eDT = Convert.ToDateTime(endDT);
@@ -130,6 +125,11 @@ namespace questionnaire
                 this.rptList.DataSource = QList;
                 this.rptList.DataBind();
             }
+        }
+
+        protected void btnLogin_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Login.aspx");
         }
     }
 }
