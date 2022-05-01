@@ -79,26 +79,8 @@
     <Content Include="BackAdmin\listPageA.aspx" />
     <Content Include="BackAdmin\mainPageA.aspx" />
     <Content Include="BackAdmin\mainPageA_Add.aspx" />
-    <Content Include="bootstrap\css\bootstrap-grid.css" />
-    <Content Include="bootstrap\css\bootstrap-grid.min.css" />
-    <Content Include="bootstrap\css\bootstrap-grid.rtl.css" />
-    <Content Include="bootstrap\css\bootstrap-grid.rtl.min.css" />
-    <Content Include="bootstrap\css\bootstrap-reboot.css" />
-    <Content Include="bootstrap\css\bootstrap-reboot.min.css" />
-    <Content Include="bootstrap\css\bootstrap-reboot.rtl.css" />
-    <Content Include="bootstrap\css\bootstrap-reboot.rtl.min.css" />
-    <Content Include="bootstrap\css\bootstrap-utilities.css" />
-    <Content Include="bootstrap\css\bootstrap-utilities.min.css" />
-    <Content Include="bootstrap\css\bootstrap-utilities.rtl.css" />
-    <Content Include="bootstrap\css\bootstrap-utilities.rtl.min.css" />
     <Content Include="bootstrap\css\bootstrap.css" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
-    <Content Include="bootstrap\css\bootstrap.rtl.css" />
-    <Content Include="bootstrap\css\bootstrap.rtl.min.css" />
-    <Content Include="bootstrap\js\bootstrap.bundle.js" />
-    <Content Include="bootstrap\js\bootstrap.bundle.min.js" />
-    <Content Include="bootstrap\js\bootstrap.esm.js" />
-    <Content Include="bootstrap\js\bootstrap.esm.min.js" />
     <Content Include="bootstrap\js\bootstrap.js" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="checkPage.aspx" />
@@ -106,7 +88,6 @@
     <Content Include="Global.asax" />
     <Content Include="images\addICON.png" />
     <Content Include="images\deleteICON.png" />
-    <Content Include="JavaScript\jquery-tablepage-1.0.js" />
     <Content Include="JavaScript\jquery.js" />
     <Content Include="JavaScript\jquery.min.js" />
     <Content Include="listPage.aspx" />
@@ -246,28 +227,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bootstrap\css\bootstrap-grid.css.map" />
-    <Content Include="bootstrap\css\bootstrap-grid.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap-grid.rtl.css.map" />
-    <Content Include="bootstrap\css\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap-reboot.css.map" />
-    <Content Include="bootstrap\css\bootstrap-reboot.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap-reboot.rtl.css.map" />
-    <Content Include="bootstrap\css\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap-utilities.css.map" />
-    <Content Include="bootstrap\css\bootstrap-utilities.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap-utilities.rtl.css.map" />
-    <Content Include="bootstrap\css\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap.css.map" />
-    <Content Include="bootstrap\css\bootstrap.min.css.map" />
-    <Content Include="bootstrap\css\bootstrap.rtl.css.map" />
-    <Content Include="bootstrap\css\bootstrap.rtl.min.css.map" />
-    <Content Include="bootstrap\js\bootstrap.bundle.js.map" />
-    <Content Include="bootstrap\js\bootstrap.bundle.min.js.map" />
-    <Content Include="bootstrap\js\bootstrap.esm.js.map" />
-    <Content Include="bootstrap\js\bootstrap.esm.min.js.map" />
-    <Content Include="bootstrap\js\bootstrap.js.map" />
-    <Content Include="bootstrap\js\bootstrap.min.js.map" />
     <Content Include="Index.Master" />
     <Content Include="BackAdmin\Admin.Master" />
     <None Include="packages.config" />

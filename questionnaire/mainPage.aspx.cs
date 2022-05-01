@@ -45,6 +45,11 @@ namespace questionnaire
                 //}
 
                 // 顯示資料
+                this.ltlState.Text = model.IsEnable.ToString();
+                if (this.ltlState.Text == "True")
+                {
+                    this.ltlState.Text = "投票中";
+                }
                 this.ltlDate.Text = $"{model.StartDate.ToShortDateString()} ~ {model.EndDate.ToShortDateString()}";
                 this.ltlTitle.Text = model.Title;
                 this.ltlBody.Text = model.Body;

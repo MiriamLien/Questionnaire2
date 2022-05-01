@@ -40,11 +40,11 @@ namespace questionnaire.BackAdmin
             string startDT = this.txtStartDate.Text;
             string endDT = this.txtEndDate.Text;
 
-            bool hasTitle = string.IsNullOrWhiteSpace(titleText);
-            bool hasStartDT = string.IsNullOrWhiteSpace(startDT);
-            bool hasEndDT = string.IsNullOrWhiteSpace(endDT);
+            bool hasTitle = !string.IsNullOrWhiteSpace(titleText);
+            bool hasStartDT = !string.IsNullOrWhiteSpace(startDT);
+            bool hasEndDT = !string.IsNullOrWhiteSpace(endDT);
 
-            if (!hasTitle)
+            if (hasTitle)
             {
                 var titleQList = this._mgrQuesContents.GetQuesContentsList(titleText);
 
@@ -58,7 +58,7 @@ namespace questionnaire.BackAdmin
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (!hasStartDT && hasEndDT)
+            else if (hasStartDT && !hasEndDT)
             {
                 DateTime sDT = Convert.ToDateTime(startDT);
                 var startDTQList = this._mgrQuesContents.GetStartDateQuesContentsList(sDT);
@@ -73,7 +73,7 @@ namespace questionnaire.BackAdmin
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (hasStartDT && !hasEndDT)
+            else if (!hasStartDT && hasEndDT)
             {
                 DateTime eDT = Convert.ToDateTime(endDT);
                 var endDTQList = this._mgrQuesContents.GetEndDateQuesContentsList(eDT);
@@ -88,7 +88,7 @@ namespace questionnaire.BackAdmin
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
                 }
             }
-            else if (!hasStartDT && !hasEndDT)
+            else if (hasStartDT && hasEndDT)
             {
                 DateTime sDT = Convert.ToDateTime(startDT);
                 DateTime eDT = Convert.ToDateTime(endDT);

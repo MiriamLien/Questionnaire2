@@ -4,8 +4,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <!--套用jQuery-->
-    <script src="../JavaScript/jquery-tablepage-1.0.js"></script>
+    <%-- 列表 --%>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
     <style>
         li {
             width: auto;
@@ -158,33 +159,32 @@
             <asp:PlaceHolder runat="server" ID="plcInfo1">
                 <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
                 <p></p>
-                <table id="tblUserInfo" class="display" border="1">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>編號</th>
-                            <th>姓名</th>
-                            <th>填寫時間</th>
-                            <th>觀看細節</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <asp:Repeater ID="rptUserInfo" runat="server">
-                            <ItemTemplate>
-                                <tr>
-                                    <td width="20"></td>
-                                    <td width="60px">
-                                        &nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
-                                    <td width="120px"><%# Eval("Name") %></td>
-                                    <td width="220px"><%# Eval("CreateDate") %></td>
-                                    <td width="80px">
-                                        <asp:Button ID="btnUserInfoAndQues" runat="server" Text="前往" CommandName='<%# Eval("UserID") %>' OnCommand="btnUserInfoAndQues_Command" />
-                                    </td>
-                                </tr>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                    </tbody>
-                </table>
+                <div style="width: 600px;">
+                    <table id="tblUserInfo" class="display" border="1">
+                        <thead>
+                            <tr>
+                                <th>編號</th>
+                                <th>姓名</th>
+                                <th>填寫時間</th>
+                                <th>觀看細節</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <asp:Repeater ID="rptUserInfo" runat="server">
+                                <ItemTemplate>
+                                    <tr>
+                                        <td width="50px">&nbsp;&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
+                                        <td width="180px">&nbsp;&nbsp;<%# Eval("Name") %></td>
+                                        <td width="220px">&nbsp;&nbsp;<%# Eval("CreateDate") %></td>
+                                        <td width="80px">
+                                            &nbsp;&nbsp;<asp:Button ID="btnUserInfoAndQues" runat="server" Text="前往" CommandName='<%# Eval("UserID") %>' OnCommand="btnUserInfoAndQues_Command" />
+                                        </td>
+                                    </tr>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </tbody>
+                    </table>
+                </div>
                 <br />
                 <br />
                 <br />
@@ -220,10 +220,10 @@
                 <asp:Repeater ID="rptStatistic" runat="server">
                     <ItemTemplate>
                         <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
-                        <asp:Literal ID="Literal2" runat="server" Text='<%# Eval("QuesTitle") %>'>
+                        <asp:Literal ID="ltlStaticQTitle" runat="server" Text='<%# Eval("QuesTitle") %>'>
                         </asp:Literal>
                         <br />
-                        <asp:Literal ID="Literal3" runat="server" Text='<%# Eval("QuesChoices") %>'>
+                        <asp:Literal ID="ltlStaticQAns" runat="server" Text='<%# Eval("QuesChoices") %>'>
                         </asp:Literal>
                         <br />
                         <br />
