@@ -16,13 +16,6 @@ namespace questionnaire.BackAdmin
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 問題類型下拉繫結
-            //var QTypeList = this._mgrQuesType.GetQuesTypesList();
-            //this.ddlAnsType.DataSource = QTypeList;
-            //this.ddlAnsType.DataValueField = "QuesTypeID";
-            //this.ddlAnsType.DataTextField = "QuesType1";
-            //this.ddlAnsType.DataBind();
-
             string a = string.Empty;
             var quesList = this._mgrCQ.GetCQsList(a);
             this.rptCQ.DataSource = quesList;
@@ -60,10 +53,6 @@ namespace questionnaire.BackAdmin
         //新增問題視窗內的儲存按鈕
         protected void btnSaveAddCQ_Click(object sender, EventArgs e)
         {
-            string title = this.txtAddQues.Text.Trim();
-            string ans = this.txtAddAns.Text.Trim();
-            bool mustAns = this.ckbAddCQMustAns.Checked;
-
             // 生成問題編號
             int i = 1;
             foreach (RepeaterItem item in this.rptCQ.Items)
@@ -73,22 +62,47 @@ namespace questionnaire.BackAdmin
                 i++;
             }
 
-            CQModel newCQ = new CQModel()
-            {
-                CQID = i,
-                CQTitle = title,
-                QuesTypeID = Convert.ToInt32(this.ddlAddAnsType.SelectedValue),
-                CQChoices = ans,
-                CQIsEnable = mustAns
-            };
+            var quesTypeID = Convert.ToInt32(this.ddlAddAnsType.SelectedValue);
+            string title = this.txtAddQues.Text.Trim();
+            string ans = this.txtAddAns.Text.Trim();
+            bool mustAns = this.ckbAddCQMustAns.Checked;
 
-            this._mgrCQ.CreateCQ(newCQ);
-            this.plcAddCQ.Visible = false;
-            this.ImgBtnAdd.Visible = true;
-            this.plcCQA.Visible = true;
-            this.plcCQA.Visible = true;
-            this.ltlAddMsg.Visible = true;
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+            if (quesTypeID == 2 || quesTypeID == 3)
+            {
+                CQModel newCQ = new CQModel()
+                {
+                    CQTitle = title,
+                    CQChoices = ans,
+                    QuesTypeID = quesTypeID,
+                    CQIsEnable = mustAns
+                };
+
+                this._mgrCQ.CreateCQ(newCQ);
+                this.plcAddCQ.Visible = false;
+                this.ImgBtnAdd.Visible = true;
+                this.plcCQA.Visible = true;
+                this.plcCQA.Visible = true;
+                this.ltlAddMsg.Visible = true;
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+            }
+            else
+            {
+                CQModel newCQ = new CQModel()
+                {
+                    CQTitle = title,
+                    QuesTypeID = quesTypeID,
+                    CQIsEnable = mustAns
+                };
+
+                this._mgrCQ.CreateCQ(newCQ);
+                this.plcAddCQ.Visible = false;
+                this.ImgBtnAdd.Visible = true;
+                this.plcCQA.Visible = true;
+                this.plcCQA.Visible = true;
+                this.ltlAddMsg.Visible = true;
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+            }
+                
         }
 
         protected void btnCancelAddCQ_Click(object sender, EventArgs e)
@@ -117,36 +131,71 @@ namespace questionnaire.BackAdmin
 
             int id = Convert.ToInt32(e.CommandName);
             var cq = this._mgrCQ.GetCQs(id);
+            hfCQid.Value = id.ToString();
 
-            this.txtEditNum.Text = cq.CQID.ToString();
-            this.txtEditQues.Text = cq.CQTitle.ToString();
-            this.txtEditAns.Text = cq.CQChoices.ToString();
-            this.ddlEditAnsType.SelectedValue = cq.QuesTypeID.ToString();
-            this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
+            if (cq.QuesTypeID == 2 || cq.QuesTypeID == 3)
+            {
+                this.txtEditNum.Text = cq.CQID.ToString();
+                this.txtEditQues.Text = cq.CQTitle.ToString();
+                this.txtEditAns.Text = cq.CQChoices.ToString();
+                this.ddlEditAnsType.SelectedValue = cq.QuesTypeID.ToString();
+                this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
+            }
+            else
+            {
+                this.txtEditNum.Text = cq.CQID.ToString();
+                this.txtEditQues.Text = cq.CQTitle.ToString();
+                this.ddlEditAnsType.SelectedValue = cq.QuesTypeID.ToString();
+                this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
+            }    
+                
         }
 
-        // 編輯視窗內的儲存鈕!!!!!! 
+
         protected void btnSaveEditCQ_Click(object sender, EventArgs e)
         {
             try
             {
+                var cq = this._mgrCQ.GetCQs(Convert.ToInt32(hfCQid.Value));
                 string title = this.txtEditQues.Text.Trim();
                 string ans = this.txtEditAns.Text.Trim();
 
-                if (title != null && ans != null) //無法更改!!!!!!!!!!!
+                if (cq.QuesTypeID == 2 || cq.QuesTypeID == 3)
                 {
-                    CQModel updateCQ = new CQModel()
+                    if (title != null && ans != null)
                     {
-                        CQTitle = title,
-                        CQChoices = ans,
-                        QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
-                        CQIsEnable = this.ckbEditCQMustAns.Checked
-                    };
+                        CQModel updateCQ = new CQModel()
+                        {
+                            CQID = cq.CQID,
+                            CQTitle = title,
+                            CQChoices = ans,
+                            QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
+                            CQIsEnable = this.ckbEditCQMustAns.Checked
+                        };
 
-                    this._mgrCQ.UpdateCQ(updateCQ);
+                        this._mgrCQ.UpdateCQ(updateCQ);
 
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('編輯完畢。');location.href='CommonQuesPageA.aspx';", true);
-                    this.plcEditCQ.Visible = false;
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('編輯完畢。');location.href='CommonQuesPageA.aspx';", true);
+                        this.plcEditCQ.Visible = false;
+                    }
+                }
+                else
+                {
+                    if (title != null)
+                    {
+                        CQModel updateCQ = new CQModel()
+                        {
+                            CQID = cq.CQID,
+                            CQTitle = title,
+                            QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
+                            CQIsEnable = this.ckbEditCQMustAns.Checked
+                        };
+
+                        this._mgrCQ.UpdateCQ(updateCQ);
+
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('編輯完畢。');location.href='CommonQuesPageA.aspx';", true);
+                        this.plcEditCQ.Visible = false;
+                    }
                 }
             }
             catch (Exception)

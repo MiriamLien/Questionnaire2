@@ -40,200 +40,200 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#paper">問卷</a></li>
-        <li><a data-toggle="tab" href="#question">問題</a></li>
-        <li><a data-toggle="tab" href="#userInfo">填寫資料</a></li>
-        <li><a data-toggle="tab" href="#statistic">統計</a></li>
-    </ul>
+    <div class="tab_alles">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#paper">問卷</a></li>
+            <li><a data-toggle="tab" href="#question">問題</a></li>
+            <li><a data-toggle="tab" href="#userInfo">填寫資料</a></li>
+            <li><a data-toggle="tab" href="#statistic">統計</a></li>
+        </ul>
 
-    <div class="tab-content">
-        <div id="paper" class="tab-pane fade in active">
-            <div id="space1">
-                <asp:Literal ID="ltlTitle" runat="server">問卷名稱</asp:Literal>
-                <asp:TextBox ID="txtTitle" runat="server" Width="320"></asp:TextBox><br />
-                <br />
-                <asp:Literal ID="ltlContent" runat="server">描述內容</asp:Literal>
-                <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="5" Width="320"></asp:TextBox><br />
-                <br />
-                <asp:Literal ID="ltlStartDate" runat="server">開始時間</asp:Literal>
-                <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
-                <br />
-                <asp:Literal ID="ltlEndDate" runat="server">結束時間</asp:Literal>
-                <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
-                <br />
-                <br />
-                <asp:Label runat="server" ID="lblMsg"></asp:Label>
-                <br />
-                <br />
-                <asp:CheckBox ID="ckbPaperEnable" runat="server" Text="已啟用" Checked="true" />
-                <br />
-            </div>
-            <div id="btnSpace1">
-                <asp:Button ID="btnEditPaperCancel" runat="server" Text="取消" OnClick="btnEditPaperCancel_Click" />
-                &emsp;&emsp;&emsp;&emsp;&emsp;
+        <div class="tab-content">
+            <div id="paper" class="tab-pane fade in active">
+                <div id="space1">
+                    <asp:Literal ID="ltlTitle" runat="server">問卷名稱</asp:Literal>
+                    <asp:TextBox ID="txtTitle" runat="server" Width="320"></asp:TextBox><br />
+                    <br />
+                    <asp:Literal ID="ltlContent" runat="server">描述內容</asp:Literal>
+                    <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="5" Width="320"></asp:TextBox><br />
+                    <br />
+                    <asp:Literal ID="ltlStartDate" runat="server">開始時間</asp:Literal>
+                    <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                    <br />
+                    <asp:Literal ID="ltlEndDate" runat="server">結束時間</asp:Literal>
+                    <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                    <br />
+                    <br />
+                    <asp:Label runat="server" ID="lblMsg"></asp:Label>
+                    <br />
+                    <br />
+                    <asp:CheckBox ID="ckbPaperEnable" runat="server" Text="已啟用" Checked="true" />
+                    <br />
+                </div>
+                <div id="btnSpace1">
+                    <asp:Button ID="btnEditPaperCancel" runat="server" Text="取消" OnClick="btnEditPaperCancel_Click" />
+                    &emsp;&emsp;&emsp;&emsp;&emsp;
                 <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click" />
-                <br />
-                <br />
-                <br />
+                    <br />
+                    <br />
+                    <br />
+                </div>
             </div>
-        </div>
 
-        <div id="question" class="tab-pane fade">
-            <asp:PlaceHolder ID="plcQues" runat="server">
-                <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
-                <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
+            <div id="question" class="tab-pane fade">
+                <asp:PlaceHolder ID="plcQues" runat="server">
+                    <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
+                    <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
             <asp:Button ID="btnUse" runat="server" Text="填入" OnClick="btnUse_Click" />
-                <br />
-                <br />
-                <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
-                <asp:TextBox ID="txtQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
+                    <br />
+                    <br />
+                    <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
+                    <asp:TextBox ID="txtQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
             <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
             <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
-                <br />
-                <br />
-                <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
-                <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                    <br />
+                    <br />
+                    <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
+                    <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnAdd" runat="server" Text="加入" CommandName='<%# Eval("QuesID") %>' OnCommand="btnAdd_Command" />
-            </asp:PlaceHolder>
+                </asp:PlaceHolder>
 
-            <%--編輯問題--%>
-            <asp:PlaceHolder ID="plcEditQues" runat="server" Visible="false">
-                <asp:Literal ID="ltlEditQuesTitle" runat="server">問題</asp:Literal>
-                <asp:TextBox ID="txtEditQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
+                <%--編輯問題--%>
+                <asp:PlaceHolder ID="plcEditQues" runat="server" Visible="false">
+                    <asp:Literal ID="ltlEditQuesTitle" runat="server">問題</asp:Literal>
+                    <asp:TextBox ID="txtEditQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
             <asp:DropDownList ID="ddlEditAnsType" runat="server"></asp:DropDownList>&nbsp;
             <asp:CheckBox ID="ckbEditMustAns" runat="server" Text="必填" />
-                <br />
-                <br />
-                <asp:Literal ID="ltlEditQuesAns" runat="server">回答</asp:Literal>
-                <asp:TextBox ID="txtEditQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                    <br />
+                    <br />
+                    <asp:Literal ID="ltlEditQuesAns" runat="server">回答</asp:Literal>
+                    <asp:TextBox ID="txtEditQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEditCheck_Command" />&nbsp;
             <asp:Button ID="btnEditCancel" runat="server" Text="取消" OnClick="btnEditCancel_Click" />
-            </asp:PlaceHolder>
-            <br />
-            <br />
-            <br />
-            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除嗎？')" /><br />
+                </asp:PlaceHolder>
+                <br />
+                <br />
+                <br />
+                <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除嗎？')" /><br />
 
-            <table border="1">
-                <tr>
-                    <th></th>
-                    <th>編號</th>
-                    <th>問題</th>
-                    <th>種類</th>
-                    <th>必填</th>
-                    <th></th>
-                </tr>
-                <asp:Repeater ID="rptQuestion" runat="server">
-                    <ItemTemplate>
-                        <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("QuesID") %>' />
-                        <tr>
-                            <td width="50">&emsp;<asp:CheckBox ID="ckbForDel" runat="server" />
-                            </td>
-                            <td width="60">&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal>
-                            </td>
-                            <td width="280">
-                                <%# Eval("QuesTitle") %>
-                            </td>
-                            <td width="100">
-                                <%# Eval("QuesType1") %>
-                            </td>
-                            <td width="50">
-                                <asp:CheckBox ID="ckbMustAns2" runat="server" Checked='<%# Eval("IsEnable") %>' Enabled="false" />
-                            </td>
-                            <td width="80">
-                                <asp:Button ID="btnEdit" runat="server" Text="編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEdit_Command" />
-                            </td>
-                        </tr>
-                    </ItemTemplate>
-                </asp:Repeater>
-            </table>
-            <br />
-            <br />
-            <br />
-        </div>
-
-        <div id="userInfo" class="tab-pane fade">
-            <asp:PlaceHolder runat="server" ID="plcInfo1">
-                <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
-                <p></p>
-                <div style="width: 600px;">
-                    <table id="tblUserInfo" class="display" border="1">
-                        <thead>
+                <table border="1">
+                    <tr>
+                        <th></th>
+                        <th>編號</th>
+                        <th>問題</th>
+                        <th>種類</th>
+                        <th>必填</th>
+                        <th></th>
+                    </tr>
+                    <asp:Repeater ID="rptQuestion" runat="server">
+                        <ItemTemplate>
+                            <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("QuesID") %>' />
                             <tr>
-                                <th>編號</th>
-                                <th>姓名</th>
-                                <th>填寫時間</th>
-                                <th>觀看細節</th>
+                                <td width="50">&emsp;<asp:CheckBox ID="ckbForDel" runat="server" />
+                                </td>
+                                <td width="60">&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal>
+                                </td>
+                                <td width="280">
+                                    <%# Eval("QuesTitle") %>
+                                </td>
+                                <td width="100">
+                                    <%# Eval("QuesType1") %>
+                                </td>
+                                <td width="50">
+                                    <asp:CheckBox ID="ckbMustAns2" runat="server" Checked='<%# Eval("IsEnable") %>' Enabled="false" />
+                                </td>
+                                <td width="80">
+                                    <asp:Button ID="btnEdit" runat="server" Text="編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEdit_Command" />
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <asp:Repeater ID="rptUserInfo" runat="server">
-                                <ItemTemplate>
-                                    <tr>
-                                        <td width="50px">&nbsp;&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
-                                        <td width="180px">&nbsp;&nbsp;<%# Eval("Name") %></td>
-                                        <td width="220px">&nbsp;&nbsp;<%# Eval("CreateDate") %></td>
-                                        <td width="80px">
-                                            &nbsp;&nbsp;<asp:Button ID="btnUserInfoAndQues" runat="server" Text="前往" CommandName='<%# Eval("UserID") %>' OnCommand="btnUserInfoAndQues_Command" />
-                                        </td>
-                                    </tr>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </tbody>
-                    </table>
-                </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </table>
                 <br />
                 <br />
                 <br />
-                <br />
-            </asp:PlaceHolder>
+            </div>
 
-            <asp:PlaceHolder runat="server" ID="plcInfo2" Visible="false">
-                <div id="info2">
-                    <asp:Literal ID="ltlName" runat="server">&nbsp;&nbsp;姓名 </asp:Literal>
-                    <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+            <div id="userInfo" class="tab-pane fade">
+                <asp:PlaceHolder runat="server" ID="plcInfo1">
+                    <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
+                    <p></p>
+                    <div style="width: 600px;">
+                        <table id="tblUserInfo" class="display" border="1">
+                            <thead>
+                                <tr>
+                                    <th>編號</th>
+                                    <th>姓名</th>
+                                    <th>填寫時間</th>
+                                    <th>觀看細節</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <asp:Repeater ID="rptUserInfo" runat="server">
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td width="50px">&nbsp;&nbsp;<asp:Literal runat="server" ID="ltlNum"></asp:Literal></td>
+                                            <td width="180px">&nbsp;&nbsp;<%# Eval("Name") %></td>
+                                            <td width="220px">&nbsp;&nbsp;<%# Eval("CreateDate") %></td>
+                                            <td width="80px">&nbsp;&nbsp;<asp:Button ID="btnUserInfoAndQues" runat="server" Text="前往" CommandName='<%# Eval("UserID") %>' OnCommand="btnUserInfoAndQues_Command" />
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </asp:PlaceHolder>
+
+                <asp:PlaceHolder runat="server" ID="plcInfo2" Visible="false">
+                    <div id="info2">
+                        <asp:Literal ID="ltlName" runat="server">&nbsp;&nbsp;姓名 </asp:Literal>
+                        <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                 <asp:Literal ID="ltlPhone" runat="server"> 手機 </asp:Literal>
-                    <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone"></asp:TextBox><br />
-                    <br />
-                    <asp:Literal ID="ltlEmail" runat="server">Email </asp:Literal>
-                    <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
-                    &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        <asp:TextBox ID="txtPhone" runat="server" TextMode="Phone"></asp:TextBox><br />
+                        <br />
+                        <asp:Literal ID="ltlEmail" runat="server">Email </asp:Literal>
+                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email"></asp:TextBox>
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                 <asp:Literal ID="ltlAge" runat="server"> 年齡 </asp:Literal>
-                    <asp:TextBox ID="txtAge" runat="server" TextMode="Number"></asp:TextBox><br />
-                    <br />
-                    <div id="dateDiv">
-                        <asp:Literal ID="ltlCreateDate" runat="server"></asp:Literal>
+                        <asp:TextBox ID="txtAge" runat="server" TextMode="Number"></asp:TextBox><br />
+                        <br />
+                        <div id="dateDiv">
+                            <asp:Literal ID="ltlCreateDate" runat="server"></asp:Literal>
+                        </div>
+                        <div id="questionDiv">
+                            <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
+                        </div>
                     </div>
-                    <div id="questionDiv">
-                        <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
-                    </div>
-                </div>
-            </asp:PlaceHolder>
-        </div>
+                </asp:PlaceHolder>
+            </div>
 
-        <div id="statistic" class="tab-pane fade">
-            <div id="statisticDiv">
-                <asp:Repeater ID="rptStatistic" runat="server">
-                    <ItemTemplate>
-                        <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
-                        <asp:Literal ID="ltlStaticQTitle" runat="server" Text='<%# Eval("QuesTitle") %>'>
-                        </asp:Literal>
-                        <br />
-                        <asp:Literal ID="ltlStaticQAns" runat="server" Text='<%# Eval("QuesChoices") %>'>
-                        </asp:Literal>
-                        <br />
-                        <br />
-                        <br />
-                    </ItemTemplate>
-                </asp:Repeater>
+            <div id="statistic" class="tab-pane fade">
+                <div id="statisticDiv">
+                    <asp:Repeater ID="rptStatistic" runat="server">
+                        <ItemTemplate>
+                            <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
+                            <asp:Literal ID="ltlStaticQTitle" runat="server" Text='<%# Eval("QuesTitle") %>'>
+                            </asp:Literal>
+                            <br />
+                            <asp:Literal ID="ltlStaticQAns" runat="server" Text='<%# Eval("QuesChoices") %>'>
+                            </asp:Literal>
+                            <br />
+                            <br />
+                            <br />
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </div>
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function () {
             $('#tblUserInfo').DataTable({
@@ -253,5 +253,7 @@
                 "order": [[0, "desc"]],
             });
         });
+
+
     </script>
 </asp:Content>

@@ -59,7 +59,7 @@
                             <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
                             <tr>
                                 <td width="50px">&nbsp;<%# Eval("TitleID") %></td>
-                                <td width="330px">&nbsp;<a href="mainPage.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>
+                                <td width="330px">&nbsp;<a href="Form1.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>
                                 <td width="90px">
                                     &nbsp;<asp:Literal ID="ltlState" runat="server" Text='<%# Eval("strIsEnable") %>'></asp:Literal>
                                 </td>

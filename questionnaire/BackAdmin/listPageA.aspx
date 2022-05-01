@@ -47,13 +47,13 @@
                     <ItemTemplate>
                         <asp:HiddenField ID="hfID" runat="server" Value='<%# Eval("ID") %>' />
                         <tr>
-                            <td width="60px">&nbsp;<%# Eval("TitleID") %></td>
+                            <td width="60px" align="center"><%# Eval("TitleID") %></td>
                             <td width="350px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>"><%# Eval("Title") %></a></td>
                             <td width="100px">&nbsp;
                                 <asp:Literal ID="ltlState" runat="server" Text='<%# Eval("strIsEnable") %>'></asp:Literal>
                                 </td>
-                            <td width="140px">&nbsp;<%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
-                            <td width="140px">&nbsp;<%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
+                            <td width="140px"><%# Eval("StartDate", "{0:yyyy/MM/dd}") %></td>
+                            <td width="140px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
                             <td width="90px">&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
                             <td width="70px">
                                 <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />

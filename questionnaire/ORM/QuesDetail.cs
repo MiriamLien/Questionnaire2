@@ -29,7 +29,7 @@ namespace questionnaire.ORM
 
         public bool IsEnable { get; set; }
 
-        public int? Count { get; set; }
+        //public int? Count { get; set; }
 
         public virtual Content Content { get; set; }
 
