@@ -27,12 +27,14 @@ namespace questionnaire.Managers
                         query =
                         from item in contextModel.CommonQues
                         where item.CQTitle.Contains(keyword)
+                        orderby item.CQID descending
                         select item;
                     }
                     else
                     {
                         query =
                             from item in contextModel.CommonQues
+                            orderby item.CQID descending
                             select item;
                     }
 

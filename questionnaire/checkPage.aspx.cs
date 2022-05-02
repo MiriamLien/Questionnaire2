@@ -66,18 +66,18 @@ namespace questionnaire
             string age = this.Session["Age"] as string;
 
             if (!string.IsNullOrWhiteSpace(name))
-                this.ltlNameAns.Text = name.ToString();
-            else
-                this.ltlNameAns.Text = "No Session";
+                this.ltlNameAns.Text = name;
+            //else
+            //    this.ltlNameAns.Text = "No Session";
 
             if (!string.IsNullOrWhiteSpace(phone))
-                this.ltlPhoneAns.Text = phone.ToString();
+                this.ltlPhoneAns.Text = phone;
 
             if (!string.IsNullOrWhiteSpace(email))
-                this.ltlEmailAns.Text = email.ToString();
+                this.ltlEmailAns.Text = email;
 
             if (!string.IsNullOrWhiteSpace(age))
-                this.ltlAgeAns.Text = age.ToString();
+                this.ltlAgeAns.Text = age;
         }
 
         private void createTextBox(QuesDetail ques)

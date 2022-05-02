@@ -83,6 +83,7 @@
                 },
                 "lengthMenu": [[10, 15, 20, "全部"], [10, 15, 20, "全部"]],
                 "order": [[0, "desc"]],
+                "ordering": false
             });
         });
     </script>
