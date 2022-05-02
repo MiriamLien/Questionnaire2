@@ -20,14 +20,17 @@ namespace questionnaire
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
                 string idText = Request.QueryString["ID"];
                 Guid questionnaireID = Guid.Parse(idText);
 
                 var quesList = this._mgrQuesContents.GetQuesContent(questionnaireID);
 
-                // 取得問卷日期和標題
+                // 取得問卷狀態、日期和標題
+                this.ltlState.Text = quesList.IsEnable.ToString();
+                if (this.ltlState.Text == "True")
+                {
+                    this.ltlState.Text = "投票中";
+                }
                 this.ltlDate.Text = $"{quesList.StartDate.ToShortDateString()} ~ {quesList.EndDate.ToShortDateString()}";
                 this.ltlTitle.Text = quesList.Title;
 
@@ -58,7 +61,8 @@ namespace questionnaire
                             break;
                     }
                 }
-            }
+
+            var ans = (this.Session["Answer"]).ToString().Split(';');
 
             string name = this.Session["Name"] as string;
             string phone = this.Session["Phone"] as string;
@@ -67,8 +71,6 @@ namespace questionnaire
 
             if (!string.IsNullOrWhiteSpace(name))
                 this.ltlNameAns.Text = name;
-            //else
-            //    this.ltlNameAns.Text = "No Session";
 
             if (!string.IsNullOrWhiteSpace(phone))
                 this.ltlPhoneAns.Text = phone;
@@ -128,6 +130,7 @@ namespace questionnaire
         // 返回填寫問卷內容的內頁
         protected void btnChange_Click(object sender, EventArgs e)
         {
+
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
 

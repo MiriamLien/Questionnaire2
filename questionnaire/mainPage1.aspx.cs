@@ -44,12 +44,20 @@ namespace questionnaire
                 //}
 
                 // 顯示資料
+                this.ltlState.Text = model.IsEnable.ToString();
+                if (this.ltlState.Text == "True")
+                {
+                    this.ltlState.Text = "投票中";
+                }
                 this.ltlDate.Text = $"{model.StartDate.ToShortDateString()} ~ {model.EndDate.ToShortDateString()}";
                 this.ltlTitle.Text = model.Title;
                 this.ltlBody.Text = model.Body;
 
+
+                string idText2 = Request.QueryString["ID"];
+                Guid questionnaireID2 = Guid.Parse(idText2);
                 // 取得問題內容
-                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID2);
 
                 foreach (var question in questionList)
                 {
@@ -101,7 +109,6 @@ namespace questionnaire
                 RadioButton radio = new RadioButton();
                 radio.Text = ansArray[i].ToString();
                 radio.ID = ques.QuesID + i.ToString();
-                //radio.ID = "132";
                 radio.GroupName = "group" + ques.QuesID;
                 this.plcForQuestion.Controls.Add(radio);
                 this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
@@ -209,6 +216,7 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
             List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
+
             for (int i = 0; i < questionList.Count; i++)
             {
                 var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
@@ -219,18 +227,25 @@ namespace questionnaire
                     QuesTypeID = q.QuesTypeID,
                 };
 
-
                 switch (questionList[i].QuesTypeID)
                 {
                     case 1:
-                        TextBox textBox = this.plcForQuestion.FindControl($"Q{questionList[i].QuesID}") as TextBox;
-                        string[] ansList1 = textBox.Text.Trim().Split(';');
-                        var ans1 = ansList1[i].TrimEnd(';').ToString();
-                        this.Session["ans1"] = ans1;
-                        break;
+                        TextBox textBox = (TextBox)this.plcForQuestion.FindControl($"Q{questionList[i].QuesID}");
+                        if (textBox.Text != null)
+                        {
+                            Ans.Answer = textBox.Text + ";";
+                            answerList.Add(Ans);
+                            break;
+                        }
+                        else
+                        {
+                            Ans.Answer = " " + ";";
+                            answerList.Add(Ans);
+                            break;
+                        }
 
                     case 2:
-                        for (int j = -1; j < i; j++)
+                        for (int j = -1; j < questionList.Count; j++)
                         {
                             int check = 0;
 
@@ -240,7 +255,7 @@ namespace questionnaire
                             {
                                 //RadioButton rdb = FindControl<RadioButton>(this.Page, $"{questionList[i].QuesID}{k}") as RadioButton;
                                 RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}");
-                                //RadioButton rdb = this.plcForQuestion.FindControl("132") as RadioButton;
+
                                 if (rdb.Checked == true)
                                 {
                                     Ans.Answer = rdb.Text + ";";
@@ -257,60 +272,36 @@ namespace questionnaire
                     case 3:
                         for (int j = -1; j < questionList.Count; j++)
                         {
+                            int check2 = 0;
+
                             // QArray -> 把一個題目的所有選項放在陣列裡
-                            string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
-                            for (int k = 0; k < QArray.Length; k++)
+                            string[] QArray2 = (questionList[i].QuesChoices).Trim().Split(';');
+                            for (int k = 0; k < QArray2.Length; k++)
                             {
-                                CheckBox ckb = this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}") as CheckBox;
+                                CheckBox ckb = (CheckBox)this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}");
+
                                 if (ckb.Checked == true)
                                 {
-                                    string[] ansList3 = ckb.Text.Trim().Split(';');
-                                    var ans3 = ansList3[i].TrimEnd(';').ToString();
-                                    this.Session["ans3"] = ans3;
+                                    Ans.Answer += ckb.Text + ";";
+                                    check2++;
+                                }
+                                else if (ckb.Checked == false)
+                                    check2++;
+
+                                if (check2 == QArray2.Length)
+                                {
+                                    answerList.Add(Ans);
+                                    break;
                                 }
                             }
+                            break;
                         }
                         break;
                 }
-
             }
-
+            this.Session["Answer"] = answerList;
             Response.Redirect($"checkPage.aspx?ID={questionnaireID}");
         }
-
-        public T FindControl<T>(string id) where T : Control
-        {
-            return FindControl<T>(Page, id);
-        }
-
-        public static T FindControl<T>(Control startingControl, string id) where T : Control
-        {
-            // 取得 T 的預設值，通常是 null
-            T found = default(T);
-
-            int controlCount = startingControl.Controls.Count;
-
-            if (controlCount > 0)
-            {
-                for (int i = 0; i < controlCount; i++)
-                {
-                    Control activeControl = startingControl.Controls[i];
-                    if (activeControl is T)
-                    {
-                        found = startingControl.Controls[i] as T;
-                        if (string.Compare(id, found.ID, true) == 0) break;
-                        else found = null;
-                    }
-                    else
-                    {
-                        found = FindControl<T>(activeControl, id);
-                        if (found != null) break;
-                    }
-                }
-            }
-            return found;
-        }
-
 
         private void BackToListPage()
         {

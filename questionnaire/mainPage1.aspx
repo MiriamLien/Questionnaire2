@@ -36,7 +36,7 @@
         </div>
         <div>
             <div id="topDiv" align="right">
-                <asp:Literal ID="ltlState" runat="server"></asp:Literal>
+                <asp:Literal ID="ltlState" runat="server"></asp:Literal><br />
                 <asp:Literal ID="ltlDate" runat="server"></asp:Literal>
             </div>
             <div id="titleDiv">

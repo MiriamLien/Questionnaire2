@@ -160,6 +160,9 @@ namespace questionnaire.BackAdmin
         // 編輯問卷後送出
         protected void btnEditPaperSend_Click(object sender, EventArgs e)
         {
+            //this.ltlMsg.Visible = true;
+            //沒有顯示
+
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
             var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
@@ -180,9 +183,8 @@ namespace questionnaire.BackAdmin
                 };
 
                 this._mgrQuesContents.UpdateQues(model);
+                Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
             }
-
-            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
         }
         #endregion
 
@@ -312,8 +314,6 @@ namespace questionnaire.BackAdmin
             foreach (RepeaterItem item in this.rptQuestion.Items)
             {
                 HiddenField hfID = item.FindControl("hfID") as HiddenField;
-                //hfID.Value = idText;
-
                 CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
                 Button btnEdit = item.FindControl("btnEdit") as Button;
 

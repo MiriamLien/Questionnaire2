@@ -24,7 +24,7 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div id="topDiv" align="right">
-        <asp:Literal ID="ltlState" runat="server"></asp:Literal>
+        <asp:Literal ID="ltlState" runat="server"></asp:Literal><br />
         <asp:Literal ID="ltlDate" runat="server"></asp:Literal>
     </div>
     <div id="titleDiv">

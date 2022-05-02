@@ -66,7 +66,8 @@ namespace questionnaire.BackAdmin
             //Account account = new AccountManager().GetCurrentUser();
 
             this._mgrQuesContents.CreateQues(model);
-            this.hfID.Value = model.ID.ToString();
+            this.ltlMsg1.Visible = true;
+            //this.hfID.Value = model.ID.ToString();
             Response.Redirect("mainPageA_Add.aspx?ID=" + model.ID.ToString());
         }
 

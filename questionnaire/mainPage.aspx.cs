@@ -20,74 +20,71 @@ namespace questionnaire
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+
+            // 如果沒有帶 id ，跳回列表頁
+            if (string.IsNullOrWhiteSpace(idText))
+                this.BackToListPage();
+
+            Guid id;
+            if (!Guid.TryParse(idText, out id))
+                this.BackToListPage();
+
+            // 查問卷資料
+            ORM.Content model = this._mgrQuesContents.GetQuesContent(questionnaireID);
+            if (model == null)
+                this.BackToListPage();
+
+            //// 若問卷為關閉中則不開放前台顯示
+            //if (!model.IsEnable)
+            //{
+            //    this.BackToListPage();
+            //}
+
+            // 顯示資料
+            this.ltlState.Text = model.IsEnable.ToString();
+            if (this.ltlState.Text == "True")
             {
-                string idText = Request.QueryString["ID"];
-                Guid questionnaireID = Guid.Parse(idText);
+                this.ltlState.Text = "投票中";
+            }
+            this.ltlDate.Text = $"{model.StartDate.ToShortDateString()} ~ {model.EndDate.ToShortDateString()}";
+            this.ltlTitle.Text = model.Title;
+            this.ltlBody.Text = model.Body;
 
-                // 如果沒有帶 id ，跳回列表頁
-                if (string.IsNullOrWhiteSpace(idText))
-                    this.BackToListPage();
+            // 取得問題內容
+            var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
-                Guid id;
-                if (!Guid.TryParse(idText, out id))
-                    this.BackToListPage();
+            foreach (var question in questionList)
+            {
+                string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                if (question.IsEnable == true)
+                    title += " (*)";
 
-                // 查問卷資料
-                ORM.Content model = this._mgrQuesContents.GetQuesContent(questionnaireID);
-                if (model == null)
-                    this.BackToListPage();
+                i += 1;
+                Literal ltlQuestion = new Literal();
+                ltlQuestion.Text = title + "<br />&emsp;";
+                this.plcForQuestion.Controls.Add(ltlQuestion);
 
-                //// 若問卷為關閉中則不開放前台顯示
-                //if (!model.IsEnable)
-                //{
-                //    this.BackToListPage();
-                //}
-
-                // 顯示資料
-                this.ltlState.Text = model.IsEnable.ToString();
-                if (this.ltlState.Text == "True")
+                switch (question.QuesTypeID)
                 {
-                    this.ltlState.Text = "投票中";
+                    case 1:
+                        createTextBox(question);
+                        break;
+                    case 2:
+                        createRdb(question);
+                        break;
+                    case 3:
+                        createCkb(question);
+                        break;
                 }
-                this.ltlDate.Text = $"{model.StartDate.ToShortDateString()} ~ {model.EndDate.ToShortDateString()}";
-                this.ltlTitle.Text = model.Title;
-                this.ltlBody.Text = model.Body;
 
-                // 取得問題內容
-                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
-
-                foreach (var question in questionList)
-                {
-                    string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
-                    if (question.IsEnable == true)
-                        title += " (*)";
-
-                    i += 1;
-                    Literal ltlQuestion = new Literal();
-                    ltlQuestion.Text = title + "<br />&emsp;";
-                    this.plcForQuestion.Controls.Add(ltlQuestion);
-
-                    switch (question.QuesTypeID)
-                    {
-                        case 1:
-                            createTextBox(question);
-                            break;
-                        case 2:
-                            createRdb(question);
-                            break;
-                        case 3:
-                            createCkb(question);
-                            break;
-                    }
-
-                    string count = questionList.Count.ToString();
-                    this.ltlQCount.Text = "共 " + count + " 個問題";
-                }
+                string count = questionList.Count.ToString();
+                this.ltlQCount.Text = "共 " + count + " 個問題";
             }
         }
 
-        // !!!!!!!!!!!!!!!!
+
         private void createTextBox(QuesDetail ques)
         {
             TextBox txt = new TextBox();
@@ -107,8 +104,7 @@ namespace questionnaire
             {
                 RadioButton radio = new RadioButton();
                 radio.Text = ansArray[i].ToString();
-                //radio.ID = ques.QuesID + i.ToString();
-                radio.ID = "580";
+                radio.ID = ques.QuesID + i.ToString();
                 radio.GroupName = "group" + ques.QuesID;
                 this.plcForQuestion.Controls.Add(radio);
                 this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
@@ -140,7 +136,6 @@ namespace questionnaire
         }
 
 
-        // 找不到動態控制項ID!!!!!!!!!!!
         protected void btnSend_Click(object sender, EventArgs e)
         {
             #region "基本資料檢查"
@@ -218,114 +213,96 @@ namespace questionnaire
             Guid questionnaireID = Guid.Parse(idText);
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
+            List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
+
             for (int i = 0; i < questionList.Count; i++)
             {
+                var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
+                UserQuesDetailModel Ans = new UserQuesDetailModel()
+                {
+                    ID = q.ID,
+                    QuesID = q.QuesID,
+                    QuesTypeID = q.QuesTypeID,
+                };
+
                 switch (questionList[i].QuesTypeID)
                 {
                     case 1:
-                        TextBox textBox = this.plcForQuestion.FindControl($"Q{questionList[i].QuesID}") as TextBox;
-                        string[] ansList1 = textBox.Text.Trim().Split(';');
-                        var ans1 = ansList1[i].TrimEnd(';').ToString();
-                        this.Session["ans1"] = ans1;
-                        break;
+                        PlaceHolder PH1 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                        TextBox textBox = (TextBox)PH1.FindControl($"Q{questionList[i].QuesID}");
+
+                        if (textBox.Text != null)
+                        {
+                            Ans.Answer = textBox.Text + ";";
+                            answerList.Add(Ans);
+                            break;
+                        }
+                        else
+                        {
+                            Ans.Answer = " " + ";";
+                            answerList.Add(Ans);
+                            break;
+                        }
 
                     case 2:
-                        for (int j = -1; j < i; j++)
+                        for (int j = -1; j < questionList.Count; j++)
                         {
+                            int check = 0;
+
                             // QArray -> 把一個題目的所有選項放在陣列裡
                             string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
                             for (int k = 0; k < QArray.Length; k++)
                             {
-                                ContentPlaceHolder ctl = (ContentPlaceHolder)Page.FindControl("ContentPlaceHolder1");
-                                //PlaceHolder plc = (PlaceHolder)ctl.Page.FindControl("plcForQuestion");
-                                //RadioButton rdb = FindControl<RadioButton>(this.Page, "plcForQuestion") as RadioButton;
-                                RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}");
-                                //RadioButton rdb = (RadioButton)this.plcForQuestion.FindControl("ContentPlaceHolder1_580");
+                                PlaceHolder PH2 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                                RadioButton rdb = (RadioButton)PH2.FindControl($"{questionList[i].QuesID}{k}");
+
                                 if (rdb.Checked == true)
                                 {
-                                    string[] ansList2 = rdb.Text.Trim().Split(';');
-                                    var ans2 = ansList2[i].TrimEnd(';').ToString();
-                                    this.Session["ans2"] = ans2;
+                                    Ans.Answer = rdb.Text + ";";
+                                    answerList.Add(Ans);
+                                    check = 1;
+                                    break;
                                 }
                             }
+                            if (check == 1)
+                                break;
                         }
-
                         break;
 
                     case 3:
                         for (int j = -1; j < questionList.Count; j++)
                         {
-                            string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
-                            for (int k = 0; k < QArray.Length; k++)
+                            int check2 = 0;
+
+                            string[] QArray2 = (questionList[i].QuesChoices).Trim().Split(';');
+                            for (int k = 0; k < QArray2.Length; k++)
                             {
-                                CheckBox ckb = this.plcForQuestion.FindControl($"{questionList[i].QuesID}{k}") as CheckBox;
+                                PlaceHolder PH3 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                                CheckBox ckb = (CheckBox)PH3.FindControl($"{questionList[i].QuesID}{k}");
+
                                 if (ckb.Checked == true)
                                 {
-                                    string[] ansList3 = ckb.Text.Trim().Split(';');
-                                    var ans3 = ansList3[i].TrimEnd(';').ToString();
-                                    this.Session["ans3"] = ans3;
+                                    Ans.Answer += ckb.Text + ";";
+                                    check2++;
+                                }
+                                else if (ckb.Checked == false)
+                                    check2++;
+
+                                if (check2 == QArray2.Length)
+                                {
+                                    answerList.Add(Ans);
+                                    break;
                                 }
                             }
+                            break;
                         }
                         break;
                 }
             }
+            this.Session["Answer"] = answerList;
             Response.Redirect($"checkPage.aspx?ID={questionnaireID}");
         }
 
-        public T FindControl<T>(string id) where T : Control
-        {
-            return FindControl<T>(Page, id);
-        }
-
-        public static T FindControl<T>(Control startingControl, string id) where T : Control
-        {
-            // 取得 T 的預設值，通常是 null
-            T found = default(T);
-
-            int controlCount = startingControl.Controls.Count;
-
-            if (controlCount > 0)
-            {
-                for (int i = 0; i < controlCount; i++)
-                {
-                    Control activeControl = startingControl.Controls[i];
-                    if (activeControl is T)
-                    {
-                        found = startingControl.Controls[i] as T;
-                        if (string.Compare(id, found.ID, true) == 0) break;
-                        else found = null;
-                    }
-                    else
-                    {
-                        found = FindControl<T>(activeControl, id);
-                        if (found != null) break;
-                    }
-                }
-            }
-            return found;
-        }
-
-
-        //public override Control FindControl(string id)
-        //{
-        //    Control ctl = base.FindControl(id);
-        //    if (ctl == null && this.Master != null) return FindControlRecursive(this.Master, id);
-        //    else return ctl;
-        //}
-        //private Control FindControlRecursive(Control rootControl, string controlID)
-        //{
-        //    if (rootControl.ID == controlID)
-        //        return rootControl;
-
-        //    foreach (Control controlToSearch in rootControl.Controls)
-        //    {
-        //        Control controlToReturn = FindControlRecursive(controlToSearch, controlID);
-        //        if (controlToReturn != null)
-        //            return controlToReturn;
-        //    }
-        //    return null/* TODO Change to default(_) if this is not a reference type */;
-        //}
         private void BackToListPage()
         {
             this.Response.Redirect("listPage.aspx", true);
