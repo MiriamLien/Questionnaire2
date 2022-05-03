@@ -160,16 +160,16 @@ namespace questionnaire.BackAdmin
         // 編輯問卷後送出
         protected void btnEditPaperSend_Click(object sender, EventArgs e)
         {
-            //this.ltlMsg.Visible = true;
-            //沒有顯示
-
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
             var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
 
             string title = this.txtTitle.Text.Trim();
             string content = this.txtContent.Text.Trim();
-            if (title != null && content != null)
+            string startDT = this.txtStartDate.Text.Trim();
+            string endDT = this.txtEndDate.Text.Trim();
+
+            if (title != null && content != null && startDT != null && endDT != null)
             {
                 QuesContentsModel model = new QuesContentsModel
                 {
@@ -177,13 +177,14 @@ namespace questionnaire.BackAdmin
                     TitleID = q.TitleID,
                     Title = title,
                     Body = content,
-                    StartDate = q.StartDate,
-                    EndDate = q.EndDate,
-                    IsEnable = q.IsEnable
+                    StartDate = Convert.ToDateTime(startDT),
+                    EndDate = Convert.ToDateTime(endDT),
+                    IsEnable = this.ckbPaperEnable.Checked
                 };
 
                 this._mgrQuesContents.UpdateQues(model);
-                Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+                //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
             }
         }
         #endregion
@@ -293,7 +294,8 @@ namespace questionnaire.BackAdmin
             };
 
             this._mgrQuesDetail.UpdateQuesDetail(model);
-            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+            //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
         }
 
         // 取消編輯
@@ -323,7 +325,8 @@ namespace questionnaire.BackAdmin
                 }
             }
 
-            Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+            //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已刪除。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
         }
 
         private void BackToListPage()
@@ -342,7 +345,6 @@ namespace questionnaire.BackAdmin
             string folder = "F:\\ccc\\ExportToCSV";
             string fileName = $"Q_{idText}.csv";
             string fullPath = $"F:\\ccc\\ExportToCSV\\Q_{idText}.csv";
-            //string folderPath = System.Web.Hosting.HostingEnvironment.MapPath(folder);
 
             DataTable dt = new DataTable();
             if (!Directory.Exists(folder))
@@ -355,6 +357,8 @@ namespace questionnaire.BackAdmin
                 File.Create(fileName);
             }
             ExportToCSV(dt, fullPath);
+
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('匯出成功。');", true);
         }
 
         // DataTable匯出成CSV檔

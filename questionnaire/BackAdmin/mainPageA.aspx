@@ -73,10 +73,8 @@
                 <div id="btnSpace1">
                     <asp:Button ID="btnEditPaperCancel" runat="server" Text="取消" OnClick="btnEditPaperCancel_Click" />
                     &emsp;&emsp;&emsp;&emsp;&emsp;
-                <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click" />
+                <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click"/>
                     <br />
-                    <br />&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                    <asp:Literal ID="ltlMsg" runat="server" Text="問卷已編輯完成" Visible="false"></asp:Literal>
                     <br />
                     <br />
                     <br />

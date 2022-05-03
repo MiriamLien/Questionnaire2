@@ -39,7 +39,7 @@ namespace questionnaire.BackAdmin
 
                 this.ddlQuesType.Items.Insert(0, new ListItem("自訂問題", "0"));
 
-                this.txtStartDate.Text = DateTime.Now.ToString();
+                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
             }
         }
 
@@ -66,9 +66,9 @@ namespace questionnaire.BackAdmin
             //Account account = new AccountManager().GetCurrentUser();
 
             this._mgrQuesContents.CreateQues(model);
-            this.ltlMsg1.Visible = true;
             //this.hfID.Value = model.ID.ToString();
-            Response.Redirect("mainPageA_Add.aspx?ID=" + model.ID.ToString());
+            //Response.Redirect("mainPageA_Add.aspx?ID=" + model.ID.ToString());
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID.ToString()}';", true);
         }
 
         protected void btnPaperCancel_Click(object sender, EventArgs e)

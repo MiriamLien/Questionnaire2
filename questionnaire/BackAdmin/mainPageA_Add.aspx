@@ -57,8 +57,6 @@
                     &emsp;&emsp;&emsp;&emsp;&emsp;
                 <asp:Button ID="btnPaperSend" runat="server" Text="送出" OnClick="btnPaperSend_Click" />
                     <br />
-                    <br />&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                    <asp:Literal ID="ltlMsg1" runat="server" Text="問卷已新增" Visible="false"></asp:Literal>
                 </div>
             </div>
 
