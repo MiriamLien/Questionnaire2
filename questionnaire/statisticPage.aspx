@@ -19,7 +19,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div id="titleDiv">
             <h2 align="center">
-                <asp:Literal ID="ltlTitle" runat="server" Text='<%# Eval("Title") %>'></asp:Literal></h2>
+                <asp:Literal ID="ltlTitle" runat="server"></asp:Literal></h2>
         <div id="questionDiv">
         <asp:PlaceHolder ID="plcForQuestion" runat="server"></asp:PlaceHolder>
     </div>

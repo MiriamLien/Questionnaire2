@@ -13,124 +13,141 @@ namespace questionnaire
     public partial class checkPage : System.Web.UI.Page
     {
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
-        private UserInfoManager _mgrUserInfo = new UserInfoManager();
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
-        Guid userID = new Guid();
+        private UserInfoManager _mgrUserInfo = new UserInfoManager();
+        private UserQuesDetailManager _mgrUserQuesDetail = new UserQuesDetailManager();
+        int ansCheck = 0;
         int i = 1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-                string idText = Request.QueryString["ID"];
-                Guid questionnaireID = Guid.Parse(idText);
+            if (Request.QueryString["ID"] == null)
+            {
+                Response.Redirect("listPage.aspx");
+            }
 
-                var quesList = this._mgrQuesContents.GetQuesContent(questionnaireID);
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
 
-                // 取得問卷狀態、日期和標題
-                this.ltlState.Text = quesList.IsEnable.ToString();
-                if (this.ltlState.Text == "True")
+            var quesList = this._mgrQuesContents.GetQuesContent(questionnaireID);
+
+            // 取得問卷狀態、日期和標題
+            this.ltlState.Text = quesList.IsEnable.ToString();
+            if (this.ltlState.Text == "True")
+            {
+                this.ltlState.Text = "投票中";
+            }
+            this.ltlDate.Text = $"{quesList.StartDate.ToShortDateString()} ~ {quesList.EndDate.ToShortDateString()}";
+            this.ltlTitle.Text = quesList.Title;
+
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
+
+            // 取得問題內容
+            var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
+            foreach (var question in questionList)
+            {
+                string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                if (question.IsEnable == true)
+                    title += " (*)";
+
+                i += 1;
+                Literal ltlQuestion = new Literal();
+                ltlQuestion.Text = title + "<br />&emsp;";
+                this.plcForQuestion.Controls.Add(ltlQuestion);
+
+                switch (question.QuesTypeID)
                 {
-                    this.ltlState.Text = "投票中";
+                    case 1:
+                        createTextBox(question);
+                        break;
+                    case 2:
+                        createRdb(question);
+                        break;
+                    case 3:
+                        createCkb(question);
+                        break;
                 }
-                this.ltlDate.Text = $"{quesList.StartDate.ToShortDateString()} ~ {quesList.EndDate.ToShortDateString()}";
-                this.ltlTitle.Text = quesList.Title;
-
-                // 取得問題內容
-                var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
-
-                foreach (var question in questionList)
-                {
-                    string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
-                    if (question.IsEnable == true)
-                        title += " (*)";
-
-                    i += 1;
-                    Literal ltlQuestion = new Literal();
-                    ltlQuestion.Text = title + "<br />&emsp;";
-                    this.plcForQuestion.Controls.Add(ltlQuestion);
-
-                    switch (question.QuesTypeID)
-                    {
-                        case 1:
-                            createTextBox(question);
-                            break;
-                        case 2:
-                            createRdb(question);
-                            break;
-                        case 3:
-                            createCkb(question);
-                            break;
-                    }
-                }
-
-            var ans = (this.Session["Answer"]).ToString().Split(';');
+            }
 
             string name = this.Session["Name"] as string;
             string phone = this.Session["Phone"] as string;
             string email = this.Session["Email"] as string;
             string age = this.Session["Age"] as string;
 
-            if (!string.IsNullOrWhiteSpace(name))
-                this.ltlNameAns.Text = name;
-
-            if (!string.IsNullOrWhiteSpace(phone))
-                this.ltlPhoneAns.Text = phone;
-
-            if (!string.IsNullOrWhiteSpace(email))
-                this.ltlEmailAns.Text = email;
-
-            if (!string.IsNullOrWhiteSpace(age))
-                this.ltlAgeAns.Text = age;
+            this.ltlNameAns.Text = name;
+            this.ltlPhoneAns.Text = phone;
+            this.ltlEmailAns.Text = email;
+            this.ltlAgeAns.Text = age;
         }
 
         private void createTextBox(QuesDetail ques)
         {
-            TextBox textBox = new TextBox();
-            textBox.ID = "Q" + ques.QuesID.ToString();
-            this.plcForQuestion.Controls.Add(textBox);
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
+
+            for (int j = 0; j < ansList.Count; j++)
+            {
+                if (ansList[j].QuesID == ques.QuesID)
+                {
+                    Label lblTextBox = new Label();
+                    lblTextBox.ID = "Q" + ques.QuesID + j.ToString();
+                    lblTextBox.Text = ansList[j].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(lblTextBox);
+                    ansCheck++;
+                }
+            }
         }
 
         private void createRdb(QuesDetail ques)
         {
+            //string idText = Request.QueryString["ID"];
+            //Guid questionnaireID = Guid.Parse(idText);
+            //var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
+
             RadioButtonList rdbList = new RadioButtonList();
             rdbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(rdbList);
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
-
-            for (int i = 0; i < ansArray.Length; i++)
+            for (int j = 0; j < ansList.Count; j++)
             {
-                RadioButton rdb = new RadioButton();
-                rdb.Text = ansArray[i].ToString();
-                rdb.ID = ques.QuesID + i.ToString();
-                rdb.GroupName = "group" + ques.QuesID;
-                this.plcForQuestion.Controls.Add(rdb);
-                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+                if (ansList[j].QuesID == ques.QuesID)
+                {
+                    Label lblRdb = new Label();
+                    lblRdb.ID = "Q" + ques.QuesID + j.ToString();
+                    lblRdb.Text = ansList[j].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(lblRdb);
+                    ansCheck++;
+                }
             }
         }
 
         private void createCkb(QuesDetail ques)
         {
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
+
             CheckBoxList ckbList = new CheckBoxList();
             ckbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(ckbList);
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
-
-            for (int i = 0; i < ansArray.Length; i++)
+            for (int j = 0; j < ansList.Count; j++)
             {
-
-                CheckBox item = new CheckBox();
-                item.Text = ansArray[i].ToString();
-                item.ID = ques.QuesID + i.ToString();
-                this.plcForQuestion.Controls.Add(item);
-                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+                if (ansList[j].QuesID == ques.QuesID)
+                {
+                    Label lblCkb = new Label();
+                    lblCkb.ID = "Q" + ques.QuesID + j.ToString();
+                    lblCkb.Text = ansList[j].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(lblCkb);
+                    ansCheck++;
+                }
             }
         }
+
 
         // 返回填寫問卷內容的內頁
         protected void btnChange_Click(object sender, EventArgs e)
         {
-
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
 
@@ -152,10 +169,12 @@ namespace questionnaire
             var email = this.Session["Email"];
             var age = this.Session["Age"];
 
+            Guid userID = Guid.NewGuid();
             UserInfoModel userInfo = new UserInfoModel()
             {
                 UserID = userID,
                 ID = questionnaireID,
+                CreateDate = DateTime.Now,
                 Name = name.ToString().Trim(),
                 Phone = phone.ToString().Trim(),
                 Email = email.ToString().Trim(),
@@ -164,29 +183,34 @@ namespace questionnaire
 
             this._mgrUserInfo.CreateUserInfo(userInfo);
 
-            //// 從Session拿出問題列表
-            //List<UserQuesDetailModel> ansList = ;
+            // 從Session拿出問題列表
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
 
-            //UserQuesDetailModel ans = new UserQuesDetailModel()
-            //{
-            //    ID = questionnaireID,
-            //    QuesID = ,
-            //    QuesTypeID = ,
-            //};
+            UserQuesDetailModel userAndAns = new UserQuesDetailModel()
+            {
+                ID = questionnaireID,
+                UserID = userID,
+            };
 
-            //for (int i = 0; i < questionList.Count; i++)
-            //{
+            for (int i = 0; i < questionList.Count; i++)
+            {
+                foreach (var item in ansList)
+                {
+                    userAndAns.QuesID = questionList[i].QuesID;
+                    userAndAns.Answer = item.Answer;
+                    userAndAns.QuesTypeID = questionList[i].QuesTypeID;
 
-            //}
+                    this._mgrUserQuesDetail.CreateUserQuesDetail(userAndAns);
+                }
+            }
 
+            Session.Remove("Name");
+            Session.Remove("Phone");
+            Session.Remove("Email");
+            Session.Remove("Age");
+            Session.Remove("Answer");
 
-
-
-
-
-
-
-            Response.Redirect("listPage.aspx");
+            Response.Redirect($"statisticPage.aspx?ID={questionnaireID}");
         }
     }
 }

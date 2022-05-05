@@ -20,12 +20,12 @@ namespace questionnaire
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 如果沒有帶 id ，跳回列表頁
+            if (Request.QueryString["ID"] == null)
+                this.BackToListPage();
+
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
-
-            // 如果沒有帶 id ，跳回列表頁
-            if (string.IsNullOrWhiteSpace(idText))
-                this.BackToListPage();
 
             Guid id;
             if (!Guid.TryParse(idText, out id))
@@ -84,7 +84,6 @@ namespace questionnaire
             }
         }
 
-
         private void createTextBox(QuesDetail ques)
         {
             TextBox txt = new TextBox();
@@ -129,12 +128,10 @@ namespace questionnaire
             }
         }
 
-
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            Response.Redirect("listPage.aspx");
+            this.BackToListPage();
         }
-
 
         protected void btnSend_Click(object sender, EventArgs e)
         {

@@ -1,4 +1,5 @@
 ﻿using questionnaire.Managers;
+using questionnaire.Models;
 using questionnaire.ORM;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,17 @@ namespace questionnaire
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Request.QueryString["ID"] == null)
+            {
+                Response.Redirect("listPage.aspx");
+            }
+
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
-
             var quesList = this._mgrQuesContents.GetQuesContent(questionnaireID);
             this.ltlTitle.Text = quesList.Title;
+
+            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
 
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
             foreach (var question in questionList)
@@ -35,64 +42,76 @@ namespace questionnaire
                 ltlQuestion.Text = title + "<br />&emsp;";
                 this.plcForQuestion.Controls.Add(ltlQuestion);
 
-                switch (question.QuesTypeID)
-                {
-                    case 1:
-                        createTextBox(question);
-                        break;
-                    case 2:
-                        createRdb(question);
-                        break;
-                    case 3:
-                        createCkb(question);
-                        break;
-                }
+                //switch (question.QuesTypeID)
+                //{
+                //    case 1:
+                //        createTextBox(question);
+                //        break;
+                //    case 2:
+                //        createRdb(question);
+                //        break;
+                //    case 3:
+                //        createCkb(question);
+                //        break;
+                //}
             }
         }
 
-        private void createTextBox(QuesDetail ques)
-        {
-            TextBox textBox = new TextBox();
-            textBox.ID = "Q" + ques.QuesID.ToString();
-            this.plcForQuestion.Controls.Add(textBox);
-        }
+        //private void createTextBox(QuesDetail ques)
+        //{
+        //    List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
 
-        private void createRdb(QuesDetail ques)
-        {
-            RadioButtonList rdbList = new RadioButtonList();
-            rdbList.ID = "Q" + ques.QuesID.ToString();
-            this.plcForQuestion.Controls.Add(rdbList);
+        //    for (int j = 0; j < ansList.Count; j++)
+        //    {
+        //        if (ansList[j].QuesID == ques.QuesID)
+        //        {
+        //            Label lblTextBox = new Label();
+        //            lblTextBox.ID = "Q" + ques.QuesID + j.ToString();
+        //            lblTextBox.Text = ansList[j].Answer.TrimEnd(';');
+        //            this.plcForQuestion.Controls.Add(lblTextBox);
+        //        }
+        //    }
+        //}
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+        //private void createRdb(QuesDetail ques)
+        //{
+        //    List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
 
-            for (int i = 0; i < ansArray.Length; i++)
-            {
-                RadioButton rdb = new RadioButton();
-                rdb.Text = ansArray[i].ToString();
-                rdb.ID = ques.QuesID + i.ToString();
-                rdb.GroupName = "group" + ques.QuesID;
-                this.plcForQuestion.Controls.Add(rdb);
-                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
-            }
-        }
+        //    RadioButtonList rdbList = new RadioButtonList();
+        //    rdbList.ID = "Q" + ques.QuesID.ToString();
+        //    this.plcForQuestion.Controls.Add(rdbList);
 
-        private void createCkb(QuesDetail ques)
-        {
-            CheckBoxList ckbList = new CheckBoxList();
-            ckbList.ID = "Q" + ques.QuesID.ToString();
-            this.plcForQuestion.Controls.Add(ckbList);
+        //    for (int j = 0; j < ansList.Count; j++)
+        //    {
+        //        if (ansList[j].QuesID == ques.QuesID)
+        //        {
+        //            Label lblRdb = new Label();
+        //            lblRdb.ID = "Q" + ques.QuesID + j.ToString();
+        //            lblRdb.Text = ansList[j].Answer.TrimEnd(';');
+        //            this.plcForQuestion.Controls.Add(lblRdb);
+        //        }
+        //    }
+        //}
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+        //private void createCkb(QuesDetail ques)
+        //{
+        //    List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
 
-            for (int i = 0; i < ansArray.Length; i++)
-            {
-                CheckBox item = new CheckBox();
-                item.Text = ansArray[i].ToString();
-                item.ID = ques.QuesID + i.ToString();
-                this.plcForQuestion.Controls.Add(item);
-                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
-            }
-        }
+        //    CheckBoxList ckbList = new CheckBoxList();
+        //    ckbList.ID = "Q" + ques.QuesID.ToString();
+        //    this.plcForQuestion.Controls.Add(ckbList);
+
+        //    for (int j = 0; j < ansList.Count; j++)
+        //    {
+        //        if (ansList[j].QuesID == ques.QuesID)
+        //        {
+        //            Label lblCkb = new Label();
+        //            lblCkb.ID = "Q" + ques.QuesID + j.ToString();
+        //            lblCkb.Text = ansList[j].Answer.TrimEnd(';');
+        //            this.plcForQuestion.Controls.Add(lblCkb);
+        //        }
+        //    }
+        //}
 
         protected void btnToListPage_Click(object sender, EventArgs e)
         {

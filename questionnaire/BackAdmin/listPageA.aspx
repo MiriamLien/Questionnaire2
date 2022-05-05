@@ -56,7 +56,7 @@
                             <td width="140px"><%# Eval("EndDate", "{0:yyyy/MM/dd}") %></td>
                             <td width="90px">&nbsp;&nbsp;<a href="mainPageA.aspx?ID=<%# Eval("ID") %>">前往</a></td>
                             <td width="70px">
-                                <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="刪除" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />
+                                <asp:Button ID="btnDelete" runat="server" CommandName='<%# Eval("ID") %>' OnCommand="btnDelete_Command" Text="關閉" OnClientClick="return confirm('確定要關閉這份問卷嗎？')" />
                             </td>
                         </tr>
                     </ItemTemplate>

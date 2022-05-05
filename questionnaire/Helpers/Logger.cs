@@ -35,6 +35,11 @@ $@"-----
         //創建檔案
         static void CreateFile()
         {
+            if (!Directory.Exists("D:\\ccc\\Logs"))
+            {
+                Directory.CreateDirectory("D:\\ccc\\Logs");
+            }
+
             if (!File.Exists("D:\\ccc\\Logs\\log.log"))
             {
                 //File.Create會傳回FileStream值,導致檔案運作
