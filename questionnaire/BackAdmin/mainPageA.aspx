@@ -84,8 +84,7 @@
             <div id="question" class="tab-pane fade">
                 <asp:PlaceHolder ID="plcQues" runat="server">
                     <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
-                    <asp:DropDownList ID="ddlQuesType" runat="server"></asp:DropDownList>&emsp;&emsp;
-            <asp:Button ID="btnUse" runat="server" Text="填入" OnClick="btnUse_Click" />
+                    <asp:DropDownList ID="ddlQuesType" runat="server" OnSelectedIndexChanged="ddlQuesType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;&emsp;
                     <br />
                     <br />
                     <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>

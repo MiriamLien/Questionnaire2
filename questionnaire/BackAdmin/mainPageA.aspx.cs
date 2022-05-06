@@ -30,12 +30,12 @@ namespace questionnaire.BackAdmin
         {
             if (!IsPostBack)
             {
+                // 如果沒有帶 id ，跳回列表頁
+                if (Request.QueryString["ID"] == null)
+                    this.BackToListPage();
+
                 string idText = Request.QueryString["ID"];
                 Guid questionnaireID = Guid.Parse(idText);
-
-                // 如果沒有帶 id ，跳回列表頁
-                if (string.IsNullOrWhiteSpace(idText))
-                    this.BackToListPage();
 
                 Guid iD;
                 if (!Guid.TryParse(idText, out iD))
@@ -232,8 +232,9 @@ namespace questionnaire.BackAdmin
             }
         }
 
+
         // 把問題填入TextBox裡
-        protected void btnUse_Click(object sender, EventArgs e)
+        protected void ddlQuesType_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cqid = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
             CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqid);
@@ -244,7 +245,7 @@ namespace questionnaire.BackAdmin
                 this.txtQuesAns.Text = CQs.CQChoices;
                 this.ddlAnsType.SelectedIndex = CQs.QuesTypeID - 1;
 
-                var isEnable = CQs.CQIsEnable;
+                bool isEnable = CQs.CQIsEnable;
                 if (isEnable)
                 {
                     this.ckbMustAns.Checked = true;
@@ -342,9 +343,9 @@ namespace questionnaire.BackAdmin
             Guid id = new Guid(idText);
             var quesList = this._mgrQuesDetail.GetQuesDetailList(id);
 
-            string folder = "F:\\ccc\\ExportToCSV";
+            string folder = "D:\\ccc\\ExportToCSV";
             string fileName = $"Q_{idText}.csv";
-            string fullPath = $"F:\\ccc\\ExportToCSV\\Q_{idText}.csv";
+            string fullPath = $"D:\\ccc\\ExportToCSV\\Q_{idText}.csv";
 
             DataTable dt = new DataTable();
             if (!Directory.Exists(folder))
@@ -415,7 +416,7 @@ namespace questionnaire.BackAdmin
                 StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8);
                 string data = "";
 
-                for (int i = 0; i < dataTable.Columns.Count; i++)//寫入列名
+                for (int i = 0; i < dataTable.Columns.Count; i++)   // 寫入列名
                 {
                     data += dataTable.Columns[i].ColumnName.ToString();
                     if (i < dataTable.Columns.Count - 1)
@@ -425,16 +426,16 @@ namespace questionnaire.BackAdmin
                 }
                 sw.WriteLine(data);
 
-                //寫入各行資料
+                // 寫入各行資料
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
                     data = "";
                     for (int j = 0; j < dataTable.Columns.Count; j++)
                     {
                         string str = dataTable.Rows[i][j].ToString();
-                        //替換英文冒號 英文冒號需要換成兩個冒號
+                        // 替換英文冒號 英文冒號需要換成兩個冒號
                         str = str.Replace("\"", "\"\"");
-                        //含逗號 冒號 換行符的需要放到引號中
+                        // 含逗號 冒號 換行符的需要放到引號中
                         if (str.Contains(',') || str.Contains('"')
                           || str.Contains('\r') || str.Contains('\n'))
                         {

@@ -66,8 +66,6 @@ namespace questionnaire.BackAdmin
             //Account account = new AccountManager().GetCurrentUser();
 
             this._mgrQuesContents.CreateQues(model);
-            //this.hfID.Value = model.ID.ToString();
-            //Response.Redirect("mainPageA_Add.aspx?ID=" + model.ID.ToString());
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID.ToString()}';", true);
         }
 
@@ -79,7 +77,7 @@ namespace questionnaire.BackAdmin
 
         #region "新增問題"
         // 把問題填入TextBox裡
-        protected void btnUse_Click(object sender, EventArgs e)
+        protected void ddlQuesType_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cqID = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
             CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqID);

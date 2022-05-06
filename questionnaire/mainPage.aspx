@@ -73,6 +73,9 @@
         <br />
         <br />
         <br />
+        <h6>
+            <asp:Label ID="lblMsg" runat="server" Visible="false" ForeColor="Red">尚有欄位未填/未選。</asp:Label>
+        </h6>
         <asp:Literal ID="ltlQCount" runat="server"></asp:Literal><br />
         <br />
         <asp:Button ID="btnCancel" runat="server" Text="取消" OnClick="btnCancel_Click" />

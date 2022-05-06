@@ -211,16 +211,23 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
             List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
+            //bool mustAns = false;
 
             for (int i = 0; i < questionList.Count; i++)
             {
                 var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
-                UserQuesDetailModel Ans = new UserQuesDetailModel()
+
+                UserQuesDetailModel ans = new UserQuesDetailModel()
                 {
                     ID = q.ID,
                     QuesID = q.QuesID,
                     QuesTypeID = q.QuesTypeID,
                 };
+
+                //if (q.IsEnable == true)
+                //{
+
+                //}
 
                 switch (questionList[i].QuesTypeID)
                 {
@@ -230,14 +237,14 @@ namespace questionnaire
 
                         if (textBox.Text != null)
                         {
-                            Ans.Answer = textBox.Text + ";";
-                            answerList.Add(Ans);
+                            ans.Answer = textBox.Text + ";";
+                            answerList.Add(ans);
                             break;
                         }
                         else
                         {
-                            Ans.Answer = " " + ";";
-                            answerList.Add(Ans);
+                            ans.Answer = " " + ";";
+                            answerList.Add(ans);
                             break;
                         }
 
@@ -255,8 +262,8 @@ namespace questionnaire
 
                                 if (rdb.Checked == true)
                                 {
-                                    Ans.Answer = rdb.Text + ";";
-                                    answerList.Add(Ans);
+                                    ans.Answer = rdb.Text + ";";
+                                    answerList.Add(ans);
                                     check = 1;
                                     break;
                                 }
@@ -279,7 +286,7 @@ namespace questionnaire
 
                                 if (ckb.Checked == true)
                                 {
-                                    Ans.Answer += ckb.Text + ";";
+                                    ans.Answer += ckb.Text + ";";
                                     check2++;
                                 }
                                 else if (ckb.Checked == false)
@@ -287,7 +294,7 @@ namespace questionnaire
 
                                 if (check2 == QArray2.Length)
                                 {
-                                    answerList.Add(Ans);
+                                    answerList.Add(ans);
                                     break;
                                 }
                             }
