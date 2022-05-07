@@ -36,11 +36,15 @@ namespace questionnaire
             if (model == null)
                 this.BackToListPage();
 
-            //// 若問卷為關閉中則不開放前台顯示
-            //if (!model.IsEnable)
-            //{
-            //    this.BackToListPage();
-            //}
+            // 若問卷為已完結或尚未開始則不開放前台內頁顯示
+            if (!model.IsEnable)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問卷已完結。');location.href='listPage.aspx';", true);
+            }
+            else if (model.IsEnable && model.StartDate > DateTime.Now)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問卷尚未開始。');location.href='listPage.aspx';", true);
+            }
 
             // 顯示資料
             this.ltlState.Text = model.IsEnable.ToString();
@@ -54,6 +58,7 @@ namespace questionnaire
 
             // 取得問題內容
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+
 
             foreach (var question in questionList)
             {
@@ -211,8 +216,99 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
             List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
-            //bool mustAns = false;
 
+            // 是否為必填/必選
+            for (int i = 0; i < questionList.Count; i++)
+            {
+                var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
+                bool mustAns = false;
+
+                if (q.IsEnable == true)
+                {
+                    switch (questionList[i].QuesTypeID)
+                    {
+                        case 1:
+                            PlaceHolder PH1 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                            TextBox textBox = (TextBox)PH1.FindControl($"Q{questionList[i].QuesID}");
+
+                            if (textBox.Text != null)
+                            {
+                                mustAns = true;
+                                break;
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('此問題為必填。');", true);
+                                break;
+                            }
+
+                        case 2:
+                            for (int j = -1; j < questionList.Count; j++)
+                            {
+                                int check = 0;
+
+                                // QArray -> 把一個題目的所有選項放在陣列裡
+                                string[] QArray = (questionList[i].QuesChoices).Trim().Split(';');
+                                for (int k = 0; k < QArray.Length; k++)
+                                {
+                                    PlaceHolder PH2 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                                    RadioButton rdb = (RadioButton)PH2.FindControl($"{questionList[i].QuesID}{k}");
+
+                                    if (rdb.Checked == true)
+                                    {
+                                        mustAns = true;
+                                        check = 1;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('此問題為必選。');", true);
+                                    }
+                                }
+                                if (check == 1)
+                                    break;
+                            }
+                            break;
+
+                        case 3:
+                            for (int j = -1; j < questionList.Count; j++)
+                            {
+                                int check2 = 0;
+
+                                string[] QArray2 = (questionList[i].QuesChoices).Trim().Split(';');
+                                for (int k = 0; k < QArray2.Length; k++)
+                                {
+                                    PlaceHolder PH3 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
+                                    CheckBox ckb = (CheckBox)PH3.FindControl($"{questionList[i].QuesID}{k}");
+
+                                    if (ckb.Checked == true)
+                                    {
+                                        check2++;
+                                    }
+                                    else if (ckb.Checked == false)
+                                        check2++;
+
+                                    if (check2 == QArray2.Length)
+                                    {
+                                        mustAns = true;
+                                        break;
+                                    }
+
+                                    if (check2 == 0)
+                                    {
+                                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('此問題為必選。');", true);
+                                    }
+                                    else
+                                        break;
+                                }
+                                break;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            // 取得選擇的答案
             for (int i = 0; i < questionList.Count; i++)
             {
                 var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
@@ -223,11 +319,6 @@ namespace questionnaire
                     QuesID = q.QuesID,
                     QuesTypeID = q.QuesTypeID,
                 };
-
-                //if (q.IsEnable == true)
-                //{
-
-                //}
 
                 switch (questionList[i].QuesTypeID)
                 {

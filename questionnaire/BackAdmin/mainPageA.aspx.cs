@@ -121,30 +121,7 @@ namespace questionnaire.BackAdmin
                 // 取得問題內容
                 var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
-                foreach (var question in quesList)
-                {
-                    string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
-                    if (question.IsEnable == true)
-                        title += " (*)";
 
-                    i += 1;
-                    Literal ltlQuestion = new Literal();
-                    ltlQuestion.Text = title + "<br />&emsp;";
-                    this.plcForQuestion.Controls.Add(ltlQuestion);
-
-                    switch (question.QuesTypeID)
-                    {
-                        case 1:
-                            createTextBox(question);
-                            break;
-                        case 2:
-                            createRdb(question);
-                            break;
-                        case 3:
-                            createCkb(question);
-                            break;
-                    }
-                }
             }
         }
 
@@ -272,7 +249,7 @@ namespace questionnaire.BackAdmin
                 IsEnable = this.ckbMustAns.Checked
             };
             this._mgrQuesDetail.CreateQuesDetail(model);
-            Response.Redirect(Request.RawUrl);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
         }
 
         // 問題編輯好後的確認鈕
@@ -512,6 +489,7 @@ namespace questionnaire.BackAdmin
         {
             TextBox txt = new TextBox();
             txt.ID = "Q" + ques.QuesID.ToString();
+            //txt.Text = ansList[j].Answer.TrimEnd(';');
             this.plcForQuestion.Controls.Add(txt);
         }
 

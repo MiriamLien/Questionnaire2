@@ -30,6 +30,7 @@
 <body>
     <form id="form1" runat="server">
     <div id="logoutDiv" align="right">
+        <asp:Literal ID="ltlMsg" runat="server"> (若要前往前台請先登出) </asp:Literal>&emsp;
         <asp:Button ID="btnLogout" runat="server" Text=" 登出 " OnClick="btnLogout_Click" />
     </div>
         <table width="90%" id="tblSpace">

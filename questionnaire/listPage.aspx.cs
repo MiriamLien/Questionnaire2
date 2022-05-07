@@ -21,14 +21,14 @@ namespace questionnaire
                 var quesList = this._mgrQuesContents.GetQuesContentsList(str);
                 this.rptList.DataSource = quesList;
                 this.rptList.DataBind();
-                
+
                 // !!!狀態：只有投票中顯示問卷填寫頁超連結，已完結則不會顯示(隱藏)
                 foreach (RepeaterItem item in this.rptList.Items)
                 {
                     Literal ltlState = item.FindControl("ltlState") as Literal;
                     HiddenField hfID = item.FindControl("hfID") as HiddenField;
                     Guid id = new Guid(hfID.Value);
-                    var q = this._mgrQuesContents.GetQuesContent(id);                    
+                    var q = this._mgrQuesContents.GetQuesContent(id);
 
                     if (q.StartDate > DateTime.Now && Guid.TryParse(hfID.Value, out Guid qID))
                     {

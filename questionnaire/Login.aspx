@@ -26,9 +26,9 @@
             <br />
             <br />
             &emsp;&emsp;&emsp;&emsp;
-            <asp:Button ID="btnBack" runat="server" ToolTip="返回前台" Text="返回" OnClick="btnBack_Click" />
+            <asp:Button ID="btnBack" runat="server" ToolTip="返回前台" Text="返回前台" OnClick="btnBack_Click" />
             &emsp;&emsp;&emsp;
-            <asp:Button ID="btnLogin" runat="server" Text=" 登入 " OnClick="btnLogin_Click" /><br />
+            <asp:Button ID="btnLogin" runat="server" ToolTip="前往後台" Text=" 登入 " OnClick="btnLogin_Click" /><br />
             <asp:Literal ID="ltlMessage" runat="server"></asp:Literal>
         </asp:PlaceHolder>
 

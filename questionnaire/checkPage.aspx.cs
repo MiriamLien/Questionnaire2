@@ -145,12 +145,12 @@ namespace questionnaire
         }
 
 
-        // 返回填寫問卷內容的內頁
+        // 返回填寫問卷內容的內頁!!!
         protected void btnChange_Click(object sender, EventArgs e)
         {
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
-
+            
             Response.Redirect($"mainPage.aspx?ID={questionnaireID}");
         }
 
@@ -169,48 +169,55 @@ namespace questionnaire
             var email = this.Session["Email"];
             var age = this.Session["Age"];
 
-            Guid userID = Guid.NewGuid();
-            UserInfoModel userInfo = new UserInfoModel()
+            if (name != null && phone != null && email != null && age != null)
             {
-                UserID = userID,
-                ID = questionnaireID,
-                CreateDate = DateTime.Now,
-                Name = name.ToString().Trim(),
-                Phone = phone.ToString().Trim(),
-                Email = email.ToString().Trim(),
-                Age = age.ToString().Trim(),
-            };
-
-            this._mgrUserInfo.CreateUserInfo(userInfo);
-
-            // 從Session拿出問題列表
-            List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
-
-            UserQuesDetailModel userAndAns = new UserQuesDetailModel()
-            {
-                ID = questionnaireID,
-                UserID = userID,
-            };
-
-            for (int i = 0; i < questionList.Count; i++)
-            {
-                foreach (var item in ansList)
+                Guid userID = Guid.NewGuid();
+                UserInfoModel userInfo = new UserInfoModel()
                 {
-                    userAndAns.QuesID = questionList[i].QuesID;
-                    userAndAns.Answer = item.Answer;
-                    userAndAns.QuesTypeID = questionList[i].QuesTypeID;
+                    UserID = userID,
+                    ID = questionnaireID,
+                    CreateDate = DateTime.Now,
+                    Name = name.ToString().Trim(),
+                    Phone = phone.ToString().Trim(),
+                    Email = email.ToString().Trim(),
+                    Age = age.ToString().Trim(),
+                };
 
-                    this._mgrUserQuesDetail.CreateUserQuesDetail(userAndAns);
+                this._mgrUserInfo.CreateUserInfo(userInfo);
+
+                // 從Session拿出問題列表
+                List<UserQuesDetailModel> ansList = (List<UserQuesDetailModel>)Session["Answer"];
+
+                UserQuesDetailModel userAndAns = new UserQuesDetailModel()
+                {
+                    ID = questionnaireID,
+                    UserID = userID,
+                };
+
+                for (int i = 0; i < questionList.Count; i++)
+                {
+                    foreach (var item in ansList)
+                    {
+                        if (item.QuesID == questionList[i].QuesID)
+                        {
+                            userAndAns.QuesID = questionList[i].QuesID;
+                            userAndAns.Answer = item.Answer;
+                            userAndAns.QuesTypeID = questionList[i].QuesTypeID;
+
+                            this._mgrUserQuesDetail.CreateUserQuesDetail(userAndAns);
+                        }
+                    }
                 }
+
+                Session.Remove("Name");
+                Session.Remove("Phone");
+                Session.Remove("Email");
+                Session.Remove("Age");
+                Session.Remove("Answer");
+
+                Response.Redirect($"statisticPage.aspx?ID={questionnaireID}");
+
             }
-
-            Session.Remove("Name");
-            Session.Remove("Phone");
-            Session.Remove("Email");
-            Session.Remove("Age");
-            Session.Remove("Answer");
-
-            Response.Redirect($"statisticPage.aspx?ID={questionnaireID}");
         }
     }
 }

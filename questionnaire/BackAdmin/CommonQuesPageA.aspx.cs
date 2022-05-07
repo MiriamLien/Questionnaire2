@@ -69,40 +69,45 @@ namespace questionnaire.BackAdmin
 
             if (quesTypeID == 2 || quesTypeID == 3)
             {
-                CQModel newCQ = new CQModel()
+                if (title != null && ans != null)
                 {
-                    CQTitle = title,
-                    CQChoices = ans,
-                    QuesTypeID = quesTypeID,
-                    CQIsEnable = mustAns
-                };
+                    CQModel newCQ = new CQModel()
+                    {
+                        CQTitle = title,
+                        CQChoices = ans,
+                        QuesTypeID = quesTypeID,
+                        CQIsEnable = mustAns
+                    };
 
-                this._mgrCQ.CreateCQ(newCQ);
-                this.plcAddCQ.Visible = false;
-                this.ImgBtnAdd.Visible = true;
-                this.plcCQA.Visible = true;
-                this.plcCQA.Visible = true;
-                this.ltlAddMsg.Visible = true;
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+                    this._mgrCQ.CreateCQ(newCQ);
+                    this.plcAddCQ.Visible = false;
+                    this.ImgBtnAdd.Visible = true;
+                    this.plcCQA.Visible = true;
+                    this.plcCQA.Visible = true;
+                    this.ltlAddMsg.Visible = true;
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+                }
             }
             else
             {
-                CQModel newCQ = new CQModel()
+                if (title != null)
                 {
-                    CQTitle = title,
-                    QuesTypeID = quesTypeID,
-                    CQIsEnable = mustAns
-                };
+                    CQModel newCQ = new CQModel()
+                    {
+                        CQTitle = title,
+                        QuesTypeID = quesTypeID,
+                        CQIsEnable = mustAns
+                    };
 
-                this._mgrCQ.CreateCQ(newCQ);
-                this.plcAddCQ.Visible = false;
-                this.ImgBtnAdd.Visible = true;
-                this.plcCQA.Visible = true;
-                this.plcCQA.Visible = true;
-                this.ltlAddMsg.Visible = true;
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+                    this._mgrCQ.CreateCQ(newCQ);
+                    this.plcAddCQ.Visible = false;
+                    this.ImgBtnAdd.Visible = true;
+                    this.plcCQA.Visible = true;
+                    this.plcCQA.Visible = true;
+                    this.ltlAddMsg.Visible = true;
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='CommonQuesPageA.aspx';", true);
+                }
             }
-                
         }
 
         protected void btnCancelAddCQ_Click(object sender, EventArgs e)
@@ -147,10 +152,9 @@ namespace questionnaire.BackAdmin
                 this.txtEditQues.Text = cq.CQTitle.ToString();
                 this.ddlEditAnsType.SelectedValue = cq.QuesTypeID.ToString();
                 this.ckbEditCQMustAns.Checked = cq.CQIsEnable;
-            }    
-                
-        }
+            }
 
+        }
 
         protected void btnSaveEditCQ_Click(object sender, EventArgs e)
         {
@@ -175,7 +179,7 @@ namespace questionnaire.BackAdmin
 
                         this._mgrCQ.UpdateCQ(updateCQ);
 
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('編輯完畢。');location.href='CommonQuesPageA.aspx';", true);
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題編輯完成。');location.href='CommonQuesPageA.aspx';", true);
                         this.plcEditCQ.Visible = false;
                     }
                 }
@@ -193,7 +197,7 @@ namespace questionnaire.BackAdmin
 
                         this._mgrCQ.UpdateCQ(updateCQ);
 
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('編輯完畢。');location.href='CommonQuesPageA.aspx';", true);
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題編輯完成。');location.href='CommonQuesPageA.aspx';", true);
                         this.plcEditCQ.Visible = false;
                     }
                 }

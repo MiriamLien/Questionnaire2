@@ -53,20 +53,27 @@ namespace questionnaire.BackAdmin
                 return;
             }
 
-            QuesContentsModel model = new QuesContentsModel()
+            string title = this.txtTitle.Text.Trim();
+            string content = this.txtContent.Text.Trim();
+            var startDT = Convert.ToDateTime(this.txtStartDate.Text.Trim());
+            var endDT = Convert.ToDateTime(this.txtEndDate.Text.Trim());
+            if (title != null && content != null && startDT != null && endDT != null)
             {
-                ID = id,
-                Title = this.txtTitle.Text.Trim(),
-                Body = this.txtContent.Text.Trim(),
-                StartDate = Convert.ToDateTime(this.txtStartDate.Text.Trim()),
-                EndDate = Convert.ToDateTime(this.txtEndDate.Text.Trim()),
-                IsEnable = this.ckbPaperEnable.Checked,
-            };
+                QuesContentsModel model = new QuesContentsModel()
+                {
+                    ID = id,
+                    Title = title,
+                    Body = content,
+                    StartDate = startDT,
+                    EndDate = endDT,
+                    IsEnable = this.ckbPaperEnable.Checked,
+                };
 
-            //Account account = new AccountManager().GetCurrentUser();
+                //Account account = new AccountManager().GetCurrentUser();
 
-            this._mgrQuesContents.CreateQues(model);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID.ToString()}';", true);
+                this._mgrQuesContents.CreateQues(model);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID.ToString()}';", true);
+            }
         }
 
         protected void btnPaperCancel_Click(object sender, EventArgs e)
@@ -93,6 +100,14 @@ namespace questionnaire.BackAdmin
                 {
                     this.ckbMustAns.Checked = true;
                 }
+            }
+
+            // 自訂問題的TextBox預設為空的
+            if (this.ddlQuesType.SelectedIndex == 0)
+            {
+                this.txtQuesTitle.Text = string.Empty;
+                this.txtQuesAns.Text = string.Empty;
+                this.ddlAnsType.SelectedIndex = 0;
             }
         }
 

@@ -85,7 +85,7 @@ namespace questionnaire.Managers
 
 
         /// <summary>
-        /// 輸入問卷ID取得使用者資訊及問題內容
+        /// 輸入問卷ID取得使用者資訊及問題內容的清單
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -147,6 +147,53 @@ namespace questionnaire.Managers
             catch (Exception ex)
             {
                 Logger.WriteLog("UserQuesDetailManager.GetUserInfoAndQuesList", ex);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 輸入問卷ID取得使用者資訊及問題內容
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public UserInfoAndQuesModel GetUserInfoAndQues(Guid id)
+        {
+            string idText = id.ToString();
+
+            try
+            {
+                using (ContextModel contextModel = new ContextModel())
+                    {
+                    var query =
+                        from item in contextModel.QuesDetails
+                        join item2 in contextModel.UserInfos
+                        on item.ID equals item2.ID
+                        where item.ID == id
+                        select new UserInfoAndQuesModel
+                        {
+                            UserID = item2.UserID,
+                            ID = item.ID,
+                            Name = item2.Name,
+                            Phone = item2.Phone,
+                            Age = item2.Age,
+                            Email = item2.Phone,
+                            QuesID = item.QuesID,
+                            QuesTitle = item.QuesTitle,
+                            QuesChoices = item.QuesChoices,
+                        };
+
+                    var userInfoAndQues = query.FirstOrDefault();
+
+                    //檢查是否存在
+                    if (userInfoAndQues != null)
+                        return userInfoAndQues;
+
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog("UserQuesDetailManager.GetUserInfoAndQues", ex);
                 throw;
             }
         }
