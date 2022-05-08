@@ -138,7 +138,7 @@ namespace questionnaire.BackAdmin
                 }
             }
 
-            // 重置輸入問題處
+            // 重置輸入問題的地方
             this.ddlQuesType.SelectedIndex = 0;
             this.txtQuesTitle.Text = string.Empty;
             this.txtQuesAns.Text = string.Empty;

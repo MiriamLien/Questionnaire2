@@ -199,6 +199,7 @@
 
                 <asp:PlaceHolder runat="server" ID="plcInfo2" Visible="false">
                     <div id="info2">
+                        <asp:HiddenField ID="hfUserID" runat="server" Value='<%# Eval("UserID") %>' />
                         <asp:Literal ID="ltlName" runat="server">&nbsp;&nbsp;姓名 </asp:Literal>
                         <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;

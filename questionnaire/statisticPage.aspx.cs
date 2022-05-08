@@ -35,7 +35,7 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
             var userQuesDetailList = this._mgrUserQuesDetail.GetUserQuesDetailList(questionnaireID);
 
-            for (int j = 0; j < questionList.Count; j++)
+            foreach (var question in questionList)
             {
                 if (userQuesDetailList == null)
                 {
@@ -44,8 +44,8 @@ namespace questionnaire
                 else
                 {
                     // 顯示題目
-                    string title = $"<br /><br /><br />{num}. {(questionList[j].QuesTitle).Trim()}";
-                    if (questionList[j].IsEnable == true)
+                    string title = $"<br /><br /><br />{num}. {(question.QuesTitle).Trim()}";
+                    if (question.IsEnable == true)
                         title += " (*)";
 
                     num += 1;
@@ -54,16 +54,16 @@ namespace questionnaire
                     this.plcForQuestion.Controls.Add(ltlQuestion);
 
                     // 一個問題的所有選項
-                    string[] answerList = (questionList[j].QuesChoices.TrimEnd(';')).Trim().Split(';');
+                    string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
 
                     int total = 0;
                     int ansCount = 0;
                     List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
-                    
+
                     // 單複選
-                    if (questionList[j].QuesTypeID != 1)
+                    if (question.QuesTypeID != 1)
                     {
-                        List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == questionList[j].QuesID);
+                        List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
 
                         foreach (var item in staList)
                         {
@@ -71,16 +71,19 @@ namespace questionnaire
                             total = item.AnsCount;
                         }
 
-                        // 動態生成答案的所有選項 和 barchart
+                        // 動態生成答案的所有選項 和 barchart!!!!!!!!!!!!!!!!!!
                         for (int k = 0; k < answerList.Length; k++)
                         {
-                            string[] checkedAns = (userQuesDetailList[j].Answer.TrimEnd(';')).Trim().Split(';');
-
-                            foreach (var item in checkedAns)
+                            foreach (var oneStatistic in staList)
                             {
-                                if (item == answerList[k])
+                                string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
+
+                                foreach (var sta in itemInStaList)
                                 {
-                                    ansCount++;
+                                    if (sta == answerList[k])
+                                    {
+                                        ansCount++;
+                                    }
                                 }
                             }
 

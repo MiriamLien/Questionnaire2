@@ -24,7 +24,7 @@ namespace questionnaire.BackAdmin
         private UserInfoManager _mgruserInfo = new UserInfoManager();
         private UserQuesDetailManager _mgruserQuesDetail = new UserQuesDetailManager();
         Guid id = Guid.NewGuid();
-        int i = 1;
+        int number = 1;
 
         protected void Page_Load(object sender, EventArgs e)    //編輯模式
         {
@@ -75,12 +75,12 @@ namespace questionnaire.BackAdmin
                 if (questionList != null || questionList.Count > 0)
                 {
                     // 生成問題編號
-                    int i = 1;
+                    int num = 1;
                     foreach (RepeaterItem item in this.rptQuestion.Items)
                     {
                         Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                        ltlNum.Text = i.ToString();
-                        i++;
+                        ltlNum.Text = num.ToString();
+                        num++;
                     }
                 }
 
@@ -92,12 +92,12 @@ namespace questionnaire.BackAdmin
                 if (questionList != null || questionList.Count > 0)
                 {
                     // 生成問題編號
-                    int i = 1;
+                    int num = 1;
                     foreach (RepeaterItem item in this.rptUserInfo.Items)
                     {
                         Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                        ltlNum.Text = i.ToString();
-                        i++;
+                        ltlNum.Text = num.ToString();
+                        num++;
                     }
                 }
 
@@ -108,12 +108,12 @@ namespace questionnaire.BackAdmin
                 if (questionList != null || questionList.Count > 0)
                 {
                     // 生成問題編號
-                    int i = 1;
+                    int num = 1;
                     foreach (RepeaterItem item in this.rptStatistic.Items)
                     {
                         Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                        ltlNum.Text = i.ToString();
-                        i++;
+                        ltlNum.Text = num.ToString();
+                        num++;
                     }
                 }
                 #endregion
@@ -441,6 +441,7 @@ namespace questionnaire.BackAdmin
 
             Guid userID = new Guid(e.CommandName);
             var userInfoList = this._mgruserInfo.GetUserInfoList2(userID);
+            this.hfUserID.Value = userID.ToString();
 
             for (int i = 0; i < userInfoList.Count; i++)
             {
@@ -454,11 +455,11 @@ namespace questionnaire.BackAdmin
             // 動態生成控制項和題目
             foreach (var question in quesList)
             {
-                string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                string title = $"<br /><br /><br />{number}. {(question.QuesTitle).Trim()}";
                 if (question.IsEnable == true)
                     title += " (*)";
 
-                i += 1;
+                number += 1;
                 Literal ltlQuestion = new Literal();
                 ltlQuestion.Text = title + "<br />&emsp;";
                 this.plcForQuestion.Controls.Add(ltlQuestion);
@@ -487,46 +488,63 @@ namespace questionnaire.BackAdmin
 
         private void createTextBox(QuesDetail ques)
         {
-            TextBox txt = new TextBox();
-            txt.ID = "Q" + ques.QuesID.ToString();
-            //txt.Text = ansList[j].Answer.TrimEnd(';');
-            this.plcForQuestion.Controls.Add(txt);
+            Guid userID = new Guid(this.hfUserID.Value);
+            var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
+            for (int i = 0; i < infoAndQuesList.Count; i++)
+            {
+                if (infoAndQuesList[i].QuesID == ques.QuesID)
+                {
+                    TextBox txt = new TextBox();
+                    txt.ID = "Q" + ques.QuesID.ToString();
+                    txt.Text = infoAndQuesList[i].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(txt);
+                }
+            }
         }
 
+        // !!!!! radioButton只生成一個
         private void createRdb(QuesDetail ques)
         {
+            Guid userID = new Guid(this.hfUserID.Value);
+            var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
+
             RadioButtonList rdbList = new RadioButtonList();
             rdbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(rdbList);
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
-
-            for (int i = 0; i < ansArray.Length; i++)
+            for (int i = 0; i < infoAndQuesList.Count; i++)
             {
-                RadioButton radio = new RadioButton();
-                radio.Text = ansArray[i].ToString();
-                radio.ID = ques.QuesID + i.ToString();
-                radio.GroupName = "group" + ques.QuesID;
-                this.plcForQuestion.Controls.Add(radio);
-                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+                if (infoAndQuesList[i].QuesID == ques.QuesID)
+                {
+                    RadioButton radio = new RadioButton();
+                    radio.ID = ques.QuesID + i.ToString();
+                    radio.Text = infoAndQuesList[i].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(radio);
+                    this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+                }
             }
         }
 
+        // !!!!! ckeckBox只生成一個
         private void createCkb(QuesDetail ques)
         {
+            Guid userID = new Guid(this.hfUserID.Value);
+            var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
+
             CheckBoxList ckbList = new CheckBoxList();
             ckbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(ckbList);
 
-            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
-
-            for (int i = 0; i < ansArray.Length; i++)
+            for (int i = 0; i < infoAndQuesList.Count; i++)
             {
-                CheckBox check = new CheckBox();
-                check.Text = ansArray[i].ToString();
-                check.ID = ques.QuesID + i.ToString();
-                this.plcForQuestion.Controls.Add(check);
-                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+                if (infoAndQuesList[i].QuesID == ques.QuesID)
+                {
+                    CheckBox check = new CheckBox();
+                    check.ID = ques.QuesID + i.ToString();
+                    check.Text = infoAndQuesList[i].Answer.TrimEnd(';');
+                    this.plcForQuestion.Controls.Add(check);
+                    this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+                }
             }
         }
         #endregion
