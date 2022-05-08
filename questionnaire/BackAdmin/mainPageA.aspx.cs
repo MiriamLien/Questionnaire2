@@ -319,20 +319,13 @@ namespace questionnaire.BackAdmin
             string idText = Request.QueryString["ID"];
             Guid id = new Guid(idText);
             var quesList = this._mgrQuesDetail.GetQuesDetailList(id);
-
             string folder = "D:\\ccc\\ExportToCSV";
-            string fileName = $"Q_{idText}.csv";
             string fullPath = $"D:\\ccc\\ExportToCSV\\Q_{idText}.csv";
 
             DataTable dt = new DataTable();
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
-            }
-
-            if (!File.Exists(fileName))
-            {
-                File.Create(fileName);
             }
             ExportToCSV(dt, fullPath);
 
@@ -485,6 +478,13 @@ namespace questionnaire.BackAdmin
             }
         }
 
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            this.plcInfo1.Visible = true;
+            this.plcInfo2.Visible = false;
+            this.btnBack.Visible = false;
+        }
+
         private void createTextBox(QuesDetail ques)
         {
             TextBox txt = new TextBox();
@@ -530,5 +530,6 @@ namespace questionnaire.BackAdmin
             }
         }
         #endregion
+
     }
 }

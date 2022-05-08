@@ -34,6 +34,12 @@
             margin-bottom: 80px;
         }
 
+        #infoSpace {
+            margin-right: 220px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
         #statisticDiv {
             margin-bottom: 50px;
         }
@@ -213,6 +219,9 @@
                         </div>
                     </div>
                 </asp:PlaceHolder>
+                <div id="infoSpace" align="right">
+                    <asp:Button ID="btnBack" runat="server" Text="返回列表" OnClick="btnBack_Click" />
+                </div>
             </div>
 
             <div id="statistic" class="tab-pane fade">

@@ -194,6 +194,7 @@
     <Compile Include="Managers\QuesContentsManager.cs" />
     <Compile Include="Managers\QuesDetailManager.cs" />
     <Compile Include="Managers\QuesTypeManager.cs" />
+    <Compile Include="Managers\StatisticManager.cs" />
     <Compile Include="Managers\UserInfoManager.cs" />
     <Compile Include="Managers\UserQuesDetailManager.cs" />
     <Compile Include="Models\AccountCheckModel.cs" />

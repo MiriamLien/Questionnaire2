@@ -17,7 +17,7 @@ namespace questionnaire
         private UserInfoManager _mgrUserInfo = new UserInfoManager();
         private UserQuesDetailManager _mgrUserQuesDetail = new UserQuesDetailManager();
         int ansCheck = 0;
-        int i = 1;
+        int num = 1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -47,11 +47,11 @@ namespace questionnaire
 
             foreach (var question in questionList)
             {
-                string title = $"<br /><br /><br />{i}. {(question.QuesTitle).Trim()}";
+                string title = $"<br /><br /><br />{num}. {(question.QuesTitle).Trim()}";
                 if (question.IsEnable == true)
                     title += " (*)";
 
-                i += 1;
+                num += 1;
                 Literal ltlQuestion = new Literal();
                 ltlQuestion.Text = title + "<br />&emsp;";
                 this.plcForQuestion.Controls.Add(ltlQuestion);
@@ -144,14 +144,13 @@ namespace questionnaire
             }
         }
 
-
-        // 返回填寫問卷內容的內頁!!!
+        // 返回填寫問卷內容的內頁
         protected void btnChange_Click(object sender, EventArgs e)
         {
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
             
-            Response.Redirect($"mainPage.aspx?ID={questionnaireID}");
+            Response.Redirect($"mainPage.aspx?ID={questionnaireID}&Edit=1");
         }
 
         protected void btnSend_Click(object sender, EventArgs e)

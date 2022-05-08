@@ -3,6 +3,7 @@ using questionnaire.Models;
 using questionnaire.ORM;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -50,6 +51,7 @@ namespace questionnaire.BackAdmin
             if (!this.CheckInput(out errorMsgList))
             {
                 this.lblMsg.Text = string.Join("<br/>", errorMsgList);
+                this.lblMsg.ForeColor = Color.Red;
                 return;
             }
 
@@ -72,7 +74,7 @@ namespace questionnaire.BackAdmin
                 //Account account = new AccountManager().GetCurrentUser();
 
                 this._mgrQuesContents.CreateQues(model);
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID.ToString()}';", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷已新增。');location.href='mainPageA_Add.aspx?ID={model.ID}#question';", true);
             }
         }
 
@@ -208,6 +210,24 @@ namespace questionnaire.BackAdmin
                 return false;
             else
                 return true;
+        }
+
+        protected void txtStartDate_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToDateTime(this.txtStartDate.Text) < DateTime.Now)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('開始時間不可小於當日。');", true);
+                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+        }
+
+        protected void txtEndDate_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToDateTime(this.txtEndDate.Text) < Convert.ToDateTime(this.txtStartDate.Text))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
+                this.txtEndDate.Text = string.Empty;
+            }
         }
     }
 }

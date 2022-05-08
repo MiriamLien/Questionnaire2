@@ -111,13 +111,13 @@ namespace questionnaire.Managers
         }
 
         /// <summary>
-        /// 輸入問題ID取得問題內容
+        /// 輸入問題ID(QuesID)取得問題內容(一題)
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public QuesDetail GetQuesDetail(int id)
+        public QuesDetail GetQuesDetail(int quesID)
         {
-            string idText = id.ToString();
+            string quesIDText = quesID.ToString();
 
             try
             {
@@ -125,7 +125,7 @@ namespace questionnaire.Managers
                 {
                     var query =
                     from item in contextModel.QuesDetails
-                    where item.QuesID == id
+                    where item.QuesID == quesID
                     select item;
 
                     var QuesDetail = query.FirstOrDefault();

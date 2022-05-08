@@ -74,7 +74,7 @@
         <br />
         <br />
         <h6>
-            <asp:Label ID="lblMsg" runat="server" Visible="false" ForeColor="Red">尚有欄位未填/未選。</asp:Label>
+            <asp:Label ID="lblMsg" runat="server" Visible="false" ForeColor="Red">尚有選項未選</asp:Label>
         </h6>
         <asp:Literal ID="ltlQCount" runat="server"></asp:Literal><br />
         <br />
