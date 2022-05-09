@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Text;
 using questionnaire.ORM;
+using System.Text.RegularExpressions;
 
 namespace questionnaire.BackAdmin
 {
@@ -23,6 +24,7 @@ namespace questionnaire.BackAdmin
         private CQManager _mgrCQ = new CQManager();
         private UserInfoManager _mgruserInfo = new UserInfoManager();
         private UserQuesDetailManager _mgruserQuesDetail = new UserQuesDetailManager();
+        private StatisticManager _mgrStatistic = new StatisticManager();
         Guid id = Guid.NewGuid();
         int number = 1;
         int count = 0;
@@ -125,26 +127,56 @@ namespace questionnaire.BackAdmin
                         ltlQuestion.Text = title + "<br />";
                         this.plcForStatistic.Controls.Add(ltlQuestion);
 
+                        // 一個問題的所有選項
+                        string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
+
+                        int total = 0;
+                        int ansCount = 0;
+                        List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
+
+                        // 單複選
                         if (question.QuesTypeID != 1)
                         {
-                            string[] ansList = question.QuesChoices.TrimEnd(';').Trim().Split(';');
-                            for (int k = 0; k < ansList.Length; k++)
+                            List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
+
+                            foreach (var item in staList)
                             {
+                                item.AnsCount = staList.Count;
+                                total = item.AnsCount;
+                            }
+
+                            // 動態生成答案的所有選項 和 barchart
+                            for (int k = 0; k < answerList.Length; k++)
+                            {
+                                ansCount = 0;
+                                foreach (var oneStatistic in staList)
+                                {
+                                    string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
+
+                                    foreach (var sta in itemInStaList)
+                                    {
+                                        if (sta == answerList[k])
+                                        {
+                                            ansCount++;
+                                        }
+                                    }
+                                }
+
                                 Literal ltlAnswer = new Literal();
-                                ltlAnswer.Text = ansList[k] + "<br />";
+                                var percent = (double)ansCount / total * 100;
+                                Literal ltlAndspace = new Literal();
+                                ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";
+                                ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
                                 this.plcForStatistic.Controls.Add(ltlAnswer);
+                                this.plcForStatistic.Controls.Add(ltlAndspace);
                             }
                         }
                         else
                         {
                             Literal ltlAnswerForText = new Literal();
-                            ltlAnswerForText.Text = " - <br/>";
+                            ltlAnswerForText.Text = "&emsp;" + " - <br/>";
                             this.plcForStatistic.Controls.Add(ltlAnswerForText);
                         }
-
-
-
-
                     }
                 }
                 #endregion
@@ -343,8 +375,11 @@ namespace questionnaire.BackAdmin
             {
                 string q = this.txtQuesTitle.Text.Trim();
                 string a = this.txtQuesAns.Text.Trim();
+                var ansCheck1 = Regex.IsMatch(this.txtQuesAns.Text.Trim(), @";");
+                var ansCheck2 = !(Regex.IsMatch(this.txtQuesAns.Text.Trim(), @";$"));
+                var ansCheck3 = !(Regex.IsMatch(this.txtQuesAns.Text.Trim(), @"^;"));
 
-                if (q != null && a != null)
+                if (q != null && a != null && ansCheck1 && ansCheck2 && ansCheck3)
                 {
                     QuesDetailModel model = new QuesDetailModel()
                     {
@@ -437,7 +472,7 @@ namespace questionnaire.BackAdmin
             }
             ExportToCSV(dt, fullPath);
 
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('匯出成功。');", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('匯出成功。');location.href='mainPageA.aspx?ID={id}#userInfo';", true);
         }
 
         // DataTable匯出成CSV檔
@@ -595,9 +630,13 @@ namespace questionnaire.BackAdmin
 
         protected void btnBack_Click(object sender, EventArgs e)
         {
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+
             this.plcInfo1.Visible = true;
             this.plcInfo2.Visible = false;
             this.btnBack.Visible = false;
+            Response.Redirect($"mainPageA.aspx?ID={questionnaireID}#userInfo");
         }
 
         private void createTextBox(QuesDetail ques)
@@ -641,6 +680,7 @@ namespace questionnaire.BackAdmin
                 }
                 this.plcForQuestion.Controls.Add(radio);
                 this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+                radio.Enabled = false;
             }
             count++;
         }
@@ -673,6 +713,7 @@ namespace questionnaire.BackAdmin
 
                 this.plcForQuestion.Controls.Add(check);
                 this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+                check.Enabled = false;
             }
             count++;
         }

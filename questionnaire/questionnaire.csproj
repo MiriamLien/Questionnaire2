@@ -85,7 +85,6 @@
     <Content Include="bootstrap\js\bootstrap.js" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="checkPage.aspx" />
-    <Content Include="Form1.aspx" />
     <Content Include="Global.asax" />
     <Content Include="images\addICON.png" />
     <Content Include="images\deleteICON.png" />
@@ -94,7 +93,6 @@
     <Content Include="listPage.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="mainPage.aspx" />
-    <Content Include="mainPage1.aspx" />
     <Content Include="statisticPage.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -141,13 +139,6 @@
     <Compile Include="checkPage.aspx.designer.cs">
       <DependentUpon>checkPage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Form1.aspx.cs">
-      <DependentUpon>Form1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Form1.aspx.designer.cs">
-      <DependentUpon>Form1.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -180,13 +171,6 @@
     </Compile>
     <Compile Include="mainPage.aspx.designer.cs">
       <DependentUpon>mainPage.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="mainPage1.aspx.cs">
-      <DependentUpon>mainPage1.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="mainPage1.aspx.designer.cs">
-      <DependentUpon>mainPage1.aspx</DependentUpon>
     </Compile>
     <Compile Include="Managers\AccountCheckManager.cs" />
     <Compile Include="Managers\AccountManager.cs" />

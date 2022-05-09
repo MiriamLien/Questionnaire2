@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -161,28 +162,70 @@ namespace questionnaire.BackAdmin
         // 新增問題(寫入Session)
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-            Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
-            Session["questionList"] += this.txtQuesAns.Text.Trim() + "&";
-            Session["questionList"] += Convert.ToInt32(this.ddlAnsType.SelectedValue) + "&";
-            Session["questionList"] += (this.ddlAnsType.SelectedItem.ToString()).Trim() + "&";
-            Session["questionList"] += this.ckbMustAns.Checked + "$";
-
-            var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
-            this.rptQuestion.DataSource = quesList;
-            this.rptQuestion.DataBind();
-
-            if (quesList != null || quesList.Count > 0)
+            if (this.ddlAnsType.SelectedIndex == 0)
             {
-                // 生成問題編號
-                int i = 1;
-                foreach (RepeaterItem item in this.rptQuestion.Items)
+                string q = this.txtQuesTitle.Text.Trim();
+
+                if (q != null)
                 {
-                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                    ltlNum.Text = i.ToString();
-                    i++;
+                    Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
+                    Session["questionList"] += this.txtQuesAns.Text.Trim() + "&";
+                    Session["questionList"] += Convert.ToInt32(this.ddlAnsType.SelectedValue) + "&";
+                    Session["questionList"] += (this.ddlAnsType.SelectedItem.ToString()).Trim() + "&";
+                    Session["questionList"] += this.ckbMustAns.Checked + "$";
+
+                    var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+                    this.rptQuestion.DataSource = quesList;
+                    this.rptQuestion.DataBind();
+
+
+                    if (quesList != null || quesList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int i = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = i.ToString();
+                            i++;
+                        }
+                    }
                 }
             }
+            else
+            {
+                string q = this.txtQuesTitle.Text.Trim();
+                string a = this.txtQuesAns.Text.Trim();
+                var ansCheck1 = Regex.IsMatch(this.txtQuesAns.Text.Trim(), @";");
+                var ansCheck2 = !(Regex.IsMatch(this.txtQuesAns.Text.Trim(), @";$"));
+                var ansCheck3 = !(Regex.IsMatch(this.txtQuesAns.Text.Trim(), @"^;"));
 
+                if (q != null && a != null && ansCheck1 && ansCheck2 && ansCheck3)
+                {
+                    Session["questionList"] += this.txtQuesTitle.Text.Trim() + "&";
+                    Session["questionList"] += this.txtQuesAns.Text.Trim() + "&";
+                    Session["questionList"] += Convert.ToInt32(this.ddlAnsType.SelectedValue) + "&";
+                    Session["questionList"] += (this.ddlAnsType.SelectedItem.ToString()).Trim() + "&";
+                    Session["questionList"] += this.ckbMustAns.Checked + "$";
+
+                    var quesList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+                    this.rptQuestion.DataSource = quesList;
+                    this.rptQuestion.DataBind();
+
+
+                    if (quesList != null || quesList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int i = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = i.ToString();
+                            i++;
+                        }
+                    }
+                }
+            }
             // 重置輸入問題的地方
             this.ddlQuesType.SelectedIndex = 0;
             this.txtQuesTitle.Text = string.Empty;
@@ -190,72 +233,72 @@ namespace questionnaire.BackAdmin
             this.ddlAnsType.SelectedValue = "1";
         }
 
-        // 把問題傳送至DB(新增模式)
-        protected void btnQuesSend_Click(object sender, EventArgs e)
-        {
-            var idText = Request.QueryString["ID"];
-            Guid id = new Guid(idText);
-            var quesContent = this._mgrQuesContents.GetQuesContent(id);
-
-            var quesDetailList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
-
-            if (quesDetailList != null || quesDetailList.Count > 0)
+            // 把問題傳送至DB(新增模式)
+            protected void btnQuesSend_Click(object sender, EventArgs e)
             {
-                int i = 1;
-                foreach (RepeaterItem item in this.rptQuestion.Items)
-                {
-                    Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                    ltlNum.Text = i.ToString();
-                    i++;
-                }
+                var idText = Request.QueryString["ID"];
+                Guid id = new Guid(idText);
+                var quesContent = this._mgrQuesContents.GetQuesContent(id);
 
-                foreach (var item in quesDetailList)
+                var quesDetailList = this._mgrQuesDetail.GetQuestionList(Session["questionList"].ToString());
+
+                if (quesDetailList != null || quesDetailList.Count > 0)
                 {
-                    QuesDetailModel model = new QuesDetailModel()
+                    int i = 1;
+                    foreach (RepeaterItem item in this.rptQuestion.Items)
                     {
-                        ID = quesContent.ID,
-                        QuesID = i,
-                        QuesTitle = item.QuesTitle,
-                        QuesChoices = item.QuesChoices,
-                        QuesTypeID = item.QuesTypeID,
-                        IsEnable = item.IsEnable
-                    };
+                        Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                        ltlNum.Text = i.ToString();
+                        i++;
+                    }
 
-                    this._mgrQuesDetail.CreateQuesDetail(model);
+                    foreach (var item in quesDetailList)
+                    {
+                        QuesDetailModel model = new QuesDetailModel()
+                        {
+                            ID = quesContent.ID,
+                            QuesID = i,
+                            QuesTitle = item.QuesTitle,
+                            QuesChoices = item.QuesChoices,
+                            QuesTypeID = item.QuesTypeID,
+                            IsEnable = item.IsEnable
+                        };
+
+                        this._mgrQuesDetail.CreateQuesDetail(model);
+                    }
                 }
+                Session.Remove("questionList");
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='listPageA.aspx';", true);
             }
-            Session.Remove("questionList");
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('問題已新增。');location.href='listPageA.aspx';", true);
+
+            protected void btnQuesCancel_Click(object sender, EventArgs e)
+            {
+                Session.Remove("questionList");
+                Response.Redirect("listPageA.aspx");
+            }
+            #endregion
+
+            private bool CheckInput(out List<string> errorMsgList)
+            {
+                errorMsgList = new List<string>();
+
+                if (string.IsNullOrWhiteSpace(this.txtTitle.Text))
+                    errorMsgList.Add("問卷名稱為必填。");
+
+                if (string.IsNullOrWhiteSpace(this.txtContent.Text))
+                    errorMsgList.Add("描述內容為必填。");
+
+                if (string.IsNullOrWhiteSpace(this.txtStartDate.Text))
+                    errorMsgList.Add("開始時間為必填。");
+
+                if (string.IsNullOrWhiteSpace(this.txtEndDate.Text))
+                    errorMsgList.Add("結束時間為必填。");
+
+                if (errorMsgList.Count > 0)
+                    return false;
+                else
+                    return true;
+            }
+
         }
-
-        protected void btnQuesCancel_Click(object sender, EventArgs e)
-        {
-            Session.Remove("questionList");
-            Response.Redirect("listPageA.aspx");
-        }
-        #endregion
-
-        private bool CheckInput(out List<string> errorMsgList)
-        {
-            errorMsgList = new List<string>();
-
-            if (string.IsNullOrWhiteSpace(this.txtTitle.Text))
-                errorMsgList.Add("問卷名稱為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtContent.Text))
-                errorMsgList.Add("描述內容為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtStartDate.Text))
-                errorMsgList.Add("開始時間為必填。");
-
-            if (string.IsNullOrWhiteSpace(this.txtEndDate.Text))
-                errorMsgList.Add("結束時間為必填。");
-
-            if (errorMsgList.Count > 0)
-                return false;
-            else
-                return true;
-        }
-
     }
-}

@@ -297,12 +297,12 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
 
             List<UserQuesDetailModel> answerList = new List<UserQuesDetailModel>();
+            int mustAns = 0;
 
             // 是否為必填/必選
             for (int i = 0; i < questionList.Count; i++)
             {
                 var q = _mgrQuesDetail.GetQuesDetail(questionList[i].QuesID);
-                bool mustAns = false;
 
                 if (q.IsEnable == true)
                 {
@@ -312,9 +312,9 @@ namespace questionnaire
                             PlaceHolder PH1 = (PlaceHolder)(Master.FindControl("ContentPlaceHolder1").FindControl("plcForQuestion"));
                             TextBox textBox = (TextBox)PH1.FindControl($"Q{questionList[i].QuesID}");
 
-                            if (textBox.Text != null)
+                            if (!string.IsNullOrWhiteSpace(textBox.Text))
                             {
-                                mustAns = true;
+                                mustAns++;
                                 break;
                             }
                             break;
@@ -333,7 +333,7 @@ namespace questionnaire
 
                                     if (rdb.Checked == true)
                                     {
-                                        mustAns = true;
+                                        mustAns++;
                                         check = 1;
                                         break;
                                     }
@@ -347,6 +347,7 @@ namespace questionnaire
                             for (int j = -1; j < questionList.Count; j++)
                             {
                                 int check2 = 0;
+                                bool ckbCheck = false;
 
                                 string[] QArray2 = (questionList[i].QuesChoices).Trim().Split(';');
                                 for (int k = 0; k < QArray2.Length; k++)
@@ -356,14 +357,15 @@ namespace questionnaire
 
                                     if (ckb.Checked == true)
                                     {
+                                        ckbCheck = true;
                                         check2++;
                                     }
                                     else if (ckb.Checked == false)
                                         check2++;
 
-                                    if (check2 == QArray2.Length)
+                                    if (check2 == QArray2.Length && ckbCheck)
                                     {
-                                        mustAns = true;
+                                        mustAns++;
                                         break;
                                     }
                                 }
@@ -374,7 +376,7 @@ namespace questionnaire
                 }
             }
 
-            if (result)
+            if (result && mustAns == questionList.Count)
             {
                 // 取得選擇的答案
                 for (int i = 0; i < questionList.Count; i++)

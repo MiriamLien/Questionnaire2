@@ -22,7 +22,6 @@ namespace questionnaire
                 this.rptList.DataSource = quesList;
                 this.rptList.DataBind();
 
-                // !!!狀態：只有投票中顯示問卷填寫頁超連結，已完結則不會顯示(隱藏)
                 foreach (RepeaterItem item in this.rptList.Items)
                 {
                     Literal ltlState = item.FindControl("ltlState") as Literal;
@@ -110,8 +109,17 @@ namespace questionnaire
                 this.rptList.DataSource = bothDTList;
                 this.rptList.DataBind();
 
-                this.txtStartDate.Text = string.Empty;
-                this.txtEndDate.Text = string.Empty;
+                if (sDT > eDT)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
+                    this.txtStartDate.Text = string.Empty;
+                    this.txtEndDate.Text = string.Empty;
+
+                    string keyword = string.Empty;
+                    var QList = this._mgrQuesContents.GetQuesContentsList(keyword);
+                    this.rptList.DataSource = QList;
+                    this.rptList.DataBind();
+                }
 
                 if (bothDTList.Count == 0 || bothDTList == null)
                 {

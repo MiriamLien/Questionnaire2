@@ -35,9 +35,14 @@ namespace questionnaire
             var questionList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
             var userQuesDetailList = this._mgrUserQuesDetail.GetUserQuesDetailList(questionnaireID);
 
+            if (questionList.Count == 0)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('尚無統計數據(無人作答)。');location.href='listPage.aspx';", true);
+            }
+
             foreach (var question in questionList)
             {
-                if (userQuesDetailList == null)
+                if (userQuesDetailList.Count == 0)
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('尚無統計數據(無人作答)。');location.href='listPage.aspx';", true);
                 }
@@ -71,9 +76,10 @@ namespace questionnaire
                             total = item.AnsCount;
                         }
 
-                        // 動態生成答案的所有選項 和 barchart!!!!!!!!!!!!!!!!!!
+                        // 動態生成答案的所有選項 和 barchart
                         for (int k = 0; k < answerList.Length; k++)
                         {
+                            ansCount = 0;
                             foreach (var oneStatistic in staList)
                             {
                                 string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
@@ -93,7 +99,7 @@ namespace questionnaire
                             HtmlGenericControl div2 = new HtmlGenericControl("div");
                             div2.Style.Value = "border: 1px solid #0094ff; background-color: #0094ff; color: white; height: 30px;";
                             var percent = (double)ansCount / total * 100;
-                            div2.Style["width"] = percent.ToString();
+                            div2.Style["width"] = $"{percent}%";
                             div1.Controls.Add(div2);
                             Literal ltlAndspace = new Literal();
                             ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";

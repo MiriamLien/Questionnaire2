@@ -98,9 +98,18 @@ namespace questionnaire.BackAdmin
                 this.rptList.DataSource = bothDTList;
                 this.rptList.DataBind();
 
-                this.txtStartDate.Text = string.Empty;
-                this.txtEndDate.Text = string.Empty;
+                if (sDT > eDT)
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
+                    this.txtStartDate.Text = string.Empty;
+                    this.txtEndDate.Text = string.Empty;
 
+                    string keyword = string.Empty;
+                    var QList = this._mgrQuesContents.GetQuesContentsList(keyword);
+                    this.rptList.DataSource = QList;
+                    this.rptList.DataBind();
+                }
+                
                 if (bothDTList.Count == 0 || bothDTList == null)
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
