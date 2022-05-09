@@ -76,16 +76,16 @@
             <asp:HiddenField ID="hfID" runat="server" />
             <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
             <asp:DropDownList ID="ddlQuesType" runat="server" OnSelectedIndexChanged="ddlQuesType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;&emsp;
-                    <br />
-            <br />
+            <br /><br />
             <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
-            <asp:TextBox ID="txtQuesTitle" runat="server" Width="280"></asp:TextBox>&nbsp;
-                <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
+            <asp:TextBox ID="txtQuesTitle" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>
+            &emsp;
+                <asp:DropDownList ID="ddlAnsType" runat="server" OnSelectedIndexChanged="ddlAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;
                 <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
             <br /><p></p>
             <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
-            <asp:TextBox ID="txtQuesAns" runat="server" Width="280" TextMode="MultiLine"></asp:TextBox>&nbsp;
-                <span>﹝多個答案以；分隔﹞</span>&emsp;
+            <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                <span>﹝多個答案以；分隔﹞</span>&emsp;&emsp;
                 <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             <br />
             <br />

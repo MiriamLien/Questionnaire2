@@ -25,6 +25,7 @@ namespace questionnaire.BackAdmin
         private UserQuesDetailManager _mgruserQuesDetail = new UserQuesDetailManager();
         Guid id = Guid.NewGuid();
         int number = 1;
+        int count = 0;
 
         protected void Page_Load(object sender, EventArgs e)    //編輯模式
         {
@@ -101,27 +102,52 @@ namespace questionnaire.BackAdmin
                     }
                 }
 
-                // 帶入問卷和問題內容(統計頁)
-                this.rptStatistic.DataSource = questionList;
-                this.rptStatistic.DataBind();
+                // 取得問題內容
+                var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+                var userQuesDetailList = this._mgruserQuesDetail.GetUserQuesDetailList(questionnaireID);
 
-                if (questionList != null || questionList.Count > 0)
+                // 帶入問卷和問題內容(統計頁)
+                foreach (var question in quesList)
                 {
-                    // 生成問題編號
-                    int num = 1;
-                    foreach (RepeaterItem item in this.rptStatistic.Items)
+                    if (userQuesDetailList == null)
                     {
-                        Literal ltlNum = item.FindControl("ltlNum") as Literal;
-                        ltlNum.Text = num.ToString();
-                        num++;
+                        this.ltlStaMsg.Text = "無統計數據。";
+                    }
+                    else
+                    {
+                        // 顯示題目
+                        string title = $"<br /><br />{number}. {(question.QuesTitle).Trim()}";
+                        if (question.IsEnable == true)
+                            title += " (* 必填)";
+
+                        number += 1;
+                        Literal ltlQuestion = new Literal();
+                        ltlQuestion.Text = title + "<br />";
+                        this.plcForStatistic.Controls.Add(ltlQuestion);
+
+                        if (question.QuesTypeID != 1)
+                        {
+                            string[] ansList = question.QuesChoices.TrimEnd(';').Trim().Split(';');
+                            for (int k = 0; k < ansList.Length; k++)
+                            {
+                                Literal ltlAnswer = new Literal();
+                                ltlAnswer.Text = ansList[k] + "<br />";
+                                this.plcForStatistic.Controls.Add(ltlAnswer);
+                            }
+                        }
+                        else
+                        {
+                            Literal ltlAnswerForText = new Literal();
+                            ltlAnswerForText.Text = " - <br/>";
+                            this.plcForStatistic.Controls.Add(ltlAnswerForText);
+                        }
+
+
+
+
                     }
                 }
                 #endregion
-
-                // 取得問題內容
-                var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
-
-
             }
         }
 
@@ -164,6 +190,28 @@ namespace questionnaire.BackAdmin
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問卷編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
             }
         }
+
+        protected void txtStartDate_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToDateTime(this.txtStartDate.Text) < DateTime.Now)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('開始時間不可更改成當日之前。');", true);
+                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+        }
+
+        protected void txtEndDate_TextChanged(object sender, EventArgs e)
+        {
+            string idText = Request.QueryString["ID"];
+            Guid questionnaireID = Guid.Parse(idText);
+            var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
+
+            if (Convert.ToDateTime(this.txtEndDate.Text) < Convert.ToDateTime(this.txtStartDate.Text))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
+                this.txtEndDate.Text = q.EndDate.ToString();
+            }
+        }
         #endregion
 
 
@@ -196,6 +244,7 @@ namespace questionnaire.BackAdmin
             {
                 this.btnEditCheck.CommandName = ques.QuesID.ToString();
                 this.txtEditQuesTitle.Text = ques.QuesTitle.ToString();
+                this.txtEditQuesAns.Enabled = false;
                 this.ddlEditAnsType.SelectedValue = ques.QuesTypeID.ToString();
                 this.ckbEditMustAns.Checked = ques.IsEnable;
             }
@@ -227,6 +276,40 @@ namespace questionnaire.BackAdmin
                 {
                     this.ckbMustAns.Checked = true;
                 }
+
+                if (this.ddlAnsType.SelectedIndex == 0)
+                {
+                    this.txtQuesAns.Enabled = false;
+                }
+                else
+                {
+                    this.txtQuesAns.Enabled = true;
+                }
+            }
+
+            // 自訂問題的TextBox預設為空的
+            if (this.ddlQuesType.SelectedIndex == 0)
+            {
+                this.txtQuesTitle.Text = string.Empty;
+                this.txtQuesAns.Text = string.Empty;
+                this.ddlAnsType.SelectedIndex = 0;
+            }
+        }
+
+        protected void ddlAnsType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int cqID = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
+            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqID);
+
+            if (this.ddlAnsType.SelectedIndex == 0)
+            {
+                this.txtQuesAns.Text = string.Empty;
+                this.txtQuesAns.Enabled = false;
+            }
+            else
+            {
+                this.txtQuesAns.Enabled = true;
+                this.txtQuesAns.Text = CQs.CQChoices;
             }
         }
 
@@ -237,22 +320,47 @@ namespace questionnaire.BackAdmin
             Guid questionnaireID = Guid.Parse(idText);
             var ques = this._mgrQuesContents.GetQuesContent(questionnaireID);
 
-            string q = this.txtQuesTitle.Text.Trim();
-            string a = this.txtQuesAns.Text.Trim();
-
-            QuesDetailModel model = new QuesDetailModel()
+            if (this.ddlAnsType.SelectedIndex == 0)
             {
-                ID = ques.ID,
-                QuesTitle = q,
-                QuesChoices = a,
-                QuesTypeID = Convert.ToInt32(this.ddlAnsType.SelectedValue),
-                IsEnable = this.ckbMustAns.Checked
-            };
-            this._mgrQuesDetail.CreateQuesDetail(model);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
+                string q = this.txtQuesTitle.Text.Trim();
+                string a = this.txtQuesAns.Text.Trim();
+
+                if (q != null)
+                {
+                    QuesDetailModel model = new QuesDetailModel()
+                    {
+                        ID = ques.ID,
+                        QuesTitle = q,
+                        QuesChoices = a,
+                        QuesTypeID = Convert.ToInt32(this.ddlAnsType.SelectedValue),
+                        IsEnable = this.ckbMustAns.Checked
+                    };
+                    this._mgrQuesDetail.CreateQuesDetail(model);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                }
+            }
+            else
+            {
+                string q = this.txtQuesTitle.Text.Trim();
+                string a = this.txtQuesAns.Text.Trim();
+
+                if (q != null && a != null)
+                {
+                    QuesDetailModel model = new QuesDetailModel()
+                    {
+                        ID = ques.ID,
+                        QuesTitle = q,
+                        QuesChoices = a,
+                        QuesTypeID = Convert.ToInt32(this.ddlAnsType.SelectedValue),
+                        IsEnable = this.ckbMustAns.Checked
+                    };
+                    this._mgrQuesDetail.CreateQuesDetail(model);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                }
+            }
         }
 
-        // 問題編輯好後的確認鈕
+        // 問題編輯好後的確認編輯鈕
         protected void btnEditCheck_Command(object sender, CommandEventArgs e)
         {
             string idText = Request.QueryString["ID"];
@@ -273,7 +381,7 @@ namespace questionnaire.BackAdmin
 
             this._mgrQuesDetail.UpdateQuesDetail(model);
             //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
         }
 
         // 取消編輯
@@ -304,7 +412,7 @@ namespace questionnaire.BackAdmin
             }
 
             //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已刪除。');location.href='mainPageA.aspx?ID={questionnaireID}';", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已刪除。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
         }
 
         private void BackToListPage()
@@ -434,6 +542,7 @@ namespace questionnaire.BackAdmin
         {
             this.plcInfo1.Visible = false;
             this.plcInfo2.Visible = true;
+            this.btnBack.Visible = true;
 
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
@@ -457,7 +566,7 @@ namespace questionnaire.BackAdmin
             {
                 string title = $"<br /><br /><br />{number}. {(question.QuesTitle).Trim()}";
                 if (question.IsEnable == true)
-                    title += " (*)";
+                    title += " (* 必填)";
 
                 number += 1;
                 Literal ltlQuestion = new Literal();
@@ -477,6 +586,11 @@ namespace questionnaire.BackAdmin
                         break;
                 }
             }
+
+            this.txtName.Enabled = false;
+            this.txtPhone.Enabled = false;
+            this.txtEmail.Enabled = false;
+            this.txtAge.Enabled = false;
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
@@ -490,21 +604,24 @@ namespace questionnaire.BackAdmin
         {
             Guid userID = new Guid(this.hfUserID.Value);
             var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
-            for (int i = 0; i < infoAndQuesList.Count; i++)
+
+            foreach (var item in infoAndQuesList)
             {
-                if (infoAndQuesList[i].QuesID == ques.QuesID)
+                TextBox txt = new TextBox();
+                txt.ID = "Q" + ques.QuesID.ToString();
+                if (ques.QuesID == item.QuesID)
                 {
-                    TextBox txt = new TextBox();
-                    txt.ID = "Q" + ques.QuesID.ToString();
-                    txt.Text = infoAndQuesList[i].Answer.TrimEnd(';');
+                    txt.Text = item.Answer.TrimEnd(';');
                     this.plcForQuestion.Controls.Add(txt);
                 }
+                txt.Enabled = false;
             }
         }
 
-        // !!!!! radioButton只生成一個
         private void createRdb(QuesDetail ques)
         {
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
             Guid userID = new Guid(this.hfUserID.Value);
             var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
 
@@ -512,22 +629,26 @@ namespace questionnaire.BackAdmin
             rdbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(rdbList);
 
-            for (int i = 0; i < infoAndQuesList.Count; i++)
+            for (int i = 0; i < ansArray.Length; i++)
             {
-                if (infoAndQuesList[i].QuesID == ques.QuesID)
+                RadioButton radio = new RadioButton();
+                radio.Text = ansArray[i].ToString();
+                radio.ID = ques.QuesID + i.ToString();
+                radio.GroupName = "group" + ques.QuesID;
+                if (radio.Text == infoAndQuesList[count].Answer.TrimEnd(';'))
                 {
-                    RadioButton radio = new RadioButton();
-                    radio.ID = ques.QuesID + i.ToString();
-                    radio.Text = infoAndQuesList[i].Answer.TrimEnd(';');
-                    this.plcForQuestion.Controls.Add(radio);
-                    this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
+                    radio.Checked = true;
                 }
+                this.plcForQuestion.Controls.Add(radio);
+                this.plcForQuestion.Controls.Add(new LiteralControl("<br />&emsp;"));
             }
+            count++;
         }
 
-        // !!!!! ckeckBox只生成一個
         private void createCkb(QuesDetail ques)
         {
+            string[] ansArray = (ques.QuesChoices).Trim().Split(';');
+
             Guid userID = new Guid(this.hfUserID.Value);
             var infoAndQuesList = this._mgruserQuesDetail.GetUserInfoList(userID);
 
@@ -535,19 +656,27 @@ namespace questionnaire.BackAdmin
             ckbList.ID = "Q" + ques.QuesID.ToString();
             this.plcForQuestion.Controls.Add(ckbList);
 
-            for (int i = 0; i < infoAndQuesList.Count; i++)
+            string[] checkedAns = (infoAndQuesList[count].Answer.TrimEnd(';')).Trim().Split(';');
+            for (int i = 0; i < ansArray.Length; i++)
             {
-                if (infoAndQuesList[i].QuesID == ques.QuesID)
-                {
-                    CheckBox check = new CheckBox();
-                    check.ID = ques.QuesID + i.ToString();
-                    check.Text = infoAndQuesList[i].Answer.TrimEnd(';');
-                    this.plcForQuestion.Controls.Add(check);
-                    this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
-                }
-            }
-        }
-        #endregion
+                CheckBox check = new CheckBox();
+                check.Text = ansArray[i].ToString();
+                check.ID = ques.QuesID + i.ToString();
 
+                foreach (var item in checkedAns)
+                {
+                    if (check.Text == item)
+                    {
+                        check.Checked = true;
+                    }
+                }
+
+                this.plcForQuestion.Controls.Add(check);
+                this.plcForQuestion.Controls.Add(new LiteralControl("&emsp;"));
+            }
+            count++;
+        }
+
+        #endregion
     }
 }

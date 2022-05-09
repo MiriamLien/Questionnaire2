@@ -95,12 +95,12 @@ namespace questionnaire
                             var percent = (double)ansCount / total * 100;
                             div2.Style["width"] = percent.ToString();
                             div1.Controls.Add(div2);
-                            Literal space = new Literal();
-                            space.Text = "<br />";
+                            Literal ltlAndspace = new Literal();
+                            ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";
                             ltlAnswer.Text = answerList[k];
                             this.plcForQuestion.Controls.Add(ltlAnswer);
                             this.plcForQuestion.Controls.Add(div1);
-                            this.plcForQuestion.Controls.Add(space);
+                            this.plcForQuestion.Controls.Add(ltlAndspace);
                         }
                     }
                     else

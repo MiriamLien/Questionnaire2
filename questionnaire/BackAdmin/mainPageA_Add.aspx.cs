@@ -44,6 +44,7 @@ namespace questionnaire.BackAdmin
             }
         }
 
+        #region "問卷"
         // 問卷資訊填寫後送出(新增模式)
         protected void btnPaperSend_Click(object sender, EventArgs e)
         {
@@ -83,6 +84,24 @@ namespace questionnaire.BackAdmin
             Response.Redirect("listPageA.aspx");
         }
 
+        protected void txtStartDate_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToDateTime(this.txtStartDate.Text) < DateTime.Now)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('開始時間不可小於當日。');", true);
+                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }
+        }
+
+        protected void txtEndDate_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToDateTime(this.txtEndDate.Text) < Convert.ToDateTime(this.txtStartDate.Text))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
+                this.txtEndDate.Text = string.Empty;
+            }
+        }
+        #endregion
 
         #region "新增問題"
         // 把問題填入TextBox裡
@@ -102,6 +121,15 @@ namespace questionnaire.BackAdmin
                 {
                     this.ckbMustAns.Checked = true;
                 }
+
+                if (this.ddlAnsType.SelectedIndex == 0)
+                {
+                    this.txtQuesAns.Enabled = false;
+                }
+                else
+                {
+                    this.txtQuesAns.Enabled = true;
+                }
             }
 
             // 自訂問題的TextBox預設為空的
@@ -110,6 +138,23 @@ namespace questionnaire.BackAdmin
                 this.txtQuesTitle.Text = string.Empty;
                 this.txtQuesAns.Text = string.Empty;
                 this.ddlAnsType.SelectedIndex = 0;
+            }
+        }
+
+        protected void ddlAnsType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int cqID = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
+            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqID);
+
+            if (this.ddlAnsType.SelectedIndex == 0)
+            {
+                this.txtQuesAns.Text = string.Empty;
+                this.txtQuesAns.Enabled = false;
+            }
+            else
+            {
+                this.txtQuesAns.Enabled = true;
+                this.txtQuesAns.Text = CQs.CQChoices;
             }
         }
 
@@ -212,22 +257,5 @@ namespace questionnaire.BackAdmin
                 return true;
         }
 
-        protected void txtStartDate_TextChanged(object sender, EventArgs e)
-        {
-            if (Convert.ToDateTime(this.txtStartDate.Text) < DateTime.Now)
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('開始時間不可小於當日。');", true);
-                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
-            }
-        }
-
-        protected void txtEndDate_TextChanged(object sender, EventArgs e)
-        {
-            if (Convert.ToDateTime(this.txtEndDate.Text) < Convert.ToDateTime(this.txtStartDate.Text))
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('結束時間不可小於開始時間。');", true);
-                this.txtEndDate.Text = string.Empty;
-            }
-        }
     }
 }

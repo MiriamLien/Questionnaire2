@@ -1,9 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/BackAdmin/Admin.Master" AutoEventWireup="true" CodeBehind="mainPageA.aspx.cs" Inherits="questionnaire.BackAdmin.mainPageA" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <%-- 列表 --%>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
@@ -14,19 +15,28 @@
             font-size: 18px;
         }
 
-        #space1, #question, #userInfo, #statisticDiv {
-            padding-top: 30px;
-            padding-left: 20px;
+        #tab_alles {
+            width: 90%;
         }
 
+        #space1 {
+            padding-top: 20px;
+            padding-left: 5px;
+        }
+        
         #btnSpace1 {
             padding-top: 20px;
-            padding-left: 180px;
+            padding-left: 220px;
+        }
+
+        #question, #userInfo {
+            padding-top: 40px;
+            padding-left: 30px;
         }
 
         #dateDiv {
             text-align: right;
-            margin-right: 220px;
+            margin-right: 60px;
             margin-bottom: -30px;
         }
 
@@ -35,39 +45,39 @@
         }
 
         #infoSpace {
-            margin-right: 220px;
+            margin-right: 30px;
             margin-top: 30px;
             margin-bottom: 50px;
         }
 
-        #statisticDiv {
-            margin-bottom: 50px;
+        #statistic {
+            margin-left: 10px;
+            margin-top: -45px;
         }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="tab_alles">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#paper">問卷</a></li>
-            <li><a data-toggle="tab" href="#question">問題</a></li>
-            <li><a data-toggle="tab" href="#userInfo">填寫資料</a></li>
-            <li><a data-toggle="tab" href="#statistic">統計</a></li>
+    <div id="tab_alles">
+        <ul>
+            <li><a href="#paper">問卷</a></li>
+            <li><a href="#question">問題</a></li>
+            <li><a href="#userInfo">填寫資料</a></li>
+            <li><a href="#statistic">統計</a></li>
         </ul>
 
-        <div class="tab-content">
-            <div id="paper" class="tab-pane fade in active">
+            <div id="paper">
                 <div id="space1">
                     <asp:Literal ID="ltlTitle" runat="server">問卷名稱</asp:Literal>
-                    <asp:TextBox ID="txtTitle" runat="server" Width="320"></asp:TextBox><br />
+                    <asp:TextBox ID="txtTitle" runat="server" Width="420"></asp:TextBox><br />
                     <br />
                     <asp:Literal ID="ltlContent" runat="server">描述內容</asp:Literal>
-                    <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="5" Width="320"></asp:TextBox><br />
+                    <asp:TextBox ID="txtContent" runat="server" TextMode="MultiLine" Rows="5" Width="420"></asp:TextBox><br />
                     <br />
                     <asp:Literal ID="ltlStartDate" runat="server">開始時間</asp:Literal>
-                    <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                    <asp:TextBox ID="txtStartDate" runat="server" TextMode="Date" Width="420" OnTextChanged="txtStartDate_TextChanged" AutoPostBack="true"></asp:TextBox><br />
                     <br />
                     <asp:Literal ID="ltlEndDate" runat="server">結束時間</asp:Literal>
-                    <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="320"></asp:TextBox><br />
+                    <asp:TextBox ID="txtEndDate" runat="server" TextMode="Date" Width="420" OnTextChanged="txtEndDate_TextChanged" AutoPostBack="true"></asp:TextBox><br />
                     <br />
                     <br />
                     <asp:Label runat="server" ID="lblMsg"></asp:Label>
@@ -75,11 +85,12 @@
                     <br />
                     <asp:CheckBox ID="ckbPaperEnable" runat="server" Text="已啟用" Checked="true" />
                     <br />
+                    <br />
                 </div>
                 <div id="btnSpace1">
                     <asp:Button ID="btnEditPaperCancel" runat="server" Text="取消" OnClick="btnEditPaperCancel_Click" />
                     &emsp;&emsp;&emsp;&emsp;&emsp;
-                <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click"/>
+                <asp:Button ID="btnEditPaperSend" runat="server" Text="送出" OnClick="btnEditPaperSend_Click" />
                     <br />
                     <br />
                     <br />
@@ -87,20 +98,20 @@
                 </div>
             </div>
 
-            <div id="question" class="tab-pane fade">
+            <div id="question">
                 <asp:PlaceHolder ID="plcQues" runat="server">
-                    <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
+                    <asp:Literal ID="ltlQuesType" runat="server">種類 </asp:Literal>
                     <asp:DropDownList ID="ddlQuesType" runat="server" OnSelectedIndexChanged="ddlQuesType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;&emsp;
                     <br />
                     <br />
-                    <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
-                    <asp:TextBox ID="txtQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
-            <asp:DropDownList ID="ddlAnsType" runat="server"></asp:DropDownList>&nbsp;
+                    <asp:Literal ID="ltlQuesTitle" runat="server">問題 </asp:Literal>
+                    <asp:TextBox ID="txtQuesTitle" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&emsp;
+            <asp:DropDownList ID="ddlAnsType" runat="server" OnSelectedIndexChanged="ddlAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;
             <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
                     <br />
                     <br />
-                    <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
-                    <asp:TextBox ID="txtQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                    <asp:Literal ID="ltlQuesAns" runat="server">回答 </asp:Literal>
+                    <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnAdd" runat="server" Text="加入" CommandName='<%# Eval("QuesID") %>' OnCommand="btnAdd_Command" />
                 </asp:PlaceHolder>
@@ -162,11 +173,11 @@
                 <br />
             </div>
 
-            <div id="userInfo" class="tab-pane fade">
+            <div id="userInfo">
                 <asp:PlaceHolder runat="server" ID="plcInfo1">
                     <asp:Button ID="btnDownload" runat="server" Text="匯出" OnClick="btnDownload_Click" />
                     <p></p>
-                    <div style="width: 600px;">
+                    <div style="width: 800px;">
                         <table id="tblUserInfo" class="display" border="1">
                             <thead>
                                 <tr>
@@ -225,24 +236,14 @@
                 </div>
             </div>
 
-            <div id="statistic" class="tab-pane fade">
-                <div id="statisticDiv">
-                    <asp:Repeater ID="rptStatistic" runat="server">
-                        <ItemTemplate>
-                            <asp:Literal runat="server" ID="ltlNum"></asp:Literal>
-                            <asp:Literal ID="ltlStaticQTitle" runat="server" Text='<%# Eval("QuesTitle") %>'>
-                            </asp:Literal>
-                            <br />
-                            <asp:Literal ID="ltlStaticQAns" runat="server" Text='<%# Eval("QuesChoices") %>'>
-                            </asp:Literal>
-                            <br />
-                            <br />
-                            <br />
-                        </ItemTemplate>
-                    </asp:Repeater>
+            <div id="statistic">
+                <div align="center">
+                    <h2><asp:Literal ID="ltlStaMsg" runat="server"></asp:Literal></h2>
                 </div>
+                <div>
+                <asp:PlaceHolder ID="plcForStatistic" runat="server"></asp:PlaceHolder>
+                    </div>
             </div>
-        </div>
     </div>
     <script>
         $(document).ready(function () {
@@ -265,6 +266,8 @@
             });
         });
 
-
+        $(function () {
+            $("#tab_alles").tabs();
+        });
     </script>
 </asp:Content>
