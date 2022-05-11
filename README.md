@@ -34,7 +34,7 @@ ASP.NET Framwork 4.7.2
 >
 >`statisticPage.aspx` 統計頁面
 >
->`Login.aspx` 登入頁面
+>`Login.aspx` (前往後台)登入頁面
 <br />
 
 後台 BackAdmin <br />
