@@ -51,7 +51,7 @@ namespace questionnaire
                     // 顯示題目
                     string title = $"<br /><br /><br />{num}. {(question.QuesTitle).Trim()}";
                     if (question.IsEnable == true)
-                        title += " (*)";
+                        title += " (* 必填)";
 
                     num += 1;
                     Literal ltlQuestion = new Literal();

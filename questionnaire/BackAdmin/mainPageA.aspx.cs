@@ -33,6 +33,8 @@ namespace questionnaire.BackAdmin
         {
             if (!IsPostBack)
             {
+                this.btnBack.Visible = false;
+
                 // 如果沒有帶 id ，跳回列表頁
                 if (Request.QueryString["ID"] == null)
                     this.BackToListPage();
@@ -111,29 +113,25 @@ namespace questionnaire.BackAdmin
                 // 帶入問卷和問題內容(統計頁)
                 foreach (var question in quesList)
                 {
-                    if (userQuesDetailList == null)
+                    // 顯示題目
+                    string title = $"<br /><br />{number}. {(question.QuesTitle).Trim()}";
+                    if (question.IsEnable == true)
+                        title += " (* 必填)";
+
+                    number += 1;
+                    Literal ltlQuestion = new Literal();
+                    ltlQuestion.Text = title + "<br />";
+                    this.plcForStatistic.Controls.Add(ltlQuestion);
+
+                    // 一個問題的所有選項
+                    string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
+
+                    int total = 0;
+                    int ansCount = 0;
+                    List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
+
+                    if (userQuesDetailList.Count != 0)
                     {
-                        this.ltlStaMsg.Text = "無統計數據。";
-                    }
-                    else
-                    {
-                        // 顯示題目
-                        string title = $"<br /><br />{number}. {(question.QuesTitle).Trim()}";
-                        if (question.IsEnable == true)
-                            title += " (* 必填)";
-
-                        number += 1;
-                        Literal ltlQuestion = new Literal();
-                        ltlQuestion.Text = title + "<br />";
-                        this.plcForStatistic.Controls.Add(ltlQuestion);
-
-                        // 一個問題的所有選項
-                        string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
-
-                        int total = 0;
-                        int ansCount = 0;
-                        List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
-
                         // 單複選
                         if (question.QuesTypeID != 1)
                         {
@@ -166,6 +164,50 @@ namespace questionnaire.BackAdmin
                                 var percent = (double)ansCount / total * 100;
                                 Literal ltlAndspace = new Literal();
                                 ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";
+                                ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
+                                this.plcForStatistic.Controls.Add(ltlAnswer);
+                                this.plcForStatistic.Controls.Add(ltlAndspace);
+                            }
+                        }
+                        else
+                        {
+                            Literal ltlAnswerForText = new Literal();
+                            ltlAnswerForText.Text = "&emsp;" + " - <br/>";
+                            this.plcForStatistic.Controls.Add(ltlAnswerForText);
+                        }
+                    }
+                    else
+                    {
+                        if (question.QuesTypeID != 1)
+                        {
+                            List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
+
+                            foreach (var item in staList)
+                            {
+                                item.AnsCount = staList.Count;
+                                total = item.AnsCount;
+                            }
+
+                            // 動態生成答案的所有選項 和 barchart
+                            for (int k = 0; k < answerList.Length; k++)
+                            {
+                                ansCount = 0;
+                                foreach (var oneStatistic in staList)
+                                {
+                                    string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
+
+                                    foreach (var sta in itemInStaList)
+                                    {
+                                        if (sta == answerList[k])
+                                        {
+                                            ansCount++;
+                                        }
+                                    }
+                                }
+
+                                Literal ltlAnswer = new Literal();
+                                Literal ltlAndspace = new Literal();
+                                ltlAndspace.Text = $"0% (0)" + "<br /><br />";
                                 ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
                                 this.plcForStatistic.Controls.Add(ltlAnswer);
                                 this.plcForStatistic.Controls.Add(ltlAndspace);
@@ -717,7 +759,6 @@ namespace questionnaire.BackAdmin
             }
             count++;
         }
-
         #endregion
     }
 }

@@ -3,6 +3,7 @@ using questionnaire.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -41,6 +42,7 @@ namespace questionnaire.BackAdmin
             this.ImgBtnAdd.Visible = false;
             this.plcCQA.Visible = false;
             this.ltlAddMsg.Visible = false;
+            this.txtAddAns.Enabled = false;
 
             // 問題類型下拉繫結
             var QTypeList = this._mgrQuesType.GetQuesTypesList();
@@ -48,6 +50,19 @@ namespace questionnaire.BackAdmin
             this.ddlAddAnsType.DataValueField = "QuesTypeID";
             this.ddlAddAnsType.DataTextField = "QuesType1";
             this.ddlAddAnsType.DataBind();
+        }
+
+        protected void ddlAddAnsType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.ddlAddAnsType.SelectedIndex == 0)
+            {
+                this.txtAddAns.Text = string.Empty;
+                this.txtAddAns.Enabled = false;
+            }
+            else
+            {
+                this.txtAddAns.Enabled = true;
+            }
         }
 
         //新增問題視窗內的儲存按鈕
@@ -66,10 +81,13 @@ namespace questionnaire.BackAdmin
             string title = this.txtAddQues.Text.Trim();
             string ans = this.txtAddAns.Text.Trim();
             bool mustAns = this.ckbAddCQMustAns.Checked;
+            var ansCheck1 = Regex.IsMatch(this.txtAddAns.Text.Trim(), @";");
+            var ansCheck2 = !(Regex.IsMatch(this.txtAddAns.Text.Trim(), @";$"));
+            var ansCheck3 = !(Regex.IsMatch(this.txtAddAns.Text.Trim(), @"^;"));
 
             if (quesTypeID == 2 || quesTypeID == 3)
             {
-                if (title != null && ans != null)
+                if (title != null && ans != null && ansCheck1 && ansCheck2 && ansCheck3)
                 {
                     CQModel newCQ = new CQModel()
                     {
@@ -116,6 +134,12 @@ namespace questionnaire.BackAdmin
             this.ImgBtnAdd.Visible = true;
             this.plcCQA.Visible = true;
             this.ltlAddMsg.Visible = true;
+
+            this.txtAddQues.Text = string.Empty;
+            this.txtAddAns.Text = string.Empty;
+            this.ddlAddAnsType.SelectedIndex = 0;
+            this.ckbAddCQMustAns.Checked = false;
+
         }
         #endregion
 
@@ -126,6 +150,7 @@ namespace questionnaire.BackAdmin
             this.plcEditCQ.Visible = true;
             this.ImgBtnAdd.Visible = false;
             this.ltlAddMsg.Visible = false;
+            this.txtEditAns.Enabled = false;
 
             // 問題類型下拉繫結
             var QTypeList = this._mgrQuesType.GetQuesTypesList();
@@ -156,6 +181,19 @@ namespace questionnaire.BackAdmin
 
         }
 
+        protected void ddlEditAnsType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.ddlEditAnsType.SelectedIndex == 0)
+            {
+                this.txtEditAns.Text = string.Empty;
+                this.txtEditAns.Enabled = false;
+            }
+            else
+            {
+                this.txtEditAns.Enabled = true;
+            }
+        }
+
         protected void btnSaveEditCQ_Click(object sender, EventArgs e)
         {
             try
@@ -163,10 +201,13 @@ namespace questionnaire.BackAdmin
                 var cq = this._mgrCQ.GetCQs(Convert.ToInt32(hfCQid.Value));
                 string title = this.txtEditQues.Text.Trim();
                 string ans = this.txtEditAns.Text.Trim();
+                var ansCheck1 = Regex.IsMatch(this.txtAddAns.Text.Trim(), @";");
+                var ansCheck2 = !(Regex.IsMatch(this.txtAddAns.Text.Trim(), @";$"));
+                var ansCheck3 = !(Regex.IsMatch(this.txtAddAns.Text.Trim(), @"^;"));
 
                 if (cq.QuesTypeID == 2 || cq.QuesTypeID == 3)
                 {
-                    if (title != null && ans != null)
+                    if (title != null && ans != null && ansCheck1 && ansCheck2 && ansCheck3)
                     {
                         CQModel updateCQ = new CQModel()
                         {
@@ -218,6 +259,11 @@ namespace questionnaire.BackAdmin
             this.plcEditCQ.Visible = false;
             this.ImgBtnAdd.Visible = true;
             this.ltlAddMsg.Visible = true;
+
+            this.txtEditQues.Text = string.Empty;
+            this.txtEditAns.Text = string.Empty;
+            this.ddlEditAnsType.SelectedIndex = 0;
+            this.ckbEditCQMustAns.Checked = false;
         }
         #endregion
 
@@ -231,7 +277,6 @@ namespace questionnaire.BackAdmin
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             string title = this.txtTitle.Text;
-            //var quesTypeID = (this.ddlAnsType.SelectedValue).ToString();
 
             if (!string.IsNullOrWhiteSpace(title))
             {

@@ -54,6 +54,10 @@
             margin-left: 10px;
             margin-top: -45px;
         }
+
+        #endSpace {
+            height: 50px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -244,6 +248,7 @@
             <div>
                 <asp:PlaceHolder ID="plcForStatistic" runat="server"></asp:PlaceHolder>
             </div>
+            <div id="endSpace"></div>
         </div>
     </div>
     <script>
@@ -261,7 +266,7 @@
                         "previous": "前一頁"
                     },
                 },
-                "lengthMenu": [[5, 10, 15, "全部"], [5, 10, 15, "全部"]],
+                "lengthMenu": [[10, 15, 20, "全部"], [10, 15, 20, "全部"]],
                 "order": [[0, "desc"]],
                 "ordering": false
             });
