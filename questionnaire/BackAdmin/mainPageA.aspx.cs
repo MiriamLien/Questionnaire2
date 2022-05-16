@@ -16,8 +16,6 @@ namespace questionnaire.BackAdmin
 {
     public partial class mainPageA : System.Web.UI.Page
     {
-        //private bool _isEditMode = false;
-
         private QuesContentsManager _mgrQuesContents = new QuesContentsManager();
         private QuesDetailManager _mgrQuesDetail = new QuesDetailManager();
         private QuesTypeManager _mgrQuesType = new QuesTypeManager();
@@ -106,129 +104,136 @@ namespace questionnaire.BackAdmin
                     }
                 }
 
-                // 取得問題內容
-                var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
-                var userQuesDetailList = this._mgruserQuesDetail.GetUserQuesDetailList(questionnaireID);
-
                 // 帶入問卷和問題內容(統計頁)
-                foreach (var question in quesList)
+                statistic(questionnaireID);
+                #endregion
+            }
+        }
+
+        // 帶入問卷和問題內容(統計頁)
+        private void statistic(Guid questionnaireID)
+        {
+            // 取得問題內容
+            var quesList = this._mgrQuesDetail.GetQuesDetailList(questionnaireID);
+            var userQuesDetailList = this._mgruserQuesDetail.GetUserQuesDetailList(questionnaireID);
+
+            // 帶入問卷和問題內容(統計頁)
+            foreach (var question in quesList)
+            {
+                // 顯示題目
+                string title = $"<br /><br />{number}. {(question.QuesTitle).Trim()}";
+                if (question.IsEnable == true)
+                    title += " (* 必填)";
+
+                number += 1;
+                Literal ltlQuestion = new Literal();
+                ltlQuestion.Text = title + "<br />";
+                this.plcForStatistic.Controls.Add(ltlQuestion);
+
+                // 一個問題的所有選項
+                string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
+
+                int total = 0;
+                int ansCount = 0;
+                List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
+
+                if (userQuesDetailList.Count != 0)
                 {
-                    // 顯示題目
-                    string title = $"<br /><br />{number}. {(question.QuesTitle).Trim()}";
-                    if (question.IsEnable == true)
-                        title += " (* 必填)";
-
-                    number += 1;
-                    Literal ltlQuestion = new Literal();
-                    ltlQuestion.Text = title + "<br />";
-                    this.plcForStatistic.Controls.Add(ltlQuestion);
-
-                    // 一個問題的所有選項
-                    string[] answerList = (question.QuesChoices.TrimEnd(';')).Trim().Split(';');
-
-                    int total = 0;
-                    int ansCount = 0;
-                    List<StatisticModel> statisticList = this._mgrStatistic.GetStatisticList(questionnaireID);
-
-                    if (userQuesDetailList.Count != 0)
+                    // 單複選
+                    if (question.QuesTypeID != 1)
                     {
-                        // 單複選
-                        if (question.QuesTypeID != 1)
+                        List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
+
+                        foreach (var item in staList)
                         {
-                            List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
+                            item.AnsCount = staList.Count;
+                            total = item.AnsCount;
+                        }
 
-                            foreach (var item in staList)
+                        // 動態生成答案的所有選項 和 barchart
+                        for (int k = 0; k < answerList.Length; k++)
+                        {
+                            ansCount = 0;
+                            foreach (var oneStatistic in staList)
                             {
-                                item.AnsCount = staList.Count;
-                                total = item.AnsCount;
-                            }
+                                string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
 
-                            // 動態生成答案的所有選項 和 barchart
-                            for (int k = 0; k < answerList.Length; k++)
-                            {
-                                ansCount = 0;
-                                foreach (var oneStatistic in staList)
+                                foreach (var sta in itemInStaList)
                                 {
-                                    string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
-
-                                    foreach (var sta in itemInStaList)
+                                    if (sta == answerList[k])
                                     {
-                                        if (sta == answerList[k])
-                                        {
-                                            ansCount++;
-                                        }
+                                        ansCount++;
                                     }
                                 }
-
-                                Literal ltlAnswer = new Literal();
-                                var percent = (double)ansCount / total * 100;
-                                Literal ltlAndspace = new Literal();
-                                ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";
-                                ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
-                                this.plcForStatistic.Controls.Add(ltlAnswer);
-                                this.plcForStatistic.Controls.Add(ltlAndspace);
                             }
-                        }
-                        else
-                        {
-                            Literal ltlAnswerForText = new Literal();
-                            ltlAnswerForText.Text = "&emsp;" + " - <br/>";
-                            this.plcForStatistic.Controls.Add(ltlAnswerForText);
+
+                            Literal ltlAnswer = new Literal();
+                            var percent = (double)ansCount / total * 100;
+                            Literal ltlAndspace = new Literal();
+                            ltlAndspace.Text = $"{percent}% ({ansCount})" + "<br /><br />";
+                            ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
+                            this.plcForStatistic.Controls.Add(ltlAnswer);
+                            this.plcForStatistic.Controls.Add(ltlAndspace);
                         }
                     }
                     else
                     {
-                        if (question.QuesTypeID != 1)
-                        {
-                            List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
-
-                            foreach (var item in staList)
-                            {
-                                item.AnsCount = staList.Count;
-                                total = item.AnsCount;
-                            }
-
-                            // 動態生成答案的所有選項 和 barchart
-                            for (int k = 0; k < answerList.Length; k++)
-                            {
-                                ansCount = 0;
-                                foreach (var oneStatistic in staList)
-                                {
-                                    string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
-
-                                    foreach (var sta in itemInStaList)
-                                    {
-                                        if (sta == answerList[k])
-                                        {
-                                            ansCount++;
-                                        }
-                                    }
-                                }
-
-                                Literal ltlAnswer = new Literal();
-                                Literal ltlAndspace = new Literal();
-                                ltlAndspace.Text = $"0% (0)" + "<br /><br />";
-                                ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
-                                this.plcForStatistic.Controls.Add(ltlAnswer);
-                                this.plcForStatistic.Controls.Add(ltlAndspace);
-                            }
-                        }
-                        else
-                        {
-                            Literal ltlAnswerForText = new Literal();
-                            ltlAnswerForText.Text = "&emsp;" + " - <br/>";
-                            this.plcForStatistic.Controls.Add(ltlAnswerForText);
-                        }
+                        Literal ltlAnswerForText = new Literal();
+                        ltlAnswerForText.Text = "&emsp;" + " - <br/>";
+                        this.plcForStatistic.Controls.Add(ltlAnswerForText);
                     }
                 }
-                #endregion
+                else
+                {
+                    if (question.QuesTypeID != 1)
+                    {
+                        List<StatisticModel> staList = statisticList.FindAll(x => x.QuesID == question.QuesID);
+
+                        foreach (var item in staList)
+                        {
+                            item.AnsCount = staList.Count;
+                            total = item.AnsCount;
+                        }
+
+                        // 動態生成答案的所有選項 和 barchart
+                        for (int k = 0; k < answerList.Length; k++)
+                        {
+                            ansCount = 0;
+                            foreach (var oneStatistic in staList)
+                            {
+                                string[] itemInStaList = oneStatistic.Answer.TrimEnd(';').Trim().Split(';');
+
+                                foreach (var sta in itemInStaList)
+                                {
+                                    if (sta == answerList[k])
+                                    {
+                                        ansCount++;
+                                    }
+                                }
+                            }
+
+                            Literal ltlAnswer = new Literal();
+                            Literal ltlAndspace = new Literal();
+                            ltlAndspace.Text = $"0% (0)" + "<br /><br />";
+                            ltlAnswer.Text = "&emsp;" + answerList[k] + "&emsp;|&emsp;";
+                            this.plcForStatistic.Controls.Add(ltlAnswer);
+                            this.plcForStatistic.Controls.Add(ltlAndspace);
+                        }
+                    }
+                    else
+                    {
+                        Literal ltlAnswerForText = new Literal();
+                        ltlAnswerForText.Text = "&emsp;" + " - <br/>";
+                        this.plcForStatistic.Controls.Add(ltlAnswerForText);
+                    }
+                }
             }
         }
 
         //string url = this.Request.Url.LocalPath + "?ID=" + idText;
         //this.Response.Redirect(url);
 
-        #region "問卷"
+        #region "編輯問卷"
         protected void btnEditPaperCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("listPageA.aspx");
@@ -240,6 +245,12 @@ namespace questionnaire.BackAdmin
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
             var q = this._mgrQuesContents.GetQuesContent(questionnaireID);
+
+            if (Convert.ToDateTime(this.txtStartDate.Text) >= Convert.ToDateTime(this.txtEndDate.Text))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('開始時間不可大於或等於結束時間。');", true);
+                this.txtStartDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+            }
 
             string title = this.txtTitle.Text.Trim();
             string content = this.txtContent.Text.Trim();
@@ -333,7 +344,7 @@ namespace questionnaire.BackAdmin
         }
 
 
-        // 把問題填入TextBox裡
+        // 把問題填入TextBox裡(套入常用問題)
         protected void ddlQuesType_SelectedIndexChanged(object sender, EventArgs e)
         {
             int cqid = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
@@ -366,24 +377,41 @@ namespace questionnaire.BackAdmin
             {
                 this.txtQuesTitle.Text = string.Empty;
                 this.txtQuesAns.Text = string.Empty;
+                this.txtQuesAns.Enabled = false;
                 this.ddlAnsType.SelectedIndex = 0;
             }
         }
 
+        // 文字(0)、單選方塊(1)、複選方塊(2)
         protected void ddlAnsType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int cqID = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
-            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqID);
-
-            if (this.ddlAnsType.SelectedIndex == 0)
+            int cqid = Convert.ToInt32(this.ddlQuesType.SelectedValue.Trim());
+            CQAndTypeModel CQs = this._mgrQuesType.GetCQType(cqid);
+            if (this.ddlQuesType.SelectedIndex != 0)
             {
-                this.txtQuesAns.Text = string.Empty;
-                this.txtQuesAns.Enabled = false;
+                if (this.ddlAnsType.SelectedIndex == 0)
+                {
+                    this.txtQuesAns.Text = string.Empty;
+                    this.txtQuesAns.Enabled = false;
+                }
+                else
+                {
+                    this.txtQuesAns.Text = CQs.CQChoices;
+                    this.txtQuesAns.Enabled = true;
+                }
             }
             else
             {
-                this.txtQuesAns.Enabled = true;
-                this.txtQuesAns.Text = CQs.CQChoices;
+                if (this.ddlAnsType.SelectedIndex == 0)
+                {
+                    this.txtQuesAns.Text = string.Empty;
+                    this.txtQuesAns.Enabled = false;
+                }
+                else
+                {
+                    this.txtQuesAns.Text = string.Empty;
+                    this.txtQuesAns.Enabled = true;
+                }
             }
         }
 
@@ -399,7 +427,7 @@ namespace questionnaire.BackAdmin
                 string q = this.txtQuesTitle.Text.Trim();
                 string a = this.txtQuesAns.Text.Trim();
 
-                if (q != null)
+                if (!string.IsNullOrWhiteSpace(q))
                 {
                     QuesDetailModel model = new QuesDetailModel()
                     {
@@ -410,11 +438,41 @@ namespace questionnaire.BackAdmin
                         IsEnable = this.ckbMustAns.Checked
                     };
                     this._mgrQuesDetail.CreateQuesDetail(model);
+
+                    var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
+                    this.rptQuestion.DataSource = questionList;
+                    this.rptQuestion.DataBind();
+
+                    if (questionList != null || questionList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int num = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = num.ToString();
+                            num++;
+                        }
+                    }
+
+                    statistic(questionnaireID);
+
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+
+                    this.ddlQuesType.SelectedIndex = 0;
+                    this.txtQuesTitle.Text = string.Empty;
+                    this.txtQuesAns.Text = string.Empty;
+                    this.txtQuesAns.Enabled = false;
+                    this.ddlAnsType.SelectedIndex = 0;
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('內容輸入錯誤。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
                 }
             }
             else
             {
+                this.txtQuesAns.Enabled = true;
                 string q = this.txtQuesTitle.Text.Trim();
                 string a = this.txtQuesAns.Text.Trim();
                 var ansCheck1 = Regex.IsMatch(this.txtQuesAns.Text.Trim(), @";");
@@ -432,8 +490,54 @@ namespace questionnaire.BackAdmin
                         IsEnable = this.ckbMustAns.Checked
                     };
                     this._mgrQuesDetail.CreateQuesDetail(model);
+
+                    var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
+                    this.rptQuestion.DataSource = questionList;
+                    this.rptQuestion.DataBind();
+
+                    if (questionList != null || questionList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int num = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = num.ToString();
+                            num++;
+                        }
+                    }
+
+                    statistic(questionnaireID);
+
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已新增。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+
+                    this.ddlQuesType.SelectedIndex = 0;
+                    this.txtQuesTitle.Text = string.Empty;
+                    this.txtQuesAns.Text = string.Empty;
+                    this.txtQuesAns.Enabled = false;
+                    this.ddlAnsType.SelectedIndex = 0;
                 }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('內容輸入錯誤。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                }
+            }
+        }
+
+        protected void ddlEditAnsType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int quesID = Convert.ToInt32(this.btnEditCheck.CommandName);
+            var quesDetail = this._mgrQuesDetail.GetQuesDetail(quesID);
+
+            if (this.ddlEditAnsType.SelectedIndex == 0)
+            {
+                this.txtEditQuesAns.Text = string.Empty;
+                this.txtEditQuesAns.Enabled = false;
+            }
+            else
+            {
+                this.txtEditQuesAns.Text = quesDetail.QuesChoices;
+                this.txtEditQuesAns.Enabled = true;
             }
         }
 
@@ -444,21 +548,103 @@ namespace questionnaire.BackAdmin
             Guid questionnaireID = Guid.Parse(idText);
 
             int quesid = Convert.ToInt32(this.btnEditCheck.CommandName);
-            var item = this._mgrQuesDetail.GetQuesDetail(quesid);
+            var quesDetail = this._mgrQuesDetail.GetQuesDetail(quesid);
 
-            QuesDetailModel model = new QuesDetailModel()
+            if (this.ddlEditAnsType.SelectedIndex != 0)
             {
-                ID = item.ID,
-                QuesID = item.QuesID,
-                QuesTitle = this.txtEditQuesTitle.Text,
-                QuesChoices = this.txtEditQuesAns.Text,
-                QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
-                IsEnable = this.ckbEditMustAns.Checked
-            };
+                string q = this.txtEditQuesTitle.Text.Trim();
+                string a = this.txtEditQuesAns.Text.Trim();
+                var ansCheck1 = Regex.IsMatch(this.txtEditQuesAns.Text.Trim(), @";");
+                var ansCheck2 = !(Regex.IsMatch(this.txtEditQuesAns.Text.Trim(), @";$"));
+                var ansCheck3 = !(Regex.IsMatch(this.txtEditQuesAns.Text.Trim(), @"^;"));
 
-            this._mgrQuesDetail.UpdateQuesDetail(model);
-            //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                if (q != null && a != null && ansCheck1 && ansCheck2 && ansCheck3)
+                {
+                    QuesDetailModel model = new QuesDetailModel()
+                    {
+                        ID = quesDetail.ID,
+                        QuesID = quesDetail.QuesID,
+                        QuesTitle = q,
+                        QuesChoices = a,
+                        QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
+                        IsEnable = this.ckbEditMustAns.Checked
+                    };
+
+                    this._mgrQuesDetail.UpdateQuesDetail(model);
+
+                    var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
+                    this.rptQuestion.DataSource = questionList;
+                    this.rptQuestion.DataBind();
+
+                    if (questionList != null || questionList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int num = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = num.ToString();
+                            num++;
+                        }
+                    }
+
+                    statistic(questionnaireID);
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                    this.plcQues.Visible = true;
+                    this.plcEditQues.Visible = false;
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('內容輸入錯誤。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                }
+            }
+            else
+            {
+                string q = this.txtEditQuesTitle.Text.Trim();
+                string a = this.txtEditQuesAns.Text.Trim();
+
+                if (q != null)
+                {
+                    QuesDetailModel model = new QuesDetailModel()
+                    {
+                        ID = quesDetail.ID,
+                        QuesID = quesDetail.QuesID,
+                        QuesTitle = q,
+                        QuesChoices = a,
+                        QuesTypeID = Convert.ToInt32(this.ddlEditAnsType.SelectedValue),
+                        IsEnable = this.ckbEditMustAns.Checked
+                    };
+
+                    this._mgrQuesDetail.UpdateQuesDetail(model);
+
+                    var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
+                    this.rptQuestion.DataSource = questionList;
+                    this.rptQuestion.DataBind();
+
+                    if (questionList != null || questionList.Count > 0)
+                    {
+                        // 生成問題編號
+                        int num = 1;
+                        foreach (RepeaterItem item in this.rptQuestion.Items)
+                        {
+                            Literal ltlNum = item.FindControl("ltlNum") as Literal;
+                            ltlNum.Text = num.ToString();
+                            num++;
+                        }
+                    }
+
+                    statistic(questionnaireID);
+
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題編輯完成。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                    this.plcQues.Visible = true;
+                    this.plcEditQues.Visible = false;
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('內容輸入錯誤。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+                }
+            }
         }
 
         // 取消編輯
@@ -476,20 +662,43 @@ namespace questionnaire.BackAdmin
             string idText = Request.QueryString["ID"];
             Guid questionnaireID = Guid.Parse(idText);
 
+            bool delChecked = false;
+
             foreach (RepeaterItem item in this.rptQuestion.Items)
             {
-                HiddenField hfID = item.FindControl("hfID") as HiddenField;
                 CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
-                Button btnEdit = item.FindControl("btnEdit") as Button;
-
-                if (ckbForDel.Checked && Int32.TryParse(hfID.Value, out int id))
+                if (ckbForDel.Checked)
                 {
-                    this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
+                    delChecked = true;
                 }
             }
 
-            //Response.Redirect("mainPageA.aspx?ID=" + questionnaireID);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已刪除。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+            if (delChecked)
+            {
+                foreach (RepeaterItem item in this.rptQuestion.Items)
+                {
+                    HiddenField hfID = item.FindControl("hfID") as HiddenField;
+                    CheckBox ckbForDel = item.FindControl("ckbForDel") as CheckBox;
+                    Button btnEdit = item.FindControl("btnEdit") as Button;
+
+                    if (ckbForDel.Checked && Int32.TryParse(hfID.Value, out int id))
+                    {
+                        this._mgrQuesDetail.DeleteQuesDetail(Convert.ToInt32(btnEdit.CommandName));
+                    }
+                }
+
+                var questionList = this._mgrQuesDetail.GetQuesDetailAndTypeList(questionnaireID);
+                this.rptQuestion.DataSource = questionList;
+                this.rptQuestion.DataBind();
+                statistic(questionnaireID);
+
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('問題已刪除。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+
+            }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", $"alert('請勾選欲刪除的問題。');location.href='mainPageA.aspx?ID={questionnaireID}#question';", true);
+            }
         }
 
         private void BackToListPage()

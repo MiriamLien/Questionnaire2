@@ -74,17 +74,17 @@
 
         <div id="question">
             <asp:HiddenField ID="hfID" runat="server" />
-            <asp:Literal ID="ltlQuesType" runat="server">種類</asp:Literal>
+            <asp:Literal ID="ltlQuesType" runat="server">種類 </asp:Literal>
             <asp:DropDownList ID="ddlQuesType" runat="server" OnSelectedIndexChanged="ddlQuesType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;&emsp;
             <br /><br />
-            <asp:Literal ID="ltlQuesTitle" runat="server">問題</asp:Literal>
+            <asp:Literal ID="ltlQuesTitle" runat="server">問題 </asp:Literal>
             <asp:TextBox ID="txtQuesTitle" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>
             &emsp;
                 <asp:DropDownList ID="ddlAnsType" runat="server" OnSelectedIndexChanged="ddlAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;
-                <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
+                <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" Checked="true" />
             <br /><p></p>
-            <asp:Literal ID="ltlQuesAns" runat="server">回答</asp:Literal>
-            <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&nbsp;
+            <asp:Literal ID="ltlQuesAns" runat="server">回答 </asp:Literal>
+            <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine" Enabled="false"></asp:TextBox>&nbsp;
                 <span>﹝多個答案以；分隔﹞</span>&emsp;&emsp;
                 <asp:Button ID="btnAdd" runat="server" Text="加入" OnClick="btnAdd_Click" /><br />
             <br />
@@ -96,7 +96,6 @@
                     <th>問題</th>
                     <th>種類</th>
                     <th>必填</th>
-                    <th></th>
                 </tr>
                 <asp:Repeater ID="rptQuestion" runat="server">
                     <ItemTemplate>
@@ -114,7 +113,6 @@
                             <td width="50">
                                 <asp:CheckBox ID="ckbMustAns2" runat="server" Checked='<%# Eval("IsEnable") %>' Enabled="false" />
                             </td>
-                            <td width="50"><a>編輯</a></td>
                         </tr>
                     </ItemTemplate>
                 </asp:Repeater>

@@ -111,25 +111,25 @@
                 <asp:Literal ID="ltlQuesTitle" runat="server">問題 </asp:Literal>
                 <asp:TextBox ID="txtQuesTitle" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&emsp;
             <asp:DropDownList ID="ddlAnsType" runat="server" OnSelectedIndexChanged="ddlAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&emsp;
-            <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" />
+            <asp:CheckBox ID="ckbMustAns" runat="server" Text="必填" Checked="true" />
                 <br />
                 <br />
                 <asp:Literal ID="ltlQuesAns" runat="server">回答 </asp:Literal>
-                <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                <asp:TextBox ID="txtQuesAns" runat="server" Width="320" TextMode="MultiLine" Enabled="false"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnAdd" runat="server" Text="加入" CommandName='<%# Eval("QuesID") %>' OnCommand="btnAdd_Command" />
             </asp:PlaceHolder>
 
             <%--編輯問題--%>
             <asp:PlaceHolder ID="plcEditQues" runat="server" Visible="false">
-                <asp:Literal ID="ltlEditQuesTitle" runat="server">問題</asp:Literal>
-                <asp:TextBox ID="txtEditQuesTitle" runat="server" Width="220"></asp:TextBox>&nbsp;
-            <asp:DropDownList ID="ddlEditAnsType" runat="server"></asp:DropDownList>&nbsp;
+                <asp:Literal ID="ltlEditQuesTitle" runat="server">問題 </asp:Literal>
+                <asp:TextBox ID="txtEditQuesTitle" runat="server" Width="280" TextMode="MultiLine"></asp:TextBox>&nbsp;
+            <asp:DropDownList ID="ddlEditAnsType" runat="server" OnSelectedIndexChanged="ddlEditAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>&nbsp;
             <asp:CheckBox ID="ckbEditMustAns" runat="server" Text="必填" />
                 <br />
                 <br />
-                <asp:Literal ID="ltlEditQuesAns" runat="server">回答</asp:Literal>
-                <asp:TextBox ID="txtEditQuesAns" runat="server" Width="220" TextMode="MultiLine"></asp:TextBox>&nbsp;
+                <asp:Literal ID="ltlEditQuesAns" runat="server">回答 </asp:Literal>
+                <asp:TextBox ID="txtEditQuesAns" runat="server" Width="280" TextMode="MultiLine"></asp:TextBox>&nbsp;
             <span>﹝多個答案以；分隔﹞</span>&emsp;
             <asp:Button ID="btnEditCheck" runat="server" Text="確認編輯" CommandName='<%# Eval("QuesID") %>' OnCommand="btnEditCheck_Command" />&nbsp;
             <asp:Button ID="btnEditCancel" runat="server" Text="取消" OnClick="btnEditCancel_Click" />
@@ -137,7 +137,7 @@
             <br />
             <br />
             <br />
-            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" OnClientClick="return confirm('確定要刪除嗎？')" /><br />
+            <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/images/deleteICON.png" Width="50" OnClick="imgbtnDelete_Click" /><br />
 
             <table border="1">
                 <tr>

@@ -36,9 +36,11 @@
         <h4>新增</h4>
         <div>
             <p>問題：<asp:TextBox ID="txtAddQues" runat="server"></asp:TextBox></p>
-            <p>回答：<asp:TextBox ID="txtAddAns" runat="server"></asp:TextBox></p>
+            <p>回答：<asp:TextBox ID="txtAddAns" runat="server"></asp:TextBox>
+                &emsp;<span>﹝多個答案以；分隔﹞</span>
+            </p>
             <p>類型：<asp:DropDownList ID="ddlAddAnsType" runat="server" OnSelectedIndexChanged="ddlAddAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></p>
-            <p>必填：<asp:CheckBox ID="ckbAddCQMustAns" runat="server" /></p>
+            <p>必填：<asp:CheckBox ID="ckbAddCQMustAns" runat="server" Checked="true" /></p>
         </div>
         <div>
             <asp:Button ID="btnSaveAddCQ" runat="server" CssClass="nes-pointer" Text="儲存" OnClick="btnSaveAddCQ_Click" />
@@ -52,7 +54,9 @@
         <div>
             <p>編號：<asp:TextBox ID="txtEditNum" runat="server" Enabled="false"></asp:TextBox></p>
             <p>問題：<asp:TextBox ID="txtEditQues" runat="server"></asp:TextBox></p>
-            <p>回答：<asp:TextBox ID="txtEditAns" runat="server"></asp:TextBox></p>
+            <p>回答：<asp:TextBox ID="txtEditAns" runat="server"></asp:TextBox>
+                &emsp;<span>﹝多個答案以；分隔﹞</span>
+            </p>
             <p>類型：<asp:DropDownList ID="ddlEditAnsType" runat="server" OnSelectedIndexChanged="ddlEditAnsType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></p>
             <p>必填：<asp:CheckBox ID="ckbEditCQMustAns" runat="server" /></p>
         </div>
