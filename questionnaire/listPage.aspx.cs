@@ -66,7 +66,7 @@ namespace questionnaire
 
                 if (titleQList.Count == 0 || titleQList == null)
                 {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPage.aspx';", true);
                 }
             }
             else if (hasStartDT && !hasEndDT)
@@ -81,7 +81,7 @@ namespace questionnaire
 
                 if (startDTQList.Count == 0 || startDTQList == null)
                 {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPage.aspx';", true);
                 }
             }
             else if (!hasStartDT && hasEndDT)
@@ -96,7 +96,7 @@ namespace questionnaire
 
                 if (endDTQList.Count == 0 || endDTQList == null)
                 {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPage.aspx';", true);
                 }
             }
             else if (hasStartDT && hasEndDT)
@@ -123,7 +123,7 @@ namespace questionnaire
 
                 if (bothDTList.Count == 0 || bothDTList == null)
                 {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPageA.aspx';", true);
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('查無資料。');location.href='listPage.aspx';", true);
                 }
             }
             else

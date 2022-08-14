@@ -25,7 +25,8 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div id="loginDiv" align="right">
-        <asp:Button ID="btnLogin" runat="server" ToolTip="前往後台請先登入" Text=" 登入 " OnClick="btnLogin_Click" />
+        <asp:Literal ID="ltlLoginMsg" runat="server"> (若要前往後台請先登入) </asp:Literal>&emsp;
+        <asp:Button ID="btnLogin" runat="server" Text=" 登入 " OnClick="btnLogin_Click" />
     </div>
     <div id="topDiv">
         <p>
